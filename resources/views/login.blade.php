@@ -13,7 +13,7 @@
 
     <style>
         body {
-            background-color: #77ca11;
+            background-color: #ebefe6;
             display: flex;
             justify-content: center;
             align-items: center;
