@@ -6,11 +6,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory;
+    use Notifiable;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -21,7 +24,19 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'id_user',
+        'kode_dep',
+        'jabatan',
+        'username',
+        'password',
+        'nama_leng',
+         'nip'
     ];
+
+    public function department()
+    {
+        return $this->belongsTo(department::class, 'kode_dep', 'kode_dep');
+    }
 
     /**
      * The attributes that should be hidden for serialization.
