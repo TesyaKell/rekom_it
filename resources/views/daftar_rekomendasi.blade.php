@@ -7,7 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Daftar Rekomendasi</title>
 
-    <link rel="stylesheet" href="./assets/css/bootstrap.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
@@ -45,12 +44,12 @@
         .container-2 {
             background-color: #ffffff;
         }
+
+        title {
+            font-weight: bold;
+        }
     </style>
 </head>
-
-
-
-{{-- <img src="{{ asset('images/header.png') }}" class="h-20 object-contain rounded-t-xl" alt="No image"> --}}
 
 <div class= "container-1">
     <div class="row-2">
@@ -59,7 +58,7 @@
         </div>
         <div class="row-2">
             <div class="col-12">
-                <p class="pt-3 mt-3 ms-3">Daftar Rekomendasi & Servis Komputer</p>
+                <p class="pt-3 mt-3 ms-5 ps-5">Daftar Rekomendasi & Servis Komputer</p>
             </div>
         </div>
     </div>
@@ -92,8 +91,11 @@
                 </div>
 
                 <div class="col-4 d-flex justify-content-end">
-                    <button type="button" class="btn btn-success mt-2 mb-2 me-2 fw-bold fs-6">Tambah Data
-                        Rekomendasi</button>
+                    <a href="{{ url('add_rekomendasi') }}">
+                        <button type="button" class="btn btn-success mt-2 mb-2 me-2 fw-bold fs-6">
+                            Tambah Data Rekomendasi
+                        </button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -112,9 +114,18 @@
                 <div class="col">Action</div>
             </div>
         </div>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
         </script>
     </body>
 
 </html>
+
+@extends('layouts.app')
+
+@section('title', 'Daftar Rekomendasi')
+
+@php
+    $pageTitle = 'Daftar Rekomendasi';
+@endphp
