@@ -44,30 +44,6 @@
             transition: all 0.3s ease;
             width: 100%;
         }
-
-
-
-        /* .login-container {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-        }
-
-        .login-container h2 {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .form-control {
-            margin-bottom: 15px;
-        }
-
-        .btn-primary {
-            width: 100%;
-        } */
     </style>
 </head>
 
@@ -90,8 +66,15 @@
                 </div>
 
                 <div class="d-grid gap-2 mb-4">
-                    <button type="submit" class="btn btn-primary mt-3">Sign In</button>
+                    <button type="submit" class="btn btn-primary mt-3"
+                        onclick="window.location='{{ url('home') }}'">Sign In</button>
                 </div>
+
+                {{-- <button type="button" class="btn btn-sm btn-outline-primary px-5 py-2.5 rounded-lg text-base shadow-md"
+                    onclick="window.location='{{ route('history') }}'">
+                    <i class="fas fa-history mr-2"></i> Review
+                </button> --}}
+
             </form>
         </div>
     </div>
