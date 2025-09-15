@@ -17,7 +17,7 @@ class userController extends Controller
             return back()->withErrors(['username' => 'Invalid credentials'])->withInput();
         }
         // Login sukses, bisa set session atau redirect ke dashboard
-        return redirect('/dashboard')->with('success', 'Login successful');
+        return redirect('/home')->with('success', 'Login successful');
     }
 
     // public function register(Request $request)

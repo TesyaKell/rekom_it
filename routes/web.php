@@ -6,6 +6,8 @@ Route::get('/', function () {
     return view('login');
 });
 
-Route::get('/home', function () {
-    return view('home');
+Route::post('/login', [App\Http\Controllers\userController::class, 'login']);
+
+Route::get('/homee', function () {
+    return view('homee');
 });
