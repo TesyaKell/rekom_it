@@ -31,7 +31,7 @@
             <p>Buat Rekomendasi</p>
         </div>
     </div>
-    <div class="card mt-2 ms-2 me-2">
+    <div class="card mt-2 ms-4 me-4">
         <div class="card-body">
             <div class="row">
                 <div class="col">
@@ -75,6 +75,26 @@
                             <label for="exampleFormControlInput1">Estimasi Harga (Rp)</label>
                             <input class="form-control" id="estimasiharga" placeholder="Rp.">
                         </div>
+
+
+                        <div class="container">
+                            <div class="row">
+                                <div class="col">
+                                    <button type="button" class="btn btn-success mt-2 mb-2 me-2 fw-bold fs-6">Tambah
+                                        Simpan</button>
+                                </div>
+                                <div class="col">
+                                    <button type="button" class="btn btn-success mt-2 mb-2 me-2 fw-bold fs-6">Tambah
+                                        Simpan & Lanjut</button>
+                                </div>
+                                <div class="col d-flex justify-content-end">
+                                    <button type="button" class="btn btn-success mt-2 mb-2 me-2 fw-bold fs-6">Tambah
+                                        Batal</button>
+                                </div>
+                            </div>
+                        </div>
+
+
                     </form>
                 </div>
             </div>
