@@ -9,3 +9,11 @@ Route::get('/', function () {
 Route::get('/home', function () {
     return view('home');
 });
+
+
+Route::get('/daftar_rekomendasi', function () {
+    return view('daftar_rekomendasi');
+});
+Route::get('/add_rekomendasi', function () {
+    return view('add_rekomendasi');
+});

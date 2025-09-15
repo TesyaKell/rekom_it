@@ -17,7 +17,7 @@
         }
 
         .card {
-            background-color: rgb(101, 182, 57);
+            background-color: rgb(70, 140, 9);
         }
 
         .card-body {
@@ -26,13 +26,10 @@
             padding-bottom: 0px;
         }
 
-        /* Hamburger Icon Styles */
         .hamburger-icon {
             display: inline-block;
             cursor: pointer;
             margin: 0px;
-            /* border-top-right-radius: 50px;
-            border-bottom-right-radius: 50px; */
         }
 
         .hamburger-line {
@@ -44,17 +41,48 @@
         }
 
         .position-fixed {
-            background-color: rgb(101, 182, 57);
+            background-color: rgb(70, 140, 9);
         }
 
-        .nav-item .nav-link {
+        .nav {
+            width: 100%;
+            padding: 0;
+        }
+
+        .y-sidebarItem {
+            width: 115%;
+            margin-left: -15px;
+        }
+
+        .nav-link {
+            display: block;
+            width: 100%;
             color: white;
+            padding: 10px 15px;
+            margin: 0;
+            text-align: left;
+        }
+
+        .nav-link:hover {
+            background-color: rgb(54, 109, 6);
+            color: white;
+            transform: scale(1.02);
         }
 
         h3 {
             color: white;
             margin-top: 7px;
         }
+
+        /* .btn {
+            display: block;
+            width: 109%;
+            color: white;
+            padding: 10px 15px;
+            margin: 0;
+            text-align: left;
+            margin-left: -15px;
+        } */
     </style>
 
 </head>
@@ -103,12 +131,73 @@
             </div>
         </div>
 
-        <ul class="nav flex-column p-3">
-            <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Rekomendasi</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Department</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Signature</a></li>
-        </ul>
+        <div class="nav flex-column p-3">
+
+            <div class="y-sidebarItem r-hide-accordion">
+                <a class="nav-link d-flex align-items-center" href="#">
+                    <img class="me-2" src="{{ asset('images/home.png') }}" alt="Logo" width="20"
+                        height="20">
+                    <span>Home</span>
+                </a>
+            </div>
+
+            {{-- pertama --}}
+            <div class="y-sidebarItem r-hide-accordion">
+                <a class="nav-link d-flex align-items-center" data-bs-toggle="collapse" href="#rekomMenu" role="button"
+                    aria-expanded="false" aria-controls="rekomMenu">
+                    <img class="me-2" src="{{ asset('images/rekomendasi.png') }}" alt="Logo" width="20"
+                        height="20">
+                    <span>Rekomendasi</span>
+                    <span class="ms-auto">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white"
+                            class="bi bi-chevron-down" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+                        </svg>
+                    </span>
+                </a>
+                <div class="collapse ps-4" id="rekomMenu">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2 d-flex align-items-center">
+                            <span style="color: orange; font-size: 1.2em; margin-right: 3px;">●</span>
+                            <a class="nav-link p-2" href="{{ url('daftar_rekomendasi') }}">Daftar Rekomendasi</a>
+                        </li>
+                        <li class="mb-2 d-flex align-items-center">
+                            <span style="color: orange; font-size: 1.2em; margin-right: 3px;">●</span>
+                            <a class="nav-link p-2" href="{{ url('add_rekomendasi') }}">Add Rekomendasi</a>
+                        </li>
+                        <li class="mb-2 d-flex align-items-center">
+                            <span style="color: orange; font-size: 1.2em; margin-right: 3px;">●</span>
+                            <a class="nav-link p-2" href="#">Deleted Rekomendasi</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+
+            {{-- kedua --}}
+            <div class="y-sidebarItem r-hide-accordion">
+                <a class="nav-link d-flex align-items-center" href="#">
+                    <img class="me-2" src="{{ asset('images/department.png') }}" alt="Logo" width="20"
+                        height="20">
+                    <span>Department</span>
+                </a>
+            </div>
+            <div class="y-sidebarItem r-hide-accordion">
+                <a class="nav-link d-flex align-items-center" href="#">
+                    <img class="me-2" src="{{ asset('images/signature.png') }}" alt="Logo" width="20"
+                        height="20">
+                    <span>Signature</span>
+                </a>
+            </div>
+            <div class="y-sidebarItem r-hide-accordion">
+                <a class="nav-link d-flex align-items-center" href="#">
+                    <img class="me-2" src="{{ asset('images/report.png') }}" alt="Logo" width="20"
+                        height="20">
+                    <span>Report</span>
+                </a>
+            </div>
+        </div>
     </div>
 
     <script>
