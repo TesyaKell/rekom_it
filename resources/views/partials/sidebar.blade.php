@@ -155,8 +155,9 @@
         </div>
 
         <div class="y-sidebarItem r-hide-accordion" style="position: absolute; bottom: 20px; width: 215px;">
-            <a class="nav-link d-flex align-items-center" href="#">
-                <img class="me-2" src="{{ asset('images/logout.png') }}" alt="Logo" width="20" height="20">
+            <a class="nav-link d-flex align-items-center" href="{{ url('/login') }}">
+                <img class="me-2" src="{{ asset('images/logout.png') }}" alt="Logo" width="20"
+                    height="20">
                 <span>Logout</span>
             </a>
         </div>

@@ -16,6 +16,10 @@
             background-color: #efefef;
         }
 
+        title {
+            font-weight: bold;
+        }
+
         p {
             color: #e8b200;
             margin-bottom: 5px;
@@ -87,16 +91,16 @@
                                 <input class="form-control" id="jenisunit" placeholder="Masukkan Jenis Unit">
                             </div>
                             <div class="form-group mt-2">
-                                <label for="exampleFormControlTextarea1">Keterangan</label>
+                                <label for="exampleFormControlTextarea1" class="mb-1">Keterangan</label>
                                 <textarea class="form-control" id="keterangan" rows="3"></textarea>
                             </div>
                             <div class="form-group mt-2">
-                                <label for="exampleFormControlInput1">Estimasi Harga (Rp)</label>
+                                <label for="exampleFormControlInput1" class="mb-1">Estimasi Harga (Rp)</label>
                                 <input class="form-control" id="estimasiharga" placeholder="Rp.">
                             </div>
 
                             <div class="form-group mt-2">
-                                <label for="tanggal_pengajuan">Tanggal Pengajuan</label>
+                                <label for="tanggal_pengajuan" class="mb-1">Tanggal Pengajuan</label>
                                 <input type="date" class="form-control" id="tanggal_pengajuan" name="tanggal_pengajuan">
                             </div>
 

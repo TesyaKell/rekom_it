@@ -44,6 +44,10 @@
         .container-2 {
             background-color: #ffffff;
         }
+
+        title {
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -54,7 +58,7 @@
         </div>
         <div class="row-2">
             <div class="col-12">
-                <p class="pt-3 mt-3 ms-3">Daftar Rekomendasi & Servis Komputer</p>
+                <p class="pt-3 mt-3 ms-5 ps-5">Daftar Rekomendasi & Servis Komputer</p>
             </div>
         </div>
     </div>
@@ -87,8 +91,11 @@
                 </div>
 
                 <div class="col-4 d-flex justify-content-end">
-                    <button type="button" class="btn btn-success mt-2 mb-2 me-2 fw-bold fs-6">Tambah Data
-                        Rekomendasi</button>
+                    <a href="{{ url('add_rekomendasi') }}">
+                        <button type="button" class="btn btn-success mt-2 mb-2 me-2 fw-bold fs-6">
+                            Tambah Data Rekomendasi
+                        </button>
+                    </a>
                 </div>
             </div>
         </div>
