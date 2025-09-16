@@ -177,7 +177,7 @@
 
             {{-- kedua --}}
             <div class="y-sidebarItem r-hide-accordion">
-                <a class="nav-link d-flex align-items-center" href="#">
+                <a class="nav-link d-flex align-items-center" href="{{ url('department') }}">
                     <img class="me-2" src="{{ asset('images/department.png') }}" alt="Logo" width="20"
                         height="20">
                     <span>Department</span>
