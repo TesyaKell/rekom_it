@@ -61,6 +61,33 @@ class rekomendasiController extends Controller
         return view('daftar_rekomendasi', compact('data'));
     }
 
+
+    public function tampilData2(Request $request)
+    {
+        if (!session()->has('loginId')) {
+            return redirect('/login');
+        }
+
+        $query = rekomendasi::query();
+
+        // Filter tanggal masuk
+        if ($request->filled('tgl_awal') && $request->filled('tgl_akhir')) {
+            $query->whereBetween('tgl_masuk', [$request->tgl_awal, $request->tgl_akhir]);
+        }
+
+        // Filter jabatan
+        if ($request->filled('jabatan_receiver')) {
+            $query->where('jabatan_receiver', $request->jabatan_receiver);
+        }
+
+        $data = $query->get();
+
+        // Ambil daftar jabatan unik dari tabel rekomendasi
+        $jabatanList = rekomendasi::select('jabatan_receiver')->distinct()->pluck('jabatan_receiver');
+
+        return view('report', compact('data', 'jabatanList'));
+    }
+
     // public function update(Request $req, $id)
     // {
     //     $rekomendasi = rekomendasi::find($id);

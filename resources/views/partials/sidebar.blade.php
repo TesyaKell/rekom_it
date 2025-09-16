@@ -55,7 +55,7 @@
 
     h3 {
         color: white;
-        margin-top: -12px;
+        margin-top: 7px;
         margin-left: 70px;
         font-size: 18px;
         font-weight: bold;
@@ -151,7 +151,7 @@
             </a>
         </div>
         <div class="y-sidebarItem r-hide-accordion">
-            <a class="nav-link d-flex align-items-center" href="#">
+            <a class="nav-link d-flex align-items-center" href="{{ url('report') }}">
                 <img class="me-2" src="{{ asset('images/report.png') }}" alt="Logo" width="20"
                     height="20">
                 <span>Report</span>
