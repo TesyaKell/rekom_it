@@ -6,16 +6,10 @@ Route::get('/login', function () {
     return view('login');
 });
 
-Route::get('/home', function () {
-    return view('home');
-});
+Route::post('/login', [App\Http\Controllers\userController::class, 'login']);
 
-
-Route::get('/daftar_rekomendasi', function () {
-    return view('daftar_rekomendasi');
-});
-Route::get('/add_rekomendasi', function () {
-    return view('add_rekomendasi');
+Route::get('/homee', function () {
+    return view('homee');
 });
 Route::get('/department', function () {
     return view('department');
