@@ -13,8 +13,12 @@ Route::get('/home', function () {
 
 //REKOMENDASI
 Route::get('/daftar_rekomendasi', function () {
-    return view('daftar_rekomendasi');
+    return view('daftar_rekomendasi', );
 });
 Route::get('/add_rekomendasi', function () {
     return view('add_rekomendasi');
 });
+
+Route::post('/add_rekomendasi', [App\Http\Controllers\rekomendasiController::class, 'create']);
+Route::get('/add_rekomendasi', [App\Http\Controllers\rekomendasiController::class, 'create']);
+Route::get('/daftar_rekomendasi', [App\Http\Controllers\rekomendasiController::class, 'tampilData']);

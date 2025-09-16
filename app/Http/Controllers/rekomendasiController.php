@@ -2,50 +2,64 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use Illuminate\Http\Request;
 use App\Models\rekomendasi;
+use Illuminate\Support\Facades\DB;
 
 class rekomendasiController extends Controller
 {
-    // public function create(Request $req)
-    // {
-    //     $req->validate([
-    //         'id_user' => 'required|string|max:255',
-    //         'id_sign' => 'required|string|max:255',
-    //         'no_spb' => 'required|integer',
-    //         'jenis_unit' => 'required|string|max:255',
-    //         'nama_rek' => 'required|string|max:255',
-    //         'ket_unit' => 'required|string|max:255',
-    //         'alasan_rek' => 'required|string|max:255',
-    //         'tgl_masuk' => 'required|date|max:255',
-    //         'nama_receiver' => 'required|string|max:255',
-    //         'tgl_verif' => 'required|date|max:255',
-    //         'masukan' => 'required|string|max:255',
-    //         'stastus' => 'required|string|max:255',
-    //         'estimasi_harga' => 'required|numeric|max:255',
-    //         'jabatan_receiver' => 'required|string|max:255',
+    public function create(Request $req)
+    {
+        if (!session()->has('loginId')) {
+            return redirect('/login');
+        }
 
+        $user = DB::table('users')->where('id_user', session('loginId'))->first();
+        $departments = \DB::table('department')->get();
 
-    //     ]);
+        try {
 
-    //     rekomendasi::create([
-    //         'id_user' => $req->id_user,
-    //         'id_sign' => $req->id_sign,
-    //         'jenis_unit' => $req->jenis_unit,
-    //         'nama_rek' => $req->nama_rek,
-    //         'ket_unit' => $req->ket_unit,
-    //         'alasan_rek' => $req->alasan_rek,
-    //         'tgl_masuk' => $req->tgl_masuk,
-    //         'nama_receiver' => $req->nama_receiver,
-    //         //'tgl_verif' => $req->tgl_verif,
-    //         'masukan' => $req->masukan,
-    //         'stastus' => $req->stastus,
-    //         'estimasi_harga' => $req->estimasi_harga,
-    //         'jabatan_receiver' => $req->jabatan_receiver,
-    //     ]);
+            $req->validate([
+                'no_spb' => 'required|numeric',
+                'nama_rek' => 'required|string|max:255',
+                'jenis_unit' => 'required|string|max:255',
+                'ket_unit' => 'required|string|max:255',
+                'tgl_masuk' => 'required|date|max:255',
+                'estimasi_harga' => 'required|numeric',
+                'jabatan_receiver' => 'required|string|max:255',
 
-    //     return view('create_rekomendasi');
-    // }
+            ]);
+
+            rekomendasi::create([
+                'id_user' => $user->id_user,
+                'nama_rek' => $req->nama_rek,
+                'jenis_unit' => $req->jenis_unit,
+                'no_spb' => $req->no_spb,
+                'ket_unit' => $req->ket_unit,
+                'tgl_masuk' => $req->tgl_masuk,
+                'stastus' => 'diproses',
+                'jabatan_receiver' => $req->jabatan_receiver,
+                'estimasi_harga' => $req->estimasi_harga,
+
+            ]);
+
+            return view('add_rekomendasi', compact('departments'));
+        } catch (\Exception $e) {
+            \Log::error("Gagal simpan data : {$e->getMessage()}");
+            return view('add_rekomendasi', compact('departments'))->with('error', 'Gagal simpan data!');
+        }
+    }
+
+    public function tampilData()
+    {
+        if (!session()->has('loginId')) {
+            return redirect('/login');
+        }
+
+        $data = rekomendasi::all();
+        return view('daftar_rekomendasi', compact('data'));
+    }
 
     // public function update(Request $req, $id)
     // {
