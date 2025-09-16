@@ -24,6 +24,7 @@
     }
 
     .position-fixed {
+        /* background-color: rgb(253, 253, 253); */
         background-color: rgb(70, 140, 9);
     }
 
@@ -54,8 +55,10 @@
 
     h3 {
         color: white;
-        margin-top: 7px;
+        margin-top: -12px;
+        margin-left: 70px;
         font-size: 18px;
+        font-weight: bold;
     }
 </style>
 
@@ -88,7 +91,7 @@
                 </div>
             </button>
         </div>
-        <div class="col-2 text-left">
+        <div class="col-11 text-left">
             <h3>{{ $pageTitle ?? 'Dashboard' }}</h3>
         </div>
     </div>
@@ -134,14 +137,14 @@
 
         {{-- kedua --}}
         <div class="y-sidebarItem r-hide-accordion">
-            <a class="nav-link d-flex align-items-center" href="#">
+            <a class="nav-link d-flex align-items-center" href="{{ url('department') }}">
                 <img class="me-2" src="{{ asset('images/department.png') }}" alt="Logo" width="20"
                     height="20">
                 <span>Department</span>
             </a>
         </div>
         <div class="y-sidebarItem r-hide-accordion">
-            <a class="nav-link d-flex align-items-center" href="#">
+            <a class="nav-link d-flex align-items-center" href="{{ url('signature') }}">
                 <img class="me-2" src="{{ asset('images/signature.png') }}" alt="Logo" width="20"
                     height="20">
                 <span>Signature</span>
@@ -149,7 +152,8 @@
         </div>
         <div class="y-sidebarItem r-hide-accordion">
             <a class="nav-link d-flex align-items-center" href="#">
-                <img class="me-2" src="{{ asset('images/report.png') }}" alt="Logo" width="20" height="20">
+                <img class="me-2" src="{{ asset('images/report.png') }}" alt="Logo" width="20"
+                    height="20">
                 <span>Report</span>
             </a>
         </div>

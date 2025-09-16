@@ -13,6 +13,11 @@
         body {
             background-color: #ebefe6;
         }
+
+        .container {
+            margin-left: -10px;
+            width: auto;
+        }
     </style>
     @yield('styles')
 </head>
