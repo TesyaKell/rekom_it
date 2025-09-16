@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Login</title>
 
-    <link rel="stylesheet" href="./assets/css/bootstrap.min.css" />
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
@@ -58,25 +58,15 @@
                     <label for="exampleInputUser">Username</label>
                     <input type="text" class="form-control" id="exampleInputUser" name="username"
                         placeholder="Enter username">
-                    {{-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
-                        else.</small> --}}
                 </div>
                 <div class="form-group mt-3">
                     <label for="exampleInputPassword1">Password</label>
                     <input type="password" class="form-control" id="exampleInputPassword1" name="password"
                         placeholder="Password">
                 </div>
-
                 <div class="d-grid gap-2 mb-4">
-                    <button type="submit" class="btn btn-primary mt-3"
-                        onclick="window.location='{{ url('home') }}'">Sign In</button>
+                    <button type="submit" class="btn btn-primary mt-3">Sign In</button>
                 </div>
-
-                {{-- <button type="button" class="btn btn-sm btn-outline-primary px-5 py-2.5 rounded-lg text-base shadow-md"
-                    onclick="window.location='{{ route('history') }}'">
-                    <i class="fas fa-history mr-2"></i> Review
-                </button> --}}
-
             </form>
         </div>
     </div>

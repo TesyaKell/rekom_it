@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class rekomendasi extends Model
 {
-    use SoftDeletes;
+    public $timestamps = false;
     protected $table = 'rekomendasi';
     protected $fillable =
         [

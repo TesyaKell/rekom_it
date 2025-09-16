@@ -16,6 +16,7 @@ class userController extends Controller
         if (!$user || !Hash::check($request->password, $user->password)) {
             return back()->withErrors(['username' => 'Invalid credentials'])->withInput();
         }
+        session(['loginId' => $user->id_user]);
         // Login sukses, bisa set session atau redirect ke dashboard
         return redirect('/home')->with('success', 'Login successful');
     }

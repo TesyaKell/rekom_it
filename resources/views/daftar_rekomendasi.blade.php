@@ -113,6 +113,43 @@
                 <div class="col">Status</div>
                 <div class="col">Action</div>
             </div>
+            {{-- <div class="row row-cols-8">
+                @forelse ($data as $item)
+                    <div class="col">{{ $item->id_rek }}</div>
+                    <div class="col">{{ $item->nomor_pr }}</div>
+                    <div class="col">{{ $item->jenis_unit }}</div>
+                    <div class="col">{{ $item->nama_pengaju }}</div>
+                    <div class="col">{{ $item->department }}</div>
+                    <div class="col">{{ $item->tanggal_pengajuan }}</div>
+                    <div class="col">{{ $item->status }}</div>
+                    <div class="col">Action</div>
+                @empty
+                    <div class="col">No Data Available</div>
+                @endforelse
+            </div> --}}
+
+            <table class="table">
+                <tbody>
+                    @forelse ($data as $item)
+                        <tr>
+                            <td>{{ $item->id_rek }}</td>
+                            <td>{{ $item->no_spb }}</td>
+                            <td>{{ $item->jenis_unit }}</td>
+                            <td>{{ $item->nama_rek }}</td>
+                            <td>{{ $item->jabatan_receiver }}</td>
+                            <td>{{ $item->tgl_masuk }}</td>
+                            <td>{{ $item->stastus }}</td>
+                            <td>
+
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="8" class="text-center">Data tidak ditemukan.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" <script
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"

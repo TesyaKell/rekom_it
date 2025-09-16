@@ -2,13 +2,27 @@
 
 use App\Http\Controllers\signatureController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\departmentController;
 
-Route::post('/login', [App\Http\Controllers\userController::class, 'login']);
-
-Route::get('/homee', function () {
-    return view('homee');
+Route::get('/login', function () {
+    return view('login');
 });
+Route::post('/login', [App\Http\Controllers\userController::class, 'login']);
+Route::get('/home', function () {
+    return view('home');
+});
+
+
+//REKOMENDASI
+Route::get('/daftar_rekomendasi', function () {
+    return view('daftar_rekomendasi', );
+});
+Route::get('/add_rekomendasi', function () {
+    return view('add_rekomendasi');
+});
+
+Route::post('/add_rekomendasi', [App\Http\Controllers\rekomendasiController::class, 'create']);
+Route::get('/add_rekomendasi', [App\Http\Controllers\rekomendasiController::class, 'create']);
+Route::get('/daftar_rekomendasi', [App\Http\Controllers\rekomendasiController::class, 'tampilData']);
 
 Route::get('/daftar_rekomendasi', function () {
     return view('daftar_rekomendasi');

@@ -7,7 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Add Rekomendasi</title>
 
-    <link rel="stylesheet" href="./assets/css/bootstrap.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
@@ -57,59 +56,63 @@
             <div class="card-body-3">
                 <div class="row">
                     <div class="col">
-                        <form class="ms-2">
+                        <form class="ms-2" method="POST" action="/add_rekomendasi">
+                            @csrf
                             <div class="form-group">
                                 <label for="exampleFormControlInput1" class="mb-1">No. Rekomendasi</label>
-                                <input type="email" class="form-control" id="exampleFormControlInput1">
+                                <input readonly type="number" class="form-control" id="exampleFormControlInput1"
+                                    name="id_rekom">
                             </div>
                             <div class="form-group mt-2">
                                 <label for="exampleFormControlInput1" class="mb-1">No. PR</label>
-                                <input class="form-control" id="pr">
+                                <input class="form-control" id="no_spb" name="no_spb">
                             </div>
                             <div class="form-group mt-2">
                                 <label for="exampleFormControlInput1" class="mb-1">Nama Pengaju</label>
-                                <input class="form-control" id="namapengaju" placeholder="Masukan Nama Anda">
+                                <input class="form-control" id="namapengaju" name="nama_rek"
+                                    placeholder="Masukan Nama Anda">
                             </div>
                             <div class="form-group mt-2">
-                                <label for="exampleFormControlSelect1" class="mb-1">Department</label>
-                                <select class="form-control" id="department">
-                                    <option>Accounting</option>
-                                    <option>Human Resources</option>
-                                    <option>IT</option>
-                                    <option>Marketing</option>
-                                    <option>Sales</option>
+                                <label for="department" class="mb-1">Department</label>
+                                <select class="form-control" id="jabatan_receiver" name="jabatan_receiver">
+                                    @foreach ($departments as $dep)
+                                        <option value="{{ $dep->nama_dep }}">{{ $dep->nama_dep }}</option>
+                                    @endforeach
                                 </select>
                             </div>
 
-                        </form>
+
 
                     </div>
                     <div class="col">
-                        <form>
-                            <div class="form-group">
-                                <label for="exampleFormControlInput1" class="mb-1">Jenis Unit</label>
-                                <input class="form-control" id="jenisunit" placeholder="Masukkan Jenis Unit">
-                            </div>
-                            <div class="form-group mt-2">
-                                <label for="exampleFormControlTextarea1" class="mb-1">Keterangan</label>
-                                <textarea class="form-control" id="keterangan" rows="3"></textarea>
-                            </div>
-                            <div class="form-group mt-2">
-                                <label for="exampleFormControlInput1" class="mb-1">Estimasi Harga (Rp)</label>
-                                <input class="form-control" id="estimasiharga" placeholder="Rp.">
-                            </div>
 
-                            <div class="form-group mt-2">
-                                <label for="tanggal_pengajuan" class="mb-1">Tanggal Pengajuan</label>
-                                <input type="date" class="form-control" id="tanggal_pengajuan" name="tanggal_pengajuan">
-                            </div>
+                        <div class="form-group">
+                            <label for="exampleFormControlInput1" class="mb-1">Jenis Unit</label>
+                            <input class="form-control" id="jenisunit" name="jenis_unit" placeholder="Masukkan Jenis Unit">
+                        </div>
+                        <div class="form-group mt-2">
+                            <label for="keterangan" class="mb-1">Keterangan</label>
+                            <textarea class="form-control" id="keterangan" name="ket_unit" rows="3"></textarea>
+                        </div>
 
 
-                            <div class="d-flex gap-2 mt-3 justify-content-end">
-                                <button type="button" class="btn btn-success fw-bold fs-6">Simpan</button>
-                                <button type="button" class="btn btn-success fw-bold fs-6">Simpan & Lanjut</button>
-                                <button type="button" class="btn btn-danger fw-bold fs-6">Batal</button>
-                            </div>
+                        <div class="form-group mt-2">
+                            <label for="estimasiharga" class="mb-1">Estimasi Harga (Rp)</label>
+                            <input class="form-control" id="estimasiharga" name="estimasi_harga" placeholder="Rp.">
+                        </div>
+
+                        <div class="form-group mt-2">
+                            <label for="tanggal_pengajuan" class="mb-1">Tanggal Pengajuan</label>
+                            <input type="date" class="form-control" id="tanggal_pengajuan" name="tgl_masuk">
+                        </div>
+
+
+                        <div class="d-flex gap-2 mt-3 justify-content-end">
+                            <button type="submit" class="btn btn-success fw-bold fs-6">Simpan</button>
+                            <button type="button" class="btn btn-success fw-bold fs-6">Simpan & Lanjut</button>
+                            <button type="button" class="btn btn-danger fw-bold fs-6">Batal</button>
+
+                        </div>
 
 
                         </form>
