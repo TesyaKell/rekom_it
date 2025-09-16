@@ -17,3 +17,6 @@ Route::get('/daftar_rekomendasi', function () {
 Route::get('/add_rekomendasi', function () {
     return view('add_rekomendasi');
 });
+Route::get('/department', function () {
+    return view('department');
+});
