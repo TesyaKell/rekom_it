@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Daftar Department</title>
+    <title>Signature</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -87,7 +87,7 @@
         <div class="row-2">
             <div class="row-2">
                 <div class="col-12">
-                    <p class="pt-3 ms-5 ps-5">Daftar Department</p>
+                    <p class="pt-3 ms-5 ps-5">Daftar signature</p>
                 </div>
             </div>
         </div>
@@ -95,20 +95,24 @@
         <div class="container tight-rows table-grid mt-3 ms-3">
             <div class="row g-0 w-50">
                 <div class="col-4 d-flex justify-content-start p-3 fw-bold">
-                    Nomor Department
+                    Nomor signature
                 </div>
                 <div class="col-8"></div>
             </div>
             <div class="row g-0 w-50">
-                <div class="col-4 d-flex justify-content-start p-3 fw-bold">Nama Department</div>
-                <div class="col-8 p-2"><input class="form-control" type="text"
-                        placeholder="Masukkan nama Department">
+                <div class="col-4 d-flex justify-content-start p-3 fw-bold">Nama Lengkap</div>
+                <div class="col-8 p-2"><input class="form-control" type="text" placeholder="Masukkan nama signature">
+                </div>
+            </div>
+            <div class="row g-0 w-50">
+                <div class="col-4 d-flex justify-content-start p-3 fw-bold">Jabatan</div>
+                <div class="col-8 p-2"><input class="form-control" type="text" placeholder="Masukkan nama signature">
                 </div>
             </div>
             <div class="row g-0 w-50">
                 <div class="col">
                     <div class="d-flex gap-2 mt-2 justify-content-start">
-                        <a href="{{ route('department.create') }}" class="btn btn-success fw-bold fs-6">Tambah</a>
+                        <a href="{{ route('signature.create') }}" class="btn btn-success fw-bold fs-6">Tambah</a>
                         <button type="button" class="btn btn-danger fw-bold fs-6">Batal</button>
                     </div>
                 </div>
@@ -117,34 +121,34 @@
 
         <div class="container mt-4 tight-rows table-grid ms-3">
             <div class="row g-0 row-cols-3 w-50" style="margin:0;">
-                <div class="col-3 fw-bold p-2 border" style="min-width:70px;">No. Dept</div>
-                <div class="col-7 fw-bold p-2 border">Nama Department</div>
+                <div class="col-3 fw-bold p-2 border" style="min-width:70px;">No. Signature</div>
+                <div class="col-7 fw-bold p-2 border">Nama Lengkap</div>
+                <div class="col-7 fw-bold p-2 border">Jabatan</div>
                 <div class="col-2 fw-bold p-2 border" style="min-width:70px;">Action</div>
             </div>
 
-            @if (isset($departments) && count($departments) > 0)
-                @foreach ($departments as $department)
+            @if (isset($signatures) && count($signatures) > 0)
+                @foreach ($signatures as $signature)
                     <div class="row g-0 row-cols-3 w-50" style="margin:0;">
                         <div class="col-3 border d-flex justify-content-start ps-3" style="min-width:70px;">
-                            {{ $department->kode_dep }}</div>
-                        <div class="col-7 border d-flex justify-content-start ps-3">{{ $department->nama_dep }}
+                            {{ $signature->id_sign }}</div>
+                        <div class="col-7 border d-flex justify-content-start ps-3">{{ $signature->nama_approval }}
                         </div>
                         <div class="col-2 fw-bold p-2 border" style="min-width:70px;">
                             <div class="dropdown m-0">
                                 <button class="btn btn-light border p-0" type="button"
-                                    id="dropdownMenuButton{{ $department->kode_dep }}" data-bs-toggle="dropdown"
+                                    id="dropdownMenuButton{{ $signature->id_sign }}" data-bs-toggle="dropdown"
                                     aria-expanded="false">
                                     <span class="fw-bold fs-4">⋮</span>
                                 </button>
-                                <ul class="dropdown-menu"
-                                    aria-labelledby="dropdownMenuButton{{ $department->kode_dep }}">
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $signature->id_sign }}">
                                     <li>
                                         <a class="dropdown-item"
-                                            href="{{ url("department/{$department->kode_dep}/edit") }}">Edit</a>
+                                            href="{{ url("signature/{$signature->id_sign}/edit") }}">Edit</a>
                                     </li>
                                     <li>
-                                        <form action="{{ url("department/{$department->kode_dep}") }}" method="POST"
-                                            onsubmit="return confirm('Are you sure you want to delete this department?')"
+                                        <form action="{{ url("signature/{$signature->id_sign}") }}" method="POST"
+                                            onsubmit="return confirm('Are you sure you want to delete this signature?')"
                                             style="display:inline;">
                                             @csrf
                                             @method('DELETE')
@@ -158,37 +162,38 @@
                 @endforeach
             @else
                 <div class="row g-0 w-75" style="margin:0;">
-                    <div class="col-12 text-center py-3 border">Tidak ada data department</div>
+                    <div class="col-12 text-center py-3 border">Tidak ada data signature</div>
                 </div>
             @endif
         </div>
     </div>
 
-    <!-- Modal Edit Department -->
-    <div class="modal fade" id="editDepartmentModal" tabindex="-1" aria-labelledby="editDepartmentModalLabel"
+    <!-- Modal Edit signature -->
+    <div class="modal fade" id="editsignatureModal" tabindex="-1" aria-labelledby="editsignatureModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
-            <form id="editDepartmentForm" method="POST">
+            <form id="editsignatureForm" method="POST">
                 @csrf
                 @method('PUT')
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editDepartmentModalLabel">Edit Nama Department</h5>
+                        <h5 class="modal-title" id="editsignatureModalLabel">Edit Nama signature</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <input type="hidden" id="editDepartmentId" name="id">
+                        <input type="hidden" id="editsignatureId" name="id">
 
                         <div class="mb-3">
-                            <label for="editKodeDep" class="form-label">No. Department</label>
+                            <label for="editKodeDep" class="form-label">No. signature</label>
                             <div class="col-3 border d-flex justify-content-start ps-3" style="min-width:70px;"
-                                name="kode_dep">
-                                {{ $department->kode_dep }}</div>
+                                name="id_sign">
+                                {{ $signature->id_sign }}</div>
                         </div>
 
                         <div class="mb-3">
-                            <label for="editNamaDep" class="form-label">Nama Department</label>
-                            <input type="text" class="form-control" id="editNamaDep" name="nama_dep" required>
+                            <label for="editNamaDep" class="form-label">Nama signature</label>
+                            <input type="text" class="form-control" id="editNamaDep" name="nama_approval"
+                                required>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -207,16 +212,16 @@
                 e.preventDefault();
                 // Ambil data dari baris yang diklik
                 var row = btn.closest('.row');
-                var kode_dep = row.querySelector('.col-3').textContent.trim();
-                var nama_dep = row.querySelector('.col-7').textContent.trim();
+                var id_sign = row.querySelector('.col-3').textContent.trim();
+                var nama_approval = row.querySelector('.col-7').textContent.trim();
 
                 // Isi modal dengan data
-                document.getElementById('editNamaDep').value = nama_dep;
-                document.getElementById('editDepartmentForm').action = '/department/' + kode_dep;
-                document.getElementById('editDepartmentId').value = kode_dep;
+                document.getElementById('editNamaDep').value = nama_approval;
+                document.getElementById('editsignatureForm').action = '/signature/' + id_sign;
+                document.getElementById('editsignatureId').value = id_sign;
 
                 // Tampilkan modal
-                var modal = new bootstrap.Modal(document.getElementById('editDepartmentModal'));
+                var modal = new bootstrap.Modal(document.getElementById('editsignatureModal'));
                 modal.show();
             });
         });
@@ -230,8 +235,8 @@
 
 @extends('layouts.app')
 
-@section('title', 'Daftar Department')
+@section('title', 'Signature')
 
 @php
-    $pageTitle = 'Daftar Department';
+    $pageTitle = 'Signature';
 @endphp

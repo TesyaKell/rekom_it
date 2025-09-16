@@ -7,59 +7,63 @@ use Illuminate\Http\Request;
 
 class departmentController extends Controller
 {
-    // public function create(Request $req)
-    // {
-    //     $req->validate(
-    //         [
-    //             'kode_dep' => 'required|string|max:255|unique:departement',
-    //             'nama_dep' => 'required|string|max:255',
-    //         ]
-    //     );
+    // Add index method to fetch departments
+    public function index()
+    {
+        $departments = department::all();
+        return view('department', compact('departments'));
+    }
 
-    //     department::create([
-    //         'kode_dep' => $req->kode_dep,
-    //         'nama_dep' => $req->nama_dep,
-    //     ]);
-    //     return view('create_department');
-    // }
+    public function create(Request $req)
+    {
+        $req->validate(
+            [
+                'kode_dep' => 'required|string|max:255|unique:departement',
+                'nama_dep' => 'required|string|max:255',
+            ]
+        );
 
-    // public function update(Request $req, $id)
-    // {
-    //     $edit =  department::where('id', $id)->firstOrFail();
+        department::create([
+            'kode_dep' => $req->kode_dep,
+            'nama_dep' => $req->nama_dep,
+        ]);
+        return view('create_department');
+    }
 
-    //     $req->validate(
-    //         [
-    //             'kode_dep' => 'required|string|max:255|unique:departement',
-    //             'nama_dep' => 'required|string|max:255',
-    //         ]
-    //     );
-    //     $edit->update([
-    //         'kode_dep' => $req->kode_dep,
-    //         'nama_dep' => $req->nama_dep,
-    //     ]);
+    public function update(Request $req, $id)
+    {
+        $edit = department::where('kode_dep', $id)->firstOrFail();
 
-    //     return view('edit_department', compact('edit'));
-    // }
+        $req->validate(
+            [
+                'kode_dep' => 'required|string|max:255|unique:departement',
+                'nama_dep' => 'required|string|max:255',
+            ]
+        );
+        $edit->update([
+            'kode_dep' => $req->kode_dep,
+            'nama_dep' => $req->nama_dep,
+        ]);
 
-    // public function delete($id)
-    // {
-    //     $softdelete = department::where('id', $id)->firstOrFail();
-    //     $softdelete->delete();
-    //     return redirect()->route('department.index');
-    // }
+        return view('edit_department', compact('edit'));
+    }
 
-    // public function search(Request $request)
-    // {
-    //     $query = $request->input('query');
+    public function delete($id)
+    {
+        $softdelete = department::where('id', $id)->firstOrFail();
+        $softdelete->delete();
+        return redirect()->route('department.index');
+    }
 
-    //     $result = department::where('nama_dep', 'LIKE', '%' . $query . '%')
-    //         ->orWhere('kode_dep', 'LIKE', '%' . $query . '%')
-    //         ->get();
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
 
-    //     return view('search_department', compact('result', 'query'));
-    // }
+        $result = department::where('nama_dep', 'LIKE', '%' . $query . '%')
+            ->orWhere('kode_dep', 'LIKE', '%' . $query . '%')
+            ->get();
 
-
-
+        return view('search_department', compact('result', 'query'));
+    }
 
 }
