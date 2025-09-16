@@ -92,123 +92,139 @@
             </div>
         </div>
 
-        <div class="container tight-rows table-grid mt-3 ms-3">
-            <div class="row g-0 w-50">
-                <div class="col-4 d-flex justify-content-start p-3 fw-bold">
-                    Nomor signature
-                </div>
-                <div class="col-8"></div>
-            </div>
-            <div class="row g-0 w-50">
-                <div class="col-4 d-flex justify-content-start p-3 fw-bold">Nama Lengkap</div>
-                <div class="col-8 p-2"><input class="form-control" type="text" placeholder="Masukkan nama signature">
-                </div>
-            </div>
-            <div class="row g-0 w-50">
-                <div class="col-4 d-flex justify-content-start p-3 fw-bold">Jabatan</div>
-                <div class="col-8 p-2"><input class="form-control" type="text" placeholder="Masukkan jabatan">
-                </div>
-            </div>
-            <div class="row g-0 w-50">
-                <div class="col">
-                    <div class="d-flex gap-2 mt-2 justify-content-start">
-                        <a href="{{ route('signature.create') }}" class="btn btn-success fw-bold fs-6">Tambah</a>
-                        {{-- <button type="button" class="btn btn-danger fw-bold fs-6">Batal</button> --}}
+        <form method="POST" action="/signature">
+            <div class="container tight-rows table-grid mt-3 ms-3">
+                <div class="row g-0 w-50">
+                    <div class="col-4 d-flex align-items-center p-3 fw-bold">
+                        Nomor signature
+                    </div>
+                    <div class="col-8 d-flex align-items-center p-2">
+                        <span class="form-control-plaintext">{{ $lastId + 1 }}</span>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="container mt-4 tight-rows table-grid ms-3">
-            <div class="row g-0 row-cols-4 w-50" style="margin:0;">
-                <div class="col-2 fw-bold p-2 border" style="min-width:70px;">No. Sign</div>
-                <div class="col-4 fw-bold p-2 border">Nama Lengkap</div>
-                <div class="col-4 fw-bold p-2 border">Jabatan</div>
-                <div class="col-2 fw-bold p-2 border" style="min-width:70px;">Action</div>
-            </div>
-
-            @if (isset($signatures) && count($signatures) > 0)
-                @foreach ($signatures as $signature)
-                    <div class="row g-0 row-cols-3 w-50" style="margin:0;">
-                        <div class="col-2 border d-flex justify-content-start ps-3" style="min-width:70px;">
-                            {{ $signature->id_sign }}</div>
-
-                        <div class="col-4 border d-flex justify-content-start ps-3">{{ $signature->nama_approval }}
-                        </div>
-
-                        <div class="col-4 border d-flex justify-content-start ps-3">{{ $signature->jabatan }}
-                        </div>
-
-                        <div class="col-2 fw-bold p-2 border" style="min-width:70px;">
-                            <div class="dropdown m-0">
-                                <button class="btn btn-light border p-0" type="button"
-                                    id="dropdownMenuButton{{ $signature->id_sign }}" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    <span class="fw-bold fs-4">⋮</span>
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $signature->id_sign }}">
-                                    <li>
-                                        <a class="dropdown-item"
-                                            href="{{ url("signature/{$signature->id_sign}/edit") }}">Edit</a>
-                                    </li>
-                                    <li>
-                                        <form action="{{ url("signature/{$signature->id_sign}") }}" method="POST"
-                                            onsubmit="return confirm('Are you sure you want to delete this signature?')"
-                                            style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="dropdown-item text-danger">Hapus</button>
-                                        </form>
-                                    </li>
-                                </ul>
-                            </div>
+                @csrf
+                <div class="row g-0 w-50">
+                    <div class="col-4 d-flex justify-content-start p-3 fw-bold">Nama Lengkap</div>
+                    <div class="col-8 p-2"><input class="form-control" type="text"
+                            placeholder="Masukkan nama signature" name="nama_approval">
+                    </div>
+                </div>
+                <div class="row g-0 w-50">
+                    <div class="col-4 d-flex justify-content-start p-3 fw-bold">Jabatan</div>
+                    <div class="col-8 p-2"><input class="form-control" type="text" placeholder="Masukkan jabatan"
+                            name="jabatan">
+                    </div>
+                </div>
+                <div class="row g-0 w-50">
+                    <div class="col">
+                        <div class="d-flex gap-2 mt-2 justify-content-start">
+                            <button type="submit" class="btn btn-success fw-bold fs-6">Tambah</button>
+                            {{-- <button type="button" class="btn btn-danger fw-bold fs-6">Batal</button> --}}
                         </div>
                     </div>
-                @endforeach
-            @else
-                <div class="row g-0 w-75" style="margin:0;">
-                    <div class="col-12 text-center py-3 border">Tidak ada data signature</div>
                 </div>
-            @endif
+        </form>
+    </div>
+
+    <div class="container mt-4 tight-rows table-grid ms-3">
+        <div class="row g-0 row-cols-4 w-50" style="margin:0;">
+            <div class="col-2 fw-bold p-2 border" style="min-width:70px;">No. Sign</div>
+            <div class="col-4 fw-bold p-2 border">Nama Lengkap</div>
+            <div class="col-4 fw-bold p-2 border">Jabatan</div>
+            <div class="col-2 fw-bold p-2 border" style="min-width:70px;">Action</div>
         </div>
+
+        @if (isset($signatures) && count($signatures) > 0)
+            @foreach ($signatures as $signature)
+                <div class="row g-0 row-cols-3 w-50" style="margin:0;">
+                    <div class="col-2 border d-flex justify-content-start ps-3" style="min-width:70px;">
+                        {{ $signature->id_sign }}</div>
+
+                    <div class="col-4 border d-flex justify-content-start ps-3">{{ $signature->nama_approval }}
+                    </div>
+
+                    <div class="col-4 border d-flex justify-content-start ps-3">{{ $signature->jabatan }}
+                    </div>
+
+                    <div class="col-2 fw-bold p-2 border" style="min-width:70px;">
+                        <div class="dropdown m-0">
+                            <button class="btn btn-light border p-0" type="button"
+                                id="dropdownMenuButton{{ $signature->id_sign }}" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                <span class="fw-bold fs-4">⋮</span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $signature->id_sign }}">
+                                <li>
+                                    <button class="dropdown-item" data-bs-toggle="modal"
+                                        data-bs-target="#editModal{{ $signature->id_sign }}">
+                                        Edit
+                                    </button>
+                                </li>
+
+                                <li>
+                                    <form action="{{ url("signature/{$signature->id_sign}") }}" method="POST"
+                                        onsubmit="return confirm('Are you sure you want to delete this signature?')"
+                                        style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="dropdown-item text-danger">Hapus</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        @else
+            <div class="row g-0 w-75" style="margin:0;">
+                <div class="col-12 text-center py-3 border">Tidak ada data signature</div>
+            </div>
+        @endif
+    </div>
     </div>
 
     <!-- Modal Edit signature -->
-    <div class="modal fade" id="editsignatureModal" tabindex="-1" aria-labelledby="editsignatureModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="editModal{{ $signature->id_sign }}" tabindex="-1"
+        aria-labelledby="editModalLabel{{ $signature->id_sign }}" aria-hidden="true">
         <div class="modal-dialog">
-            <form id="editsignatureForm" method="POST">
+            <form method="POST" action="{{ route('signature.update', $signature->id_sign) }}">
                 @csrf
                 @method('PUT')
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editsignatureModalLabel">Edit Nama signature</h5>
+                        <h5 class="modal-title" id="editModalLabel{{ $signature->id_sign }}">Edit Signature</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <input type="hidden" id="editsignatureId" name="id">
 
                         <div class="mb-3">
-                            <label for="editKodeDep" class="form-label">No. signature</label>
-                            <div class="col-3 border d-flex justify-content-start ps-3" style="min-width:70px;"
-                                name="id_sign">
-                                {{ $signature->id_sign }}</div>
+                            <label class="form-label">No. signature</label>
+                            <input type="text" class="form-control" value="{{ $signature->id_sign }}" disabled>
                         </div>
 
                         <div class="mb-3">
-                            <label for="editNamaDep" class="form-label">Nama signature</label>
-                            <input type="text" class="form-control" id="editNamaDep" name="nama_approval"
-                                required>
+                            <label class="form-label">Nama signature</label>
+                            <input type="text" class="form-control" name="nama_approval"
+                                value="{{ $signature->nama_approval }}" required>
                         </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Jabatan</label>
+                            <input type="text" class="form-control" name="jabatan"
+                                value="{{ $signature->jabatan }}" required>
+                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
+
 
     <script>
         // Tangkap klik tombol Edit

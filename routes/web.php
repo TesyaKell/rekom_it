@@ -27,12 +27,12 @@ Route::get('/daftar_rekomendasi', [App\Http\Controllers\rekomendasiController::c
 
 Route::get('/report', [App\Http\Controllers\rekomendasiController::class, 'tampilData2'])->name('report');
 
-Route::get('/signature', function () {
-    return view('signature');
-});
-
+// SIGNATURE
 Route::get('/signature', [signatureController::class, 'index'])->name('signature.index');
 Route::post('/signature', [signatureController::class, 'create'])->name('signature.create');
+Route::delete('/signature/{id}', [SignatureController::class, 'destroy'])->name('signature.destroy');
+Route::get('/signature/{id}/edit', [SignatureController::class, 'edit'])->name('signature.edit');
+Route::put('/signature/{id}', [SignatureController::class, 'update'])->name('signature.update');
 
 // departmentController
 Route::get('/department', [departmentController::class, 'index'])->name('department.index');
