@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\signatureController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\departmentController;
 
 Route::get('/login', function () {
     return view('login');
@@ -24,9 +25,7 @@ Route::post('/add_rekomendasi', [App\Http\Controllers\rekomendasiController::cla
 Route::get('/add_rekomendasi', [App\Http\Controllers\rekomendasiController::class, 'create']);
 Route::get('/daftar_rekomendasi', [App\Http\Controllers\rekomendasiController::class, 'tampilData']);
 
-Route::get('/daftar_rekomendasi', function () {
-    return view('daftar_rekomendasi');
-});
+Route::get('/report', [App\Http\Controllers\rekomendasiController::class, 'tampilData2'])->name('report');
 
 Route::get('/signature', function () {
     return view('signature');
@@ -41,3 +40,6 @@ Route::post('/department', [departmentController::class, 'create'])->name('depar
 Route::get('/department/{id}/edit', [departmentController::class, 'edit'])->name('department.edit');
 Route::put('/department/{id}', [departmentController::class, 'update'])->name('department.update');
 Route::delete('/department/{id}', [departmentController::class, 'delete'])->name('department.delete');
+
+
+

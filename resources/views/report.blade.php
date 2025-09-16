@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Daftar Rekomendasi</title>
+    <title>Report</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -44,6 +44,15 @@
         .container-2 {
             background-color: #ffffff;
             border-radius: 5px;
+            width: 400px;
+            height: 350px;
+        }
+
+        .container-3 {
+            background-color: #ffffff;
+            border-radius: 5px;
+            width: 1150px;
+            height: auto;
         }
 
         title {
@@ -56,7 +65,16 @@
 
         th,
         td {
-            font-size: 13px;
+            font-size: 14px;
+        }
+
+        .col-md-4 {
+            background: #ffffff;
+        }
+
+        label {
+            font-size: 15px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -68,52 +86,57 @@
         </div>
         <div class="row-2">
             <div class="col-12">
-                <p class="pt-3 mt-3 ms-5 ps-5">Daftar Rekomendasi & Servis Komputer</p>
+                <p class="pt-3 mt-3 ms-5 ps-5">LAPORAN REKOMENDASI & SERVIS UNIT KOMPUTER</p>
             </div>
         </div>
     </div>
 
 
     <body>
-
-        <div class="container-2 w-auto h-100 ms-3 me-3 mt-3 pt-2 pb-2">
-            <div class="row">
-                <div class="col-4">
-                    <form class="d-flex justify-content-start">
-                        <input class="form-control w-50 me-2 ms-2 mt-2 mb-2" type="search" placeholder="Search"
-                            aria-label="Search">
-                        <button class="btn btn-outline-success w-15 h-25 mt-2" type="submit">Search</button>
-                    </form>
-                </div>
-
-                <div class="col-4 d-flex justify-content-start">
-                    <div class="dropdown mt-2">
-                        <button type="button" class="btn dropdown-toggle fw-bold" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            Semua Rekomendasi
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Semua Rekomendasi</a></li>
-                            <li><a class="dropdown-item" href="#">Belum Realisasi</a></li>
-                            <li><a class="dropdown-item" href="#">Sudah Realisasi</a></li>
-                        </ul>
+        <div class="container-2 mt-4 mb-5 me-5 ms-5 p-4">
+            <form method="GET" action="{{ route('report') }}" class="mb-4">
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <label for="noRek" class="form-label">No. Rekomendasi</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="noRek" id="noRek"
+                                value="{{ request('id_rek') }}" placeholder="Dari">
+                            <span class="input-group-text">s/d</span>
+                            <input type="text" class="form-control" name="noRek2" id="noRek2"
+                                value="{{ request('id_rek') }}" placeholder="Sampai">
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="tgl_awal" class="form-label">Periode Tanggal Masuk</label>
+                        <div class="input-group">
+                            <input type="date" class="form-control" name="tgl_awal" id="tgl_awal"
+                                value="{{ request('tgl_awal') }}">
+                            <span class="input-group-text">s/d</span>
+                            <input type="date" class="form-control" name="tgl_akhir" id="tgl_akhir"
+                                value="{{ request('tgl_akhir') }}">
+                        </div>
+                    </div>
+                    <div class="col-md-12 mb-2">
+                        <label for="jabatan" class="form-label">Jabatan</label>
+                        <select class="form-select" name="jabatan" id="jabatan">
+                            <option value="">Semua Jabatan</option>
+                            @foreach ($jabatanList as $jabatan)
+                                <option value="{{ $jabatan }}"
+                                    {{ request('jabatan_receiver') == $jabatan ? 'selected' : '' }}>
+                                    {{ $jabatan }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-12 d-flex align-items-end">
+                        <button type="submit" class="btn btn-success w-50">Tampilkan</button>
                     </div>
                 </div>
-
-                <div class="col-4 d-flex justify-content-end">
-                    <a href="{{ url('add_rekomendasi') }}">
-                        <button type="button" class="btn btn-success mt-2 mb-2 me-2 fw-bold fs-6">
-                            Tambah Data Rekomendasi
-                        </button>
-                    </a>
-                </div>
-            </div>
+            </form>
         </div>
 
-
-
-        <div class="container mt-4">
-            <table class="table table-bordered table-sm align-middle m-3">
+        <div class="container-3 mt-3 mb-5 me-5 ms-5 p-2">
+            <p class="ps-2 pt-2">* Hasil Pencarian : {{ $data->count() }} data</p>
+            <table class="table table-bordered table-sm align-middle me-5 mt-3">
                 <thead class="table-light">
                     <tr>
                         <th class="ps-2">No. Rek</th>
@@ -172,7 +195,8 @@
                                                 style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="dropdown-item text-danger">Hapus</button>
+                                                <button type="submit"
+                                                    class="dropdown-item text-danger">Hapus</button>
                                             </form>
                                         </li>
                                     </ul>
@@ -186,6 +210,7 @@
                     @endforelse
                 </tbody>
             </table>
+
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" <script
@@ -198,8 +223,8 @@
 
 @extends('layouts.app')
 
-@section('title', 'Daftar Rekomendasi')
+@section('title', 'Laporan Rekomendasi & Servis Unit Komputer')
 
 @php
-    $pageTitle = 'Daftar Rekomendasi';
+    $pageTitle = 'Laporan Rekomendasi & Servis Unit Komputer';
 @endphp

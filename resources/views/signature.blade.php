@@ -106,34 +106,39 @@
             </div>
             <div class="row g-0 w-50">
                 <div class="col-4 d-flex justify-content-start p-3 fw-bold">Jabatan</div>
-                <div class="col-8 p-2"><input class="form-control" type="text" placeholder="Masukkan nama signature">
+                <div class="col-8 p-2"><input class="form-control" type="text" placeholder="Masukkan jabatan">
                 </div>
             </div>
             <div class="row g-0 w-50">
                 <div class="col">
                     <div class="d-flex gap-2 mt-2 justify-content-start">
                         <a href="{{ route('signature.create') }}" class="btn btn-success fw-bold fs-6">Tambah</a>
-                        <button type="button" class="btn btn-danger fw-bold fs-6">Batal</button>
+                        {{-- <button type="button" class="btn btn-danger fw-bold fs-6">Batal</button> --}}
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="container mt-4 tight-rows table-grid ms-3">
-            <div class="row g-0 row-cols-3 w-50" style="margin:0;">
-                <div class="col-3 fw-bold p-2 border" style="min-width:70px;">No. Signature</div>
-                <div class="col-7 fw-bold p-2 border">Nama Lengkap</div>
-                <div class="col-7 fw-bold p-2 border">Jabatan</div>
+            <div class="row g-0 row-cols-4 w-50" style="margin:0;">
+                <div class="col-2 fw-bold p-2 border" style="min-width:70px;">No. Sign</div>
+                <div class="col-4 fw-bold p-2 border">Nama Lengkap</div>
+                <div class="col-4 fw-bold p-2 border">Jabatan</div>
                 <div class="col-2 fw-bold p-2 border" style="min-width:70px;">Action</div>
             </div>
 
             @if (isset($signatures) && count($signatures) > 0)
                 @foreach ($signatures as $signature)
                     <div class="row g-0 row-cols-3 w-50" style="margin:0;">
-                        <div class="col-3 border d-flex justify-content-start ps-3" style="min-width:70px;">
+                        <div class="col-2 border d-flex justify-content-start ps-3" style="min-width:70px;">
                             {{ $signature->id_sign }}</div>
-                        <div class="col-7 border d-flex justify-content-start ps-3">{{ $signature->nama_approval }}
+
+                        <div class="col-4 border d-flex justify-content-start ps-3">{{ $signature->nama_approval }}
                         </div>
+
+                        <div class="col-4 border d-flex justify-content-start ps-3">{{ $signature->jabatan }}
+                        </div>
+
                         <div class="col-2 fw-bold p-2 border" style="min-width:70px;">
                             <div class="dropdown m-0">
                                 <button class="btn btn-light border p-0" type="button"
