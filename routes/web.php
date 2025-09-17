@@ -33,6 +33,6 @@ Route::put('/signature/{id}', [signatureController::class, 'update'])->name('sig
 // departmentController
 Route::get('/department', [departmentController::class, 'index'])->name('department.index');
 Route::post('/department', [departmentController::class, 'create'])->name('department.create');
-Route::get('/department/{id}/edit', [departmentController::class, 'edit'])->name('department.edit');
-Route::put('/department/{id}', [departmentController::class, 'update'])->name('department.update');
-Route::delete('/department/{id}', [departmentController::class, 'delete'])->name('department.delete');
+Route::get('/department/{kode_dep}/edit', [departmentController::class, 'edit'])->name('department.edit');
+Route::put('/department/{kode_dep}', [departmentController::class, 'update'])->name('department.update');
+Route::delete('/department/{kode_dep}', [departmentController::class, 'destroy'])->name('department.destroy');

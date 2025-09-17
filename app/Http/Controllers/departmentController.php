@@ -13,8 +13,7 @@ class departmentController extends Controller
     public function index()
     {
         $departments = department::all();
-        $nextKodeDep = $this->generateDepartmentId();
-        return view('department', compact('departments', 'nextKodeDep'));
+        return view('department', compact('departments'));
     }
 
     public function generateDepartmentId()
@@ -49,12 +48,11 @@ class departmentController extends Controller
 
 
             $req->validate([
-                'kode_dep' => 'required|string|max:255|unique:department',
                 'nama_dep' => 'required|string|max:255',
             ]);
 
             department::create([
-                'kode_dep' => $req->kode_dep,
+                'kode_dep' => $this->generateDepartmentId(),
                 'nama_dep' => $req->nama_dep,
             ]);
 
@@ -67,30 +65,35 @@ class departmentController extends Controller
 
     }
 
-    // public function update(Request $req, $id)
-    // {
-    //     $edit = department::where('kode_dep', $id)->firstOrFail();
+    public function edit($id)
+    {
+        $edit = department::where('kode_dep', $id)->firstOrFail();
+        return view('edit_department', compact('edit'));
+    }
 
-    //     $req->validate(
-    //         [
-    //             'kode_dep' => 'required|string|max:255|unique:departement',
-    //             'nama_dep' => 'required|string|max:255',
-    //         ]
-    //     );
-    //     $edit->update([
-    //         'kode_dep' => $req->kode_dep,
-    //         'nama_dep' => $req->nama_dep,
-    //     ]);
+    public function update(Request $req, $id)
+    {
+        $edit = department::where('kode_dep', $id)->firstOrFail();
 
-    //     return view('edit_department', compact('edit'));
-    // }
+        $req->validate(
+            [
+                'nama_dep' => 'required|string|max:255',
+            ]
+        );
+        $edit->update([
+            'nama_dep' => $req->nama_dep,
+        ]);
 
-    // public function delete($kode_dep)
-    // {
-    //     $softdelete = department::where('kode_dep', $kode_dep)->firstOrFail();
-    //     $softdelete->delete();
-    //     return view('department', compact('departments'));
-    // }
+        return redirect()->route('department.index');
+    }
+
+    public function destroy($kode_dep)
+    {
+        $departments = department::find($kode_dep);
+        $departments->delete();
+
+        return redirect()->route('department.index');
+    }
 
     // public function search(Request $request)
     // {

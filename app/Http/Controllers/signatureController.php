@@ -71,9 +71,6 @@ class signatureController extends Controller
         return redirect()->route('signature.index')->with('success', 'Data berhasil diperbarui!');
     }
 
-
-
-
     public function destroy($id)
     {
         $signature = signature::find($id);

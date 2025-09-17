@@ -106,13 +106,9 @@
                             if ($lastDep) {
                                 $lastNum = (int) substr($lastDep->kode_dep, 3);
                                 $newId = 'DEP' . str_pad($lastNum + 1, 3, '0', STR_PAD_LEFT);
-                            } else {
-                                $newId = 'DEP001';
                             }
                         @endphp
                         {{ $newId }}
-                        <input type="hidden" name="kode_dep" value="{{ $newId }}">
-
                     </div>
                 </div>
 
@@ -200,8 +196,8 @@
                         <div class="mb-3">
                             <label for="editKodeDep" class="form-label">No. Department</label>
                             <div class="col-3 border d-flex justify-content-start ps-3" style="min-width:70px;"
-                                name="kode_dep">
-                                {{ $department->kode_dep }}</div>
+                                id="editKodeDep">
+                            </div>
                         </div>
 
                         <div class="mb-3">
@@ -229,6 +225,7 @@
                 var nama_dep = row.querySelector('.col-7').textContent.trim();
 
                 // Isi modal dengan data
+                document.getElementById('editKodeDep').textContent = kode_dep;
                 document.getElementById('editNamaDep').value = nama_dep;
                 document.getElementById('editDepartmentForm').action = '/department/' + kode_dep;
                 document.getElementById('editDepartmentId').value = kode_dep;
