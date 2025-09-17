@@ -66,6 +66,15 @@
         td {
             font-size: 13px;
         }
+
+        .modal-backdrop.show {
+            opacity: 0.2 !important;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #000000cb;
+        }
     </style>
 </head>
 
@@ -151,7 +160,7 @@
                                 @elseif($item->status == 'menunggu verifikasi Tim IT')
                                     <span class="badge
                                         bg-orange text-light p-1"
-                                        style="background-color: rgb(41, 63, 230);">Menunggu
+                                        style="background-color: rgb(249, 137, 0);">Menunggu
                                         Tim IT</span>
                                 @elseif($item->status == 'Ditolak')
                                     <span class="badge bg-danger p-1">Ditolak</span>
@@ -203,6 +212,76 @@
                     @endforelse
                 </tbody>
             </table>
+
+            @foreach ($data as $item)
+                <div class="modal fade" id="editModal{{ $item->id_rek }}" tabindex="-1"
+                    aria-labelledby="editModalLabel{{ $item->id_rek }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <form action="{{ url('rekomendasi/' . $item->id_rek) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title fw-bold " style="color: rgb(249, 137, 0);"
+                                        id="editModalLabel{{ $item->id_rek }}">Edit
+                                        Rekomendasi
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="nama_rek{{ $item->id_rek }}" class="form-label">Nama
+                                            Pengaju</label>
+                                        <input type="text" class="form-control" id="nama_rek{{ $item->id_rek }}"
+                                            name="nama_rek" value="{{ $item->nama_rek }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="jenis_unit{{ $item->id_rek }}" class="form-label">Jenis
+                                            Unit</label>
+                                        <input type="text" class="form-control"
+                                            id="jenis_unit{{ $item->id_rek }}" name="jenis_unit"
+                                            value="{{ $item->jenis_unit }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="ket_unit{{ $item->id_rek }}" class="form-label">Keterangan
+                                            Unit</label>
+                                        <input type="text" class="form-control" id="ket_unit{{ $item->id_rek }}"
+                                            name="ket_unit" value="{{ $item->ket_unit }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="tgl_masuk{{ $item->id_rek }}" class="form-label">Tanggal
+                                            Pengajuan</label>
+                                        <input type="date" class="form-control" id="tgl_masuk{{ $item->id_rek }}"
+                                            name="tgl_masuk" value="{{ $item->tgl_masuk }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="jabatan_receiver{{ $item->id_rek }}"
+                                            class="form-label">Department</label>
+                                        <input type="text" class="form-control"
+                                            id="jabatan_receiver{{ $item->id_rek }}" name="jabatan_receiver"
+                                            value="{{ $item->jabatan_receiver }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="estimasi_harga{{ $item->id_rek }}" class="form-label">Estimasi
+                                            Harga</label>
+                                        <input type="number" class="form-control"
+                                            id="estimasi_harga{{ $item->id_rek }}" name="estimasi_harga"
+                                            value="{{ $item->estimasi_harga }}" required>
+                                    </div>
+                                    <!-- Tambahkan field lain sesuai kebutuhan -->
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Batal</button>
+                                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            @endforeach
+
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
