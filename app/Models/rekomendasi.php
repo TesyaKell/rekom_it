@@ -15,7 +15,6 @@ class rekomendasi extends Model
             'id_rek',
             'id_user',
             'id_sign',
-            'no_spb',
             'nama_rek',
             'jenis_unit',
             'ket_unit',
@@ -25,8 +24,11 @@ class rekomendasi extends Model
             'tgl_verif',
             'masukan',
             'status',
+            'no_spb',
+            'jabatan_receiver',
             'estimasi_harga',
-            'jabatan_receiver'
+            'harga_akhir',
+            'bukti'
         ];
 
     public function user()

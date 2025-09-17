@@ -141,17 +141,6 @@ class rekomendasiController extends Controller
         return view('print', compact('data'));
     }
 
-    // Tambahkan method edit agar route edit bisa digunakan
-    public function edit($id)
-    {
-        if (!session()->has('loginId')) {
-            return redirect('/login');
-        }
-
-        $data = rekomendasi::findOrFail($id);
-        $departments = department::all();
-        return view('edit_rekomendasi', compact('data', 'departments'));
-    }
 
     public function destroy($id_rek)
     {
