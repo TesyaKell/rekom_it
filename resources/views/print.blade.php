@@ -79,10 +79,7 @@
                             <td class="ps-3" style="width: 170px;">No. PR</th>
                             <td class="ps-3">{{ $data->no_spb }}</td>
                         </tr>
-                        <tr>
-                            <td class="ps-3" style="width: 170px;">Jenis Unit</td>
-                            <td class="ps-3">{{ $data->jenis_unit }}</td>
-                        </tr>
+
                         <tr>
                             <td class="ps-3" style="width: 170px;">Nama Pengaju</td>
                             <td class="ps-3">{{ $data->nama_rek }}</td>
@@ -95,25 +92,22 @@
                             <td class="ps-3" style="width: 170px;">Tanggal Pengajuan</td>
                             <td class="ps-3">{{ $data->tgl_masuk }}</td>
                         </tr>
-                        {{-- <tr>
-                            <th class="ps-3">Status</th>
-                            <td class="ps-3">
-                                @if ($data->status == 'menunggu verifikasi Kabag')
-                                    <span class="badge text-light p-1"
-                                        style="background-color: rgb(249, 137, 0);">Menunggu
-                                        Kabag</span>
-                                @elseif($data->status == 'menunggu verifikasi Tim IT')
-                                    <span class="badge bg-orange text-light p-1"
-                                        style="background-color: rgb(41, 63, 230);">Menunggu Tim IT</span>
-                                @elseif($data->status == 'Ditolak')
-                                    <span class="badge bg-danger p-1">Ditolak</span>
-                                @elseif($data->status == 'Diterima')
-                                    <span class="badge bg-success p-1">Diterima</span>
-                                @else
-                                    <span class="badge bg-secondary">{{ $data->status }}</span>
-                                @endif
-                            </td>
-                        </tr> --}}
+                        <tr>
+                            <td class="ps-3" style="width: 170px;">Jenis Unit</td>
+                            <td class="ps-3">{{ $data->jenis_unit }}</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-3" style="width: 170px;">Keterangan</td>
+                            <td class="ps-3">{{ $data->alasan_rek }}</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-3" style="width: 170px;">Rekomendasi</td>
+                            <td class="ps-3">{{ $data->ket_unit }}</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-3" style="width: 170px;">Harga Estimasi</td>
+                            <td class="ps-3">Rp. {{ $data->estimasi_harga }}</td>
+                        </tr>
                     @else
                         <tr>
                             <td colspan="8" class="text-center">Data tidak ditemukan.</td>
@@ -122,6 +116,49 @@
                 </tbody>
 
             </table>
+
+            <table class="table table-bordered table-sm align-middle me-5 mt-5 bg-light">
+                <tbody class="table-light">
+                    @if ($data)
+                        <tr class="mt-5">
+                            <td class="ps-3 d-flex justify-content-end me-4">Labuhan Ratu,
+                                {{ \Carbon\Carbon::now()->format('d F Y') }}</td>
+                        </tr>
+                    @else
+                        <tr>
+                            <td colspan="8" class="text-center">Data tidak ditemukan.</td>
+                        </tr>
+                    @endif
+                </tbody>
+            </table>
+
+            <table class="table table-bordered table-sm align-middle me-5 bg-light">
+                <tbody class="table-light">
+                    <tr>
+                        <td class="ps-3" style="width: 400px;">Disetujui,</td>
+                        <td class="ps-3" style="width: 400px;">Diketahui Oleh,</td>
+                        <td class="ps-3">Diminta Oleh,</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table class="table table-bordered table-sm align-middle me-5 bg-light">
+                <tbody class="table-light">
+                    @if ($data)
+                        <tr>
+                            <td class="ps-3" style="width: 400px;">Dept. IT</td>
+                            <td class="ps-3" style="width: 400px;">{{ $data->nama_receiver }}</td>
+                            <td class="ps-3">{{ $data->nama_rek }}</td>
+                        </tr>
+                    @else
+                        <tr>
+                            <td colspan="8" class="text-center">Data tidak ditemukan.</td>
+                        </tr>
+                    @endif
+                </tbody>
+            </table>
+
+
 
         </div>
     </div>

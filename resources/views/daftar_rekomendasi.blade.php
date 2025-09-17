@@ -253,7 +253,7 @@
                                         <label for="tgl_masuk{{ $item->id_rek }}" class="form-label">Tanggal
                                             Pengajuan</label>
                                         <input type="date" class="form-control" id="tgl_masuk{{ $item->id_rek }}"
-                                            name="tgl_masuk" value="{{ $item->tgl_masuk }}" required>
+                                            name="tgl_masuk" value="{{ $item->tgl_masuk }}" disabled>
                                     </div>
                                     <div class="mb-3">
                                         <label for="jabatan_receiver{{ $item->id_rek }}"
@@ -290,4 +290,3 @@
     </body>
 
 </html>
-@endphp
