@@ -23,7 +23,7 @@ class departmentController extends Controller
             $lastNumber = department::withTrashed()
                 ->select('kode_dep')
                 ->get()
-                ->map(fn ($item) => (int) substr($item->kode_dep, 3))
+                ->map(fn($item) => (int) substr($item->kode_dep, 3))
                 ->sortDesc()
                 ->first();
 
@@ -56,7 +56,7 @@ class departmentController extends Controller
                 'kode_dep' => $this->generateDepartmentId(),
                 'nama_dep' => $req->nama_dep,
             ]);
-            return view('department', compact('departments'));
+            return redirect()->route('department.index');
         } catch (\Exception $e) {
             \Log::error("Gagal simpan data : {$e->getMessage()}");
         }
