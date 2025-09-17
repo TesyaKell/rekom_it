@@ -22,6 +22,7 @@ Route::get('/report', [rekomendasiController::class, 'tampilData2'])->name('repo
 Route::delete('/rekomendasi/{id_rek}', [rekomendasiController::class, 'destroy'])->name('rekomendasi.destroy');
 Route::get('/rekomendasi/{id_rek}/edit', [rekomendasiController::class, 'edit'])->name('rekomendasi.edit');
 Route::put('/rekomendasi/{id_rek}', [rekomendasiController::class, 'update'])->name('rekomendasi.update');
+Route::get('search', [rekomendasiController::class, 'searchRekomendasi'])->name('searchRekomendasi');
 
 // // SIGNATURE
 Route::get('/signature', [signatureController::class, 'index'])->name('signature.index');

@@ -140,28 +140,22 @@ class rekomendasiController extends Controller
         return redirect()->route('rekomendasi.index');
     }
 
+    public function searchRekomendasi(Request $id_rek)
+    {
+        $query = $id_rek->input('query');
+
+        $data = rekomendasi::where('nama_rek', 'LIKE', '%' . $query . '%')
+            ->orWhere('jenis_unit', 'LIKE', '%' . $query . '%')
+            ->orWhere('status', 'LIKE', '%' . $query . '%')
+            ->orWhere('nama_receiver', 'LIKE', '%' . $query . '%')
+            ->orWhere('jabatan_receiver', 'LIKE', '%' . $query . '%')
+            ->orWhere('id_rek', 'LIKE', '%' . $query . '%')
+            ->get();
+
+        return view('daftar_rekomendasi', compact('data', 'query'));
+    }
 
 
-
-
-    //     $rekomendasi->update([
-    //         'id_user' => $req->id_user,
-    //         'id_sign' => $req->id_sign,
-    //         'jenis_unit' => $req->jenis_unit,
-    //         'nama_rek' => $req->nama_rek,
-    //         'ket_unit' => $req->ket_unit,
-    //         'alasan_rek' => $req->alasan_rek,
-    //         'tgl_masuk' => $req->tgl_masuk,
-    //         'nama_receiver' => $req->nama_receiver,
-    //         //'tgl_verif' => $req->tgl_verif,
-    //         'masukan' => $req->masukan,
-    //         'stastus' => $req->stastus,
-    //         'estimasi_harga' => $req->estimasi_harga,
-    //         'jabatan_receiver' => $req->jabatan_receiver,
-    //     ]);
-
-    //     return view('edit_rekomendasi', compact('rekomendasi'));
-    // }
 
     // // public function copy_request(Request $req, $id)
     // // {
@@ -174,21 +168,6 @@ class rekomendasiController extends Controller
 
 
 
-
-    // public function search(Request $req)
-    // {
-    //     $query = $req->input('query');
-
-    //     $results = rekomendasi::where('nama_rek', 'LIKE', '%' . $query . '%')
-    //         ->orWhere('jenis_unit', 'LIKE', '%' . $query . '%')
-    //         ->orWhere('stastus', 'LIKE', '%' . $query . '%')
-    //         ->orWhere('nama_receiver', 'LIKE', '%' . $query . '%')
-    //         ->orWhere('nama_dep', 'LIKE', '%' . $query . '%')
-    //         ->orWhere('id_rek', 'LIKE', '%' . $query . '%')
-    //         ->get();
-
-    //     return view('search_results', compact('results', 'query'));
-    // }
 
     // public function laporan(Request $req)
     // {

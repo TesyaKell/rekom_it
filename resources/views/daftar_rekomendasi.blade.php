@@ -79,9 +79,9 @@
         <div class="container-2 w-auto h-100 ms-3 me-3 mt-3 pt-2 pb-2">
             <div class="row">
                 <div class="col-4">
-                    <form class="d-flex justify-content-start">
+                    <form class="d-flex justify-content-start" action="{{ route('searchRekomendasi') }}" method="GET">
                         <input class="form-control w-50 me-2 ms-2 mt-2 mb-2" type="search" placeholder="Search"
-                            aria-label="Search">
+                            name="query" aria-label="Search ">
                         <button class="btn btn-outline-success w-15 h-25 mt-2" type="submit">Search</button>
                     </form>
                 </div>
