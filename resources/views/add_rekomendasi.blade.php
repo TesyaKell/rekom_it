@@ -60,8 +60,8 @@
                             @csrf
                             <div class="form-group">
                                 <label for="exampleFormControlInput1" class="mb-1">No. Rekomendasi</label>
-                                <input readonly type="number" class="form-control" id="exampleFormControlInput1"
-                                    name="id_rekom">
+                                <input type="text" readonly class="form-control-plaintext border px-2 text-center"
+                                    id="norekom" value="{{ $lastId + 1 }}">
                             </div>
                             <div class="form-group mt-2">
                                 <label for="exampleFormControlInput1" class="mb-1">No. PR</label>

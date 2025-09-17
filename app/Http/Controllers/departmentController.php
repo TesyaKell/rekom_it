@@ -56,7 +56,7 @@ class departmentController extends Controller
                 'kode_dep' => $this->generateDepartmentId(),
                 'nama_dep' => $req->nama_dep,
             ]);
-            return view('department', compact('departments'));
+            return redirect()->route('department.index');
         } catch (\Exception $e) {
             \Log::error("Gagal simpan data : {$e->getMessage()}");
         }
