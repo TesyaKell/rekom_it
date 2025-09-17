@@ -14,6 +14,7 @@ class rekomendasi extends Model
             'id_rek',
             'id_user',
             'id_sign',
+            'no_spb',
             'nama_rek',
             'jenis_unit',
             'ket_unit',

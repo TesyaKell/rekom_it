@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\department;
 use Auth;
 use Illuminate\Http\Request;
 use App\Models\rekomendasi;
@@ -9,6 +10,20 @@ use Illuminate\Support\Facades\DB;
 
 class rekomendasiController extends Controller
 {
+    public function index()
+    {
+        if (!session()->has('loginId')) {
+            return redirect('/login');
+        }
+
+        $user = DB::table('users')->where('id_user', session('loginId'))->first();
+
+        $rekomendasi = rekomendasi::where('id_user', $user->id_user)->get();
+        $departments = \DB::table('department')->get();
+        $lastId = $rekomendasi->max('id_rek');
+
+        return view('add_rekomendasi', compact('user', 'departments', 'lastId'));
+    }
     public function create(Request $req)
     {
         if (!session()->has('loginId')) {
@@ -17,18 +32,17 @@ class rekomendasiController extends Controller
 
         $user = DB::table('users')->where('id_user', session('loginId'))->first();
         $departments = \DB::table('department')->get();
+        $lastId = rekomendasi::max('id_rek'); // ambil id terakhir langsung dari tabel
 
         try {
-
             $req->validate([
                 'no_spb' => 'required|numeric',
                 'nama_rek' => 'required|string|max:255',
                 'jenis_unit' => 'required|string|max:255',
                 'ket_unit' => 'required|string|max:255',
-                'tgl_masuk' => 'required|date|max:255',
+                'tgl_masuk' => 'required|date',
                 'estimasi_harga' => 'required|numeric',
                 'jabatan_receiver' => 'required|string|max:255',
-
             ]);
 
             rekomendasi::create([
@@ -38,16 +52,18 @@ class rekomendasiController extends Controller
                 'no_spb' => $req->no_spb,
                 'ket_unit' => $req->ket_unit,
                 'tgl_masuk' => $req->tgl_masuk,
-                'stastus' => 'diproses',
+                'status' => 'menunggu verifikasi Kabag',
                 'jabatan_receiver' => $req->jabatan_receiver,
                 'estimasi_harga' => $req->estimasi_harga,
-
             ]);
 
-            return view('add_rekomendasi', compact('departments'));
+            return redirect()->route('departments.index');
+
         } catch (\Exception $e) {
             \Log::error("Gagal simpan data : {$e->getMessage()}");
-            return view('add_rekomendasi', compact('departments'))->with('error', 'Gagal simpan data!');
+
+            return view('add_rekomendasi', compact('departments', 'lastId'))
+                ->with('error', 'Gagal simpan data!');
         }
     }
 
@@ -58,7 +74,8 @@ class rekomendasiController extends Controller
         }
 
         $data = rekomendasi::all();
-        return view('daftar_rekomendasi', compact('data'));
+        $departments = department::all();
+        return view('daftar_rekomendasi', compact('data', 'departments'));
     }
 
 

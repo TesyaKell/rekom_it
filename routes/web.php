@@ -3,6 +3,7 @@
 use App\Http\Controllers\signatureController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\departmentController;
+use App\Http\Controllers\rekomendasiController;
 
 Route::get('/login', function () {
     return view('login');
@@ -14,25 +15,17 @@ Route::get('/home', function () {
 
 
 //REKOMENDASI
-Route::get('/daftar_rekomendasi', function () {
-    return view('daftar_rekomendasi', );
-});
-Route::get('/add_rekomendasi', function () {
-    return view('add_rekomendasi');
-});
-
-Route::post('/add_rekomendasi', [App\Http\Controllers\rekomendasiController::class, 'create']);
-Route::get('/add_rekomendasi', [App\Http\Controllers\rekomendasiController::class, 'create']);
-Route::get('/daftar_rekomendasi', [App\Http\Controllers\rekomendasiController::class, 'tampilData']);
-
-Route::get('/report', [App\Http\Controllers\rekomendasiController::class, 'tampilData2'])->name('report');
+Route::post('/add_rekomendasi', [rekomendasiController::class, 'create'])->name('rekomendasi.create');
+Route::get('/add_rekomendasi', [rekomendasiController::class, 'index'])->name('rekomendasi.index');
+Route::get('/daftar_rekomendasi', [rekomendasiController::class, 'tampilData']);
+Route::get('/report', [rekomendasiController::class, 'tampilData2'])->name('report');
 
 // SIGNATURE
 Route::get('/signature', [signatureController::class, 'index'])->name('signature.index');
 Route::post('/signature', [signatureController::class, 'create'])->name('signature.create');
-Route::delete('/signature/{id}', [SignatureController::class, 'destroy'])->name('signature.destroy');
-Route::get('/signature/{id}/edit', [SignatureController::class, 'edit'])->name('signature.edit');
-Route::put('/signature/{id}', [SignatureController::class, 'update'])->name('signature.update');
+Route::delete('/signature/{id}', [signatureController::class, 'destroy'])->name('signature.destroy');
+Route::get('/signature/{id}/edit', [signatureController::class, 'edit'])->name('signature.edit');
+Route::put('/signature/{id}', [signatureController::class, 'update'])->name('signature.update');
 
 // departmentController
 Route::get('/department', [departmentController::class, 'index'])->name('department.index');

@@ -133,8 +133,9 @@
                             <td class="ps-2">{{ $item->no_spb }}</td>
                             <td class="ps-2">{{ $item->jenis_unit }}</td>
                             <td class="ps-2">{{ $item->nama_rek }}</td>
-                            <td class="ps-2">{{ $item->jabatan }}</td>
+                            <td class="ps-2">{{ $item->jabatan_receiver }}</td>
                             <td class="ps-2">{{ $item->tgl_masuk }}</td>
+                            {{ $item->stastus }}
                             <td class="ps-2">
                                 @if ($item->status == 'menunggu verifikasi Kabag')
                                     <span class="badge text-light p-1"
