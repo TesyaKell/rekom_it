@@ -157,18 +157,20 @@
                             <td>
                                 <div class="dropdown d-flex justify-content-center align-items-center">
                                     <button class="btn btn-light border p-0" type="button"
-                                        id="dropdownMenuButton{{ $item->id_sign }}" data-bs-toggle="dropdown"
+                                        id="dropdownMenuButton{{ $item->id_rek }}" data-bs-toggle="dropdown"
                                         aria-expanded="false">
                                         <span class="fw-bold fs-4 d-flex justify-content-center align-items-center"
                                             style="height: 100%;">⋮</span>
                                     </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $item->id_sign }}">
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $item->id_rek }}">
                                         <li>
-                                            <a class="dropdown-item"
-                                                href="{{ url("item/{$item->id_sign}/edit") }}">Edit</a>
+                                            <button class="dropdown-item" data-bs-toggle="modal"
+                                                data-bs-target="#editModal{{ $item->id_rek }}">
+                                                Edit
+                                            </button>
                                         </li>
                                         <li>
-                                            <form action="{{ url("item/{$item->id_sign}") }}" method="POST"
+                                            <form action="{{ url("rekomendasi/{$item->id_rek}") }}" method="POST"
                                                 onsubmit="return confirm('Are you sure you want to delete this item?')"
                                                 style="display:inline;">
                                                 @csrf

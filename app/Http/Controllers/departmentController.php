@@ -42,22 +42,26 @@ class departmentController extends Controller
         if (!session()->has('loginId')) {
             return redirect('/login');
         }
-        $departments = department::all();
+
         $user = DB::table('users')->where('id_user', session('loginId'))->first();
+
         try {
 
-            $req->validate(
-                [
-                    'nama_dep' => 'required|string|max:255',
-                ]
-            );
+
+            $req->validate([
+                'kode_dep' => 'required|string|max:255|unique:department',
+                'nama_dep' => 'required|string|max:255',
+            ]);
 
             department::create([
-                'kode_dep' => $this->generateDepartmentId(),
+                'kode_dep' => $req->kode_dep,
                 'nama_dep' => $req->nama_dep,
             ]);
+
+            \Log::info("Data department: ", $req->all());
             return redirect()->route('department.index');
         } catch (\Exception $e) {
+            \Log::info("Data department: ", $req->all());
             \Log::error("Gagal simpan data : {$e->getMessage()}");
         }
 

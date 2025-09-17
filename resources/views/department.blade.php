@@ -91,20 +91,27 @@
                 </div>
             </div>
         </div>
+
         <form method="POST" action="/department">
             @csrf
             <div class="container tight-rows table-grid mt-3 ms-3">
                 <div class="row g-0 w-50">
+
                     <div class="col-4 d-flex justify-content-start p-3 fw-bold">
                         Nomor Department
                     </div>
                     <div class="col-8">
                         @php
                             $lastDep = $departments->last();
-                            $lastNum = (int) substr($lastDep->kode_dep, 3);
-                            $newId = 'DEP' . str_pad($lastNum + 1, 3, '0', STR_PAD_LEFT);
+                            if ($lastDep) {
+                                $lastNum = (int) substr($lastDep->kode_dep, 3);
+                                $newId = 'DEP' . str_pad($lastNum + 1, 3, '0', STR_PAD_LEFT);
+                            } else {
+                                $newId = 'DEP001';
+                            }
                         @endphp
                         {{ $newId }}
+                        <input type="hidden" name="kode_dep" value="{{ $newId }}">
 
                     </div>
                 </div>

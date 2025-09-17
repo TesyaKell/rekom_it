@@ -19,8 +19,11 @@ Route::post('/add_rekomendasi', [rekomendasiController::class, 'create'])->name(
 Route::get('/add_rekomendasi', [rekomendasiController::class, 'index'])->name('rekomendasi.index');
 Route::get('/daftar_rekomendasi', [rekomendasiController::class, 'tampilData']);
 Route::get('/report', [rekomendasiController::class, 'tampilData2'])->name('report');
+Route::delete('/rekomendasi/{id_rek}', [rekomendasiController::class, 'destroy'])->name('rekomendasi.destroy');
+Route::get('/rekomendasi/{id_rek}/edit', [rekomendasiController::class, 'edit'])->name('rekomendasi.edit');
+Route::put('/rekomendasi/{id_rek}', [rekomendasiController::class, 'update'])->name('rekomendasi.update');
 
-// SIGNATURE
+// // SIGNATURE
 Route::get('/signature', [signatureController::class, 'index'])->name('signature.index');
 Route::post('/signature', [signatureController::class, 'create'])->name('signature.create');
 Route::delete('/signature/{id}', [signatureController::class, 'destroy'])->name('signature.destroy');

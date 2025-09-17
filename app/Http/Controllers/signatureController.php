@@ -11,20 +11,16 @@ class signatureController extends Controller
 {
     public function index()
     {
-        if (!session()->has('loginId')) {
-            return redirect('/login');
+        $username = session('username');
+        $user = DB::table('login')->where('username', $username)->first();
+        if ($user) {
+            $signatures = signature::all();
+            $lastId = signature::max('id_sign');
+            return view('signature', compact('signatures', 'lastId'));
+        } else {
+            return view('home');
         }
-
-        $user = DB::table('users')->where('id_user', session('loginId'))->first();
-
-        $signatures = Signature::where('id_user', $user->id_user)->get();
-
-        $lastId = Signature::max('id_sign'); // cari id terbesar
-        return view('signature', compact('signatures', 'lastId'));
-
     }
-
-
 
     public function create(Request $request)
     {
@@ -41,12 +37,11 @@ class signatureController extends Controller
             ]);
 
             Signature::create([
-                'id_user' => $user->id_user,
                 'nama_approval' => $request->nama_approval,
                 'jabatan' => $request->jabatan,
             ]);
 
-            Log::info("Berhasil simpan data");
+
             Log::info("Data signature: ", $request->all());
             return redirect()->route('signature.index');
 
