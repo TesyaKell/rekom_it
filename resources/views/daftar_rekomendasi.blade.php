@@ -1,3 +1,11 @@
+@extends('layouts.app')
+
+@section('title', 'Daftar Rekomendasi')
+
+@php
+    $pageTitle = 'Daftar Rekomendasi';
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -113,7 +121,7 @@
 
 
         <div class="container mt-4">
-            <table class="table table-bordered table-sm align-middle m-3">
+            <table class="table table-sm align-middle m-3">
                 <thead class="table-light">
                     <tr>
                         <th class="ps-2">No. Rek</th>
@@ -135,7 +143,6 @@
                             <td class="ps-2">{{ $item->nama_rek }}</td>
                             <td class="ps-2">{{ $item->jabatan_receiver }}</td>
                             <td class="ps-2">{{ $item->tgl_masuk }}</td>
-                            {{ $item->stastus }}
                             <td class="ps-2">
                                 @if ($item->status == 'menunggu verifikasi Kabag')
                                     <span class="badge text-light p-1"
@@ -157,18 +164,22 @@
                             <td>
                                 <div class="dropdown d-flex justify-content-center align-items-center">
                                     <button class="btn btn-light border p-0" type="button"
-                                        id="dropdownMenuButton{{ $item->id_sign }}" data-bs-toggle="dropdown"
+                                        id="dropdownMenuButton{{ $item->id_rek }}" data-bs-toggle="dropdown"
                                         aria-expanded="false">
                                         <span class="fw-bold fs-4 d-flex justify-content-center align-items-center"
                                             style="height: 100%;">⋮</span>
                                     </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $item->id_sign }}">
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $item->id_rek }}">
                                         <li>
                                             <a class="dropdown-item"
-                                                href="{{ url("item/{$item->id_sign}/edit") }}">Edit</a>
+                                                href="{{ url('/print/' . $item->id_rek) }}">Print</a>
                                         </li>
                                         <li>
-                                            <form action="{{ url("item/{$item->id_sign}") }}" method="POST"
+                                            <a class="dropdown-item"
+                                                href="{{ url("item/{$item->id_rek}/edit") }}">Edit</a>
+                                        </li>
+                                        <li>
+                                            <form action="{{ url("item/{$item->id_rek}") }}" method="POST"
                                                 onsubmit="return confirm('Are you sure you want to delete this item?')"
                                                 style="display:inline;">
                                                 @csrf
@@ -176,6 +187,8 @@
                                                 <button type="submit" class="dropdown-item text-danger">Hapus</button>
                                             </form>
                                         </li>
+
+
                                     </ul>
                                 </div>
                             </td>
@@ -189,18 +202,10 @@
             </table>
         </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" <script
-            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
         </script>
     </body>
 
 </html>
-
-@extends('layouts.app')
-
-@section('title', 'Daftar Rekomendasi')
-
-@php
-    $pageTitle = 'Daftar Rekomendasi';
 @endphp

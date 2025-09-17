@@ -9,6 +9,7 @@ class rekomendasi extends Model
 {
     public $timestamps = false;
     protected $table = 'rekomendasi';
+    protected $primaryKey = 'id_rek';
     protected $fillable =
         [
             'id_rek',
@@ -23,7 +24,7 @@ class rekomendasi extends Model
             'nama_receiver',
             'tgl_verif',
             'masukan',
-            'stastus' ,
+            'status',
             'estimasi_harga',
             'jabatan_receiver'
         ];

@@ -21,8 +21,9 @@ class rekomendasiController extends Controller
         $rekomendasi = rekomendasi::where('id_user', $user->id_user)->get();
         $departments = \DB::table('department')->get();
         $lastId = $rekomendasi->max('id_rek');
+        $data = $rekomendasi;
 
-        return view('add_rekomendasi', compact('user', 'departments', 'lastId'));
+        return view('add_rekomendasi', compact('user', 'departments', 'lastId', 'data'));
     }
     public function create(Request $req)
     {
@@ -103,6 +104,29 @@ class rekomendasiController extends Controller
         $jabatanList = rekomendasi::select('jabatan_receiver')->distinct()->pluck('jabatan_receiver');
 
         return view('report', compact('data', 'jabatanList'));
+    }
+
+    public function print($id)
+    {
+        if (!session()->has('loginId')) {
+            return redirect('/login');
+        }
+
+        $data = rekomendasi::findOrFail($id);
+        // Pastikan variabel yang dikirim ke view adalah 'item'
+        return view('print', compact('data'));
+    }
+
+    // Tambahkan method edit agar route edit bisa digunakan
+    public function edit($id)
+    {
+        if (!session()->has('loginId')) {
+            return redirect('/login');
+        }
+
+        $data = rekomendasi::findOrFail($id);
+        $departments = department::all();
+        return view('edit_rekomendasi', compact('data', 'departments'));
     }
 
     // public function update(Request $req, $id)
@@ -229,4 +253,6 @@ class rekomendasiController extends Controller
     // {
     //     return view('view_rekomendasi');
     // }
+
+
 }

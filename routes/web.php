@@ -13,12 +13,18 @@ Route::get('/home', function () {
     return view('home');
 });
 
-
+//Route::get('/print-rekomendasi', [rekomendasiController::class, 'index'])->name('rekomendasi.index');
 //REKOMENDASI
 Route::post('/add_rekomendasi', [rekomendasiController::class, 'create'])->name('rekomendasi.create');
 Route::get('/add_rekomendasi', [rekomendasiController::class, 'index'])->name('rekomendasi.index');
 Route::get('/daftar_rekomendasi', [rekomendasiController::class, 'tampilData']);
 Route::get('/report', [rekomendasiController::class, 'tampilData2'])->name('report');
+Route::get('/print/{id}', [rekomendasiController::class, 'print'])->name('rekomendasi.print');
+
+// Tambahkan route edit dan delete untuk rekomendasi
+Route::get('/item/{id}/edit', [rekomendasiController::class, 'edit'])->name('rekomendasi.edit');
+Route::delete('/item/{id}', [rekomendasiController::class, 'delete'])->name('rekomendasi.delete');
+
 
 // SIGNATURE
 Route::get('/signature', [signatureController::class, 'index'])->name('signature.index');
