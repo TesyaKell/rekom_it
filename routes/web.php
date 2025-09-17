@@ -24,10 +24,6 @@ Route::get('/rekomendasi/{id_rek}/edit', [rekomendasiController::class, 'edit'])
 Route::put('/rekomendasi/{id_rek}', [rekomendasiController::class, 'update'])->name('rekomendasi.update');
 Route::get('/print/{id}', [rekomendasiController::class, 'print'])->name('rekomendasi.print');
 
-// Tambahkan route edit dan delete untuk rekomendasi
-Route::get('/item/{id}/edit', [rekomendasiController::class, 'edit'])->name('rekomendasi.edit');
-Route::delete('/item/{id}', [rekomendasiController::class, 'delete'])->name('rekomendasi.delete');
-
 
 // // SIGNATURE
 Route::get('/signature', [signatureController::class, 'index'])->name('signature.index');
