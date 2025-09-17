@@ -185,46 +185,48 @@
     </div>
 
     <!-- Modal Edit signature -->
-    <div class="modal fade" id="editModal{{ $signature->id_sign }}" tabindex="-1"
-        aria-labelledby="editModalLabel{{ $signature->id_sign }}" aria-hidden="true">
-        <div class="modal-dialog">
-            <form method="POST" action="{{ route('signature.update', $signature->id_sign) }}">
-                @csrf
-                @method('PUT')
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editModalLabel{{ $signature->id_sign }}">Edit Signature</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-
-                        <div class="mb-3">
-                            <label class="form-label">No. signature</label>
-                            <input type="text" class="form-control" value="{{ $signature->id_sign }}" disabled>
+    @foreach ($signatures as $signature)
+        <div class="modal fade" id="editModal{{ $signature->id_sign }}" tabindex="-1"
+            aria-labelledby="editModalLabel{{ $signature->id_sign }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <form method="POST" action="{{ route('signature.update', $signature->id_sign) }}">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editModalLabel{{ $signature->id_sign }}">Edit Signature</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
                         </div>
+                        <div class="modal-body">
 
-                        <div class="mb-3">
-                            <label class="form-label">Nama signature</label>
-                            <input type="text" class="form-control" name="nama_approval"
-                                value="{{ $signature->nama_approval }}" required>
+                            <div class="mb-3">
+                                <label class="form-label">No. signature</label>
+                                <input type="text" class="form-control" value="{{ $signature->id_sign }}" disabled>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Nama signature</label>
+                                <input type="text" class="form-control" name="nama_approval"
+                                    value="{{ $signature->nama_approval }}" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Jabatan</label>
+                                <input type="text" class="form-control" name="jabatan"
+                                    value="{{ $signature->jabatan }}" required>
+                            </div>
+
                         </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Jabatan</label>
-                            <input type="text" class="form-control" name="jabatan"
-                                value="{{ $signature->jabatan }}" required>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                         </div>
-
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
-    </div>
-
+    @endforeach
 
     <script>
         // Tangkap klik tombol Edit

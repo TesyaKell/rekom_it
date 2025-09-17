@@ -5,20 +5,27 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Log;
 
 class userController extends Controller
 {
     public function login(Request $request)
     {
-        $user = User::where('username', $request->username)->first();
-
-
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return back()->withErrors(['username' => 'Invalid credentials'])->withInput();
+        // Cek tabel login
+        $login = \DB::table('login')->where('username', $request->username)->where('password', $request->password)->first();
+        if ($login) {
+            session(['username' => $login->username]);
+            return redirect('/signature')->with('success', 'Login signature successful');
         }
-        session(['loginId' => $user->id_user]);
-        // Login sukses, bisa set session atau redirect ke dashboard
-        return redirect('/home')->with('success', 'Login successful');
+
+        // Cek tabel user
+        $user = User::where('username', $request->username)->first();
+        if ($user && \Hash::check($request->password, $user->password)) {
+            session(['loginId' => $user->id_user]);
+            return redirect('/home')->with('success', 'Login successful');
+        }
+
+        return back()->withErrors(['username' => 'Invalid credentials'])->withInput();
     }
 
     // public function register(Request $request)

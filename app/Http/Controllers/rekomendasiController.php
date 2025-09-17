@@ -37,7 +37,7 @@ class rekomendasiController extends Controller
 
         try {
             $req->validate([
-                'no_spb' => 'required|numeric',
+                'no_spb' => 'nullable|numeric',
                 'nama_rek' => 'required|string|max:255',
                 'jenis_unit' => 'required|string|max:255',
                 'ket_unit' => 'required|string|max:255',
@@ -58,7 +58,7 @@ class rekomendasiController extends Controller
                 'estimasi_harga' => $req->estimasi_harga,
             ]);
 
-            return redirect()->route('departments.index');
+            return redirect()->route('rekomendasi.index');
 
         } catch (\Exception $e) {
             \Log::error("Gagal simpan data : {$e->getMessage()}");
@@ -78,7 +78,31 @@ class rekomendasiController extends Controller
         $departments = department::all();
         return view('daftar_rekomendasi', compact('data', 'departments'));
     }
+    public function edit($id)
+    {
+        $rekomendasi = rekomendasi::findOrFail($id);
+        return view('rekomendasi_edit', compact('rekomendasi'));
+    }
 
+    public function update(Request $req, $id_rek)
+    {
+        $req->validate([
+            'no_spb' => 'nullable|numeric',
+            'nama_rek' => 'required|string|max:255',
+            'jenis_unit' => 'required|string|max:255',
+            'ket_unit' => 'required|string|max:255',
+            'tgl_masuk' => 'required|date',
+            'estimasi_harga' => 'required|numeric',
+            'jabatan_receiver' => 'required|string|max:255',
+        ]);
+
+        $rekomendasi = rekomendasi::find($id_rek);
+        if ($rekomendasi) {
+            $rekomendasi->update($req->all());
+        }
+
+        return redirect()->route('rekomendasi.index');
+    }
 
     public function tampilData2(Request $request)
     {
@@ -129,26 +153,20 @@ class rekomendasiController extends Controller
         return view('edit_rekomendasi', compact('data', 'departments'));
     }
 
-    // public function update(Request $req, $id)
-    // {
-    //     $rekomendasi = rekomendasi::find($id);
+    public function destroy($id_rek)
+    {
+        $rekomendasi = rekomendasi::where('id_rek', $id_rek)->first();
+        if ($rekomendasi) {
+            $data = $rekomendasi->toArray();
+            DB::table('deleted')->insert($data);
+            $rekomendasi->delete();
+        }
+        return redirect()->route('rekomendasi.index');
+    }
 
-    //     $req->validate([
-    //         'id_user' => 'required|string|max:255',
-    //         'id_sign' => 'required|string|max:255',
-    //         'jenis_unit' => 'required|string|max:255',
-    //         'nama_rek' => 'required|string|max:255',
-    //         'ket_unit' => 'required|string|max:255',
-    //         'alasan_rek	' => 'required|string|max:255',
-    //         'tgl_masuk' => 'required|date|max:255',
-    //         'nama_receiver' => 'required|string|max:255',
-    //         //'tgl_verif' => 'required|date|max:255',
-    //         'masukan' => 'required|string|max:255',
-    //         'stastus' => 'required|string|max:255',
-    //         'estimasi_harga' => 'required|numeric|max:255',
-    //         'jabatan_receiver' => 'required|string|max:255',
 
-    //     ]);
+
+
 
     //     $rekomendasi->update([
     //         'id_user' => $req->id_user,
@@ -178,17 +196,7 @@ class rekomendasiController extends Controller
     // //     return view('copy_rekomendasi', compact('baru'));
     // // }
 
-    // public function delete($id)
-    // {
-    //     $rekomendasi = rekomendasi::find($id);
 
-    //     // Simpan data ke tabel deleted
-    //     \DB::insert('INSERT INTO deleted SELECT * FROM rekomendasi WHERE id_rek = ?', [$id]);
-
-    //     rekomendasi::find($id)->delete();
-
-    //     return redirect()->route('rekomendasi.index');
-    // }
 
 
     // public function search(Request $req)

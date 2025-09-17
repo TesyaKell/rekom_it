@@ -9,7 +9,7 @@ class rekomendasi extends Model
 {
     public $timestamps = false;
     protected $table = 'rekomendasi';
-    protected $primaryKey = 'id_rek';
+    public $primaryKey = 'id_rek';
     protected $fillable =
         [
             'id_rek',
