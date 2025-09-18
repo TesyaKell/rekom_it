@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\department;
+use App\Models\signature;
 use Auth;
 use Illuminate\Http\Request;
 use App\Models\rekomendasi;
@@ -104,30 +105,27 @@ class rekomendasiController extends Controller
         return redirect()->route('rekomendasi.index');
     }
 
-    public function tampilData2(Request $request)
+    public function laporan(Request $req)
     {
-        if (!session()->has('loginId')) {
-            return redirect('/login');
+        $results = collect();
+        $departmentList = collect();
+
+        try {
+            $results = rekomendasi::query()
+                ->when($req->filled('noRek') && $req->filled('noRek2'), fn($q) =>
+                    $q->whereBetween('id_rek', [$req->noRek, $req->noRek2]))
+                ->when($req->filled('tgl_awal') && $req->filled('tgl_akhir'), fn($q) =>
+                    $q->whereBetween('tgl_masuk', [$req->tgl_awal, $req->tgl_akhir]))
+                ->when($req->filled('department'), fn($q) =>
+                    $q->whereRaw('LOWER(jabatan_receiver) = ?', [strtolower($req->department)]))
+                ->get();
+
+            $departmentList = rekomendasi::select('jabatan_receiver')->distinct()->pluck('jabatan_receiver');
+
+        } catch (\Exception $e) {
+            \Log::error("Gagal menampilkan data : {$e->getMessage()}");
         }
-
-        $query = rekomendasi::query();
-
-        // Filter tanggal masuk
-        if ($request->filled('tgl_awal') && $request->filled('tgl_akhir')) {
-            $query->whereBetween('tgl_masuk', [$request->tgl_awal, $request->tgl_akhir]);
-        }
-
-        // Filter jabatan
-        if ($request->filled('jabatan_receiver')) {
-            $query->where('jabatan_receiver', $request->jabatan_receiver);
-        }
-
-        $data = $query->get();
-
-        // Ambil daftar jabatan unik dari tabel rekomendasi
-        $jabatanList = rekomendasi::select('jabatan_receiver')->distinct()->pluck('jabatan_receiver');
-
-        return view('report', compact('data', 'jabatanList'));
+        return view('report', compact('results', 'departmentList'));
     }
 
     public function print($id)
@@ -153,28 +151,23 @@ class rekomendasiController extends Controller
         return redirect()->route('rekomendasi.index');
     }
 
+    public function searchRekomendasi(Request $id_rek)
+    {
+        $query = $id_rek->input('query');
+
+        $data = rekomendasi::where('nama_rek', 'LIKE', '%' . $query . '%')
+            ->orWhere('jenis_unit', 'LIKE', '%' . $query . '%')
+            ->orWhere('status', 'LIKE', '%' . $query . '%')
+            ->orWhere('nama_receiver', 'LIKE', '%' . $query . '%')
+            ->orWhere('jabatan_receiver', 'LIKE', '%' . $query . '%')
+            ->orWhere('id_rek', 'LIKE', '%' . $query . '%')
+            ->get();
+
+        return view('daftar_rekomendasi', compact('data', 'query'));
+    }
 
 
 
-
-    //     $rekomendasi->update([
-    //         'id_user' => $req->id_user,
-    //         'id_sign' => $req->id_sign,
-    //         'jenis_unit' => $req->jenis_unit,
-    //         'nama_rek' => $req->nama_rek,
-    //         'ket_unit' => $req->ket_unit,
-    //         'alasan_rek' => $req->alasan_rek,
-    //         'tgl_masuk' => $req->tgl_masuk,
-    //         'nama_receiver' => $req->nama_receiver,
-    //         //'tgl_verif' => $req->tgl_verif,
-    //         'masukan' => $req->masukan,
-    //         'stastus' => $req->stastus,
-    //         'estimasi_harga' => $req->estimasi_harga,
-    //         'jabatan_receiver' => $req->jabatan_receiver,
-    //     ]);
-
-    //     return view('edit_rekomendasi', compact('rekomendasi'));
-    // }
 
     // // public function copy_request(Request $req, $id)
     // // {
@@ -188,63 +181,7 @@ class rekomendasiController extends Controller
 
 
 
-    // public function search(Request $req)
-    // {
-    //     $query = $req->input('query');
-
-    //     $results = rekomendasi::where('nama_rek', 'LIKE', '%' . $query . '%')
-    //         ->orWhere('jenis_unit', 'LIKE', '%' . $query . '%')
-    //         ->orWhere('stastus', 'LIKE', '%' . $query . '%')
-    //         ->orWhere('nama_receiver', 'LIKE', '%' . $query . '%')
-    //         ->orWhere('nama_dep', 'LIKE', '%' . $query . '%')
-    //         ->orWhere('id_rek', 'LIKE', '%' . $query . '%')
-    //         ->get();
-
-    //     return view('search_results', compact('results', 'query'));
-    // }
-
-    // public function laporan(Request $req)
-    // {
-    //     $data = rekomendasi::query();
-
-    //     if ($req->filled('no_awal') && $req->filled('no_akhir')) {
-    //         if ($req->no_awal > $req->no_akhir) {
-    //             return redirect('laporan_rekomendasi')->with('error', 'No SPB Awal tidak boleh lebih besar dari No SPB Akhir');
-    //         }
-    //         $data->whereBetween('no_spb', [$req->no_awal, $req->no_akhir]);
-    //     }
-
-    //     if ($req->filled('tgl_awal') && $req->filled('tgl_akhir')) {
-    //         if ($req->tgl_awal > $req->tgl_akhir) {
-    //             return redirect('laporan_rekomendasi')->with('error', 'Tanggal Awal tidak boleh lebih besar dari Tanggal Akhir');
-    //         }
-    //         $data->whereBetween('tgl_masuk', [$req->tgl_awal, $req->tgl_akhir]);
-    //     }
-
-    //     if ($req->filled('status')) {
-    //         $data->where('stastus', $req->status);
-    //     }
-
-    //     if ($req->filled('jenis')) {
-    //         $data->where('jenis_unit', $req->jenis);
-    //     }
-
-    //     if ($req->filled('dep')) {
-    //         if ($req->dep == 'All') {
-    //             // do nothing, get all
-    //         } else {
-    //             $data->where('nama_dep', $req->dep);
-    //         }
-    //     }
-
-    //     if ($req->filled('departemen')) {
-    //         $data->where('nama_dep', $req->departemen);
-    //     }
-
-    //     $results = $data->get();
-
-    //     return view('laporan_rekomendasi', compact('results'));
-    // }
+    //
 
     // public function view()
     // {
