@@ -15,7 +15,7 @@ class userController extends Controller
         $login = \DB::table('login')->where('username', $request->username)->where('password', $request->password)->first();
         if ($login) {
             session(['username' => $login->username]);
-            return redirect('/signature')->with('success', 'Login signature successful');
+            return redirect('/home')->with('success', 'Login signature successful');
         }
 
         // Cek tabel user
