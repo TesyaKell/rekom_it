@@ -1,0 +1,46 @@
+* [33m7406282[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mgabung[m[33m, [m[1;31morigin/gabung[m[33m)[m laporan filter
+* [33m1758bef[m[33m ([m[1;31morigin/tesya[m[33m)[m search rekom
+* [33m85796e1[m CRUD dep
+* [33m50ed154[m sisa dept dan edit rek
+* [33m62904cf[m coba
+* [33m0af6907[m sign CRUD
+*   [33md31a51b[m Merge branch 'tesya' of https://github.com/TesyaKell/rekom_it into gabung
+[32m|[m[33m\[m  
+[32m|[m * [33m6daf21c[m daftar rekomendasi dan report
+[32m|[m *   [33me5f5cc3[m Merge branch 'gabung' of https://github.com/TesyaKell/rekom_it into tesya
+[32m|[m [34m|[m[35m\[m  
+* [34m|[m [35m|[m [33m49ffa20[m depart
+* [34m|[m [35m|[m [33m5dab5a4[m Merge branch 'tesya' of https://github.com/TesyaKell/rekom_it into gabung
+[35m|[m[34m\[m[34m|[m [35m|[m 
+[35m|[m [34m|[m[35m/[m  
+[35m|[m[35m/[m[34m|[m   
+[35m|[m * [33m1f26bf3[m department dan signature
+[35m|[m *   [33m0ef2f38[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge branch 'ella' of https://github.com/TesyaKell/rekom_it
+[35m|[m [1;32m|[m[1;33m\[m  
+[35m|[m * [1;33m|[m [33m201927c[m depratment
+* [1;33m|[m [1;33m|[m [33m480cc9e[m rek
+* [1;33m|[m [1;33m|[m [33m187701c[m Merge branch 'main' of https://github.com/TesyaKell/rekom_it into gabung
+[1;34m|[m[1;33m\[m[1;33m|[m [1;33m|[m 
+[1;34m|[m * [1;33m|[m [33mcdc80f6[m[33m ([m[1;32mmain[m[33m)[m logout
+[1;34m|[m * [1;33m|[m [33md3ac039[m perbaikan sidebar dan daftar rekomendasi
+[1;34m|[m * [1;33m|[m [33m331faf9[m login
+* [1;35m|[m [1;33m|[m [33m8914151[m integrasi rek
+* [1;35m|[m [1;33m|[m   [33m2ee900c[m Merge branch 'ella' of https://github.com/TesyaKell/rekom_it into gabung
+[1;36m|[m[1;33m\[m [1;35m\[m [1;33m\[m  
+[1;36m|[m [1;33m|[m [1;35m|[m[1;33m/[m  
+[1;36m|[m [1;33m|[m[1;33m/[m[1;35m|[m   
+[1;36m|[m * [1;35m|[m [33m0116991[m Merge branch 'main' of https://github.com/TesyaKell/rekom_it into ella
+[1;36m|[m [32m|[m[1;35m\[m[1;35m|[m 
+[1;36m|[m [32m|[m * [33mb24c5b5[m home, daftar, add rekom
+[1;36m|[m * [33m|[m [33m71ad11d[m integrasi login
+* [33m|[m [33m|[m   [33m031b0a1[m Merge branch 'main' of https://github.com/TesyaKell/rekom_it into gabung
+[33m|[m[33m\[m [33m\[m [33m\[m  
+[33m|[m [33m|[m[33m/[m [33m/[m  
+[33m|[m[33m/[m[33m|[m [33m/[m   
+[33m|[m [33m|[m[33m/[m    
+[33m|[m * [33m5466122[m home humberger
+* [35m|[m [33m729c03e[m login
+* [35m|[m [33mc024627[m create edit delete dept dan sign
+[35m|[m[35m/[m  
+* [33md870b79[m login
+* [33m7112149[m first commit
