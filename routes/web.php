@@ -13,7 +13,7 @@ Route::get('/home', function () {
     return view('home');
 });
 
-
+//Route::get('/print-rekomendasi', [rekomendasiController::class, 'index'])->name('rekomendasi.index');
 //REKOMENDASI
 Route::post('/add_rekomendasi', [rekomendasiController::class, 'create'])->name('rekomendasi.create');
 Route::get('/add_rekomendasi', [rekomendasiController::class, 'index'])->name('rekomendasi.index');
@@ -23,6 +23,8 @@ Route::delete('/rekomendasi/{id_rek}', [rekomendasiController::class, 'destroy']
 Route::get('/rekomendasi/{id_rek}/edit', [rekomendasiController::class, 'edit'])->name('rekomendasi.edit');
 Route::put('/rekomendasi/{id_rek}', [rekomendasiController::class, 'update'])->name('rekomendasi.update');
 Route::get('search', [rekomendasiController::class, 'searchRekomendasi'])->name('searchRekomendasi');
+Route::get('/print/{id}', [rekomendasiController::class, 'print'])->name('rekomendasi.print');
+
 
 // // SIGNATURE
 Route::get('/signature', [signatureController::class, 'index'])->name('signature.index');

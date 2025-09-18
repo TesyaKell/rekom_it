@@ -78,6 +78,11 @@
             border-radius: 0;
             border: #fff;
         }
+
+        .form-label {
+            font-weight: 600;
+            color: #000000cb;
+        }
     </style>
 </head>
 
@@ -187,7 +192,9 @@
                 @method('PUT')
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editDepartmentModalLabel">Edit Nama Department</h5>
+                        <h5 class="modal-title fw-bold" id="editDepartmentModalLabel" style="color: rgb(249, 137, 0);">
+                            Edit Nama
+                            Department</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">

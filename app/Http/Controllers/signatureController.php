@@ -28,7 +28,7 @@ class signatureController extends Controller
             return redirect('/login');
         }
 
-        $user = DB::table('users')->where('id_user', session('loginId'))->first();
+        $user = DB::table(table: 'users')->where('id_user', session('loginId'))->first();
 
         try {
             $request->validate([

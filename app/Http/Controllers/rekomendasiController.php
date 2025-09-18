@@ -22,8 +22,9 @@ class rekomendasiController extends Controller
         $rekomendasi = rekomendasi::where('id_user', $user->id_user)->get();
         $departments = \DB::table('department')->get();
         $lastId = $rekomendasi->max('id_rek');
+        $data = $rekomendasi;
 
-        return view('add_rekomendasi', compact('user', 'departments', 'lastId'));
+        return view('add_rekomendasi', compact('user', 'departments', 'lastId', 'data'));
     }
     public function create(Request $req)
     {
@@ -87,14 +88,14 @@ class rekomendasiController extends Controller
     public function update(Request $req, $id_rek)
     {
         $req->validate([
-                'no_spb' => 'nullable|numeric',
-                'nama_rek' => 'required|string|max:255',
-                'jenis_unit' => 'required|string|max:255',
-                'ket_unit' => 'required|string|max:255',
-                'tgl_masuk' => 'required|date',
-                'estimasi_harga' => 'required|numeric',
-                'jabatan_receiver' => 'required|string|max:255',
-            ]);
+            'no_spb' => 'nullable|numeric',
+            'nama_rek' => 'required|string|max:255',
+            'jenis_unit' => 'required|string|max:255',
+            'ket_unit' => 'required|string|max:255',
+            'tgl_masuk' => 'required|date',
+            'estimasi_harga' => 'required|numeric',
+            'jabatan_receiver' => 'required|string|max:255',
+        ]);
 
         $rekomendasi = rekomendasi::find($id_rek);
         if ($rekomendasi) {
@@ -111,11 +112,11 @@ class rekomendasiController extends Controller
 
         try {
             $results = rekomendasi::query()
-                ->when($req->filled('noRek') && $req->filled('noRek2'), fn ($q) =>
+                ->when($req->filled('noRek') && $req->filled('noRek2'), fn($q) =>
                     $q->whereBetween('id_rek', [$req->noRek, $req->noRek2]))
-                ->when($req->filled('tgl_awal') && $req->filled('tgl_akhir'), fn ($q) =>
+                ->when($req->filled('tgl_awal') && $req->filled('tgl_akhir'), fn($q) =>
                     $q->whereBetween('tgl_masuk', [$req->tgl_awal, $req->tgl_akhir]))
-                ->when($req->filled('department'), fn ($q) =>
+                ->when($req->filled('department'), fn($q) =>
                     $q->whereRaw('LOWER(jabatan_receiver) = ?', [strtolower($req->department)]))
                 ->get();
 
@@ -125,6 +126,17 @@ class rekomendasiController extends Controller
             \Log::error("Gagal menampilkan data : {$e->getMessage()}");
         }
         return view('report', compact('results', 'departmentList'));
+    }
+
+    public function print($id)
+    {
+        if (!session()->has('loginId')) {
+            return redirect('/login');
+        }
+
+        $data = rekomendasi::findOrFail($id);
+        // Pastikan variabel yang dikirim ke view adalah 'item'
+        return view('print', compact('data'));
     }
 
 
@@ -175,4 +187,6 @@ class rekomendasiController extends Controller
     // {
     //     return view('view_rekomendasi');
     // }
+
+
 }

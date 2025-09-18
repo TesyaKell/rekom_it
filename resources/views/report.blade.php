@@ -37,15 +37,22 @@
         p {
             text-align: left;
             font-size: 14px;
-            font-weight: bold;
             color: #e8b200;
+            font-weight: 600;
         }
 
         .container-2 {
             background-color: #ffffff;
             border-radius: 5px;
-            width: 400px;
+            width: 440px;
             height: 350px;
+        }
+
+        .container-5 {
+            background-color: #ffa74844;
+            border-radius: 5px;
+            width: 1150px;
+            height: 50px;
         }
 
         .container-3 {
@@ -109,13 +116,17 @@
                     </div>
 
                     <div class="col-md-12">
-                        <label for="tgl_awal" class="form-label">Periode Tanggal Masuk</label>
-                        <div class="input-group">
-                            <input type="date" class="form-control" name="tgl_awal" id="tgl_awal"
-                                value="{{ request('tgl_awal') }}">
-                            <span class="input-group-text">s/d</span>
-                            <input type="date" class="form-control" name="tgl_akhir" id="tgl_akhir"
-                                value="{{ request('tgl_akhir') }}">
+                        <div class="form-check">
+                            <label for="tgl_awal" class="form-label ms-2">Periode Tanggal Masuk</label>
+                            <div class="input-group">
+                                <input class="form-check-input me-3" type="checkbox" value=""
+                                    id="flexCheckDefault">
+                                <input type="date" class="form-control" name="tgl_awal" id="tgl_awal"
+                                    value="{{ request('tgl_awal') }}">
+                                <span class="input-group-text">s/d</span>
+                                <input type="date" class="form-control" name="tgl_akhir" id="tgl_akhir"
+                                    value="{{ request('tgl_akhir') }}">
+                            </div>
                         </div>
                     </div>
 
@@ -139,19 +150,26 @@
             </form>
         </div>
 
+        <div class="container-5 me-5 ms-5">
+            <p class="p-3 mt-4" style="color: #e68e00">* Hasil Pencarian : {{ $data->count() }} data</p>
+        </div>
+
         <div class="container-3 mt-3 mb-5 me-5 ms-5 p-2">
-            <p class="ps-2 pt-2">* Hasil Pencarian : {{ $results->count() }} data</p>
+
             <table class="table table-bordered table-sm align-middle me-5 mt-3">
                 <thead class="table-light">
                     <tr>
                         <th class="ps-2">No. Rek</th>
                         <th class="ps-2">No. PR</th>
                         <th class="ps-2">Jenis Unit</th>
+                        <th class="ps-2">Keterangan</th>
+                        <th class="ps-2">Alasan</th>
+                        <th class="ps-2">Estimasi Harga</th>
                         <th class="ps-2">Nama Pengaju</th>
                         <th class="ps-2">Jabatan</th>
                         <th class="ps-2">Tanggal Pengajuan</th>
                         <th class="ps-2">Status</th>
-                        <th class="ps-2 text-center">Action</th>
+                        <th class="ps-2">Tangal Realisasi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -160,6 +178,9 @@
                             <td class="ps-2">{{ $item->id_rek }}</td>
                             <td class="ps-2">{{ $item->no_spb }}</td>
                             <td class="ps-2">{{ $item->jenis_unit }}</td>
+                            <td class="ps-2">{{ $item->ket_unit }}</td>
+                            <td class="ps-2">{{ $item->alasan_rek }}</td>
+                            <td class="ps-2">{{ $item->estimasi_harga }}</td>
                             <td class="ps-2">{{ $item->nama_rek }}</td>
                             <td class="ps-2">{{ $item->jabatan_receiver }}</td>
 
@@ -182,32 +203,9 @@
                                     <span class="badge bg-secondary">{{ $item->status }}</span>
                                 @endif
                             </td>
-                            <td>
-                                <div class="dropdown d-flex justify-content-center align-items-center">
-                                    <button class="btn btn-light border p-0" type="button"
-                                        id="dropdownMenuButton{{ $item->id_sign }}" data-bs-toggle="dropdown"
-                                        aria-expanded="false">
-                                        <span class="fw-bold fs-4 d-flex justify-content-center align-items-center"
-                                            style="height: 100%;">⋮</span>
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $item->id_sign }}">
-                                        <li>
-                                            <a class="dropdown-item"
-                                                href="{{ url("item/{$item->id_sign}/edit") }}">Edit</a>
-                                        </li>
-                                        <li>
-                                            <form action="{{ url("item/{$item->id_sign}") }}" method="POST"
-                                                onsubmit="return confirm('Are you sure you want to delete this item?')"
-                                                style="display:inline;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="dropdown-item text-danger">Hapus</button>
-                                            </form>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </td>
+
+                            <td class="ps-2">{{ $item->tgl_verif }}</td>
+
                         </tr>
                     @empty
                         <tr>

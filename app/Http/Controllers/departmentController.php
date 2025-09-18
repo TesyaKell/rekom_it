@@ -22,7 +22,7 @@ class departmentController extends Controller
             $lastNumber = department::withTrashed()
                 ->select('kode_dep')
                 ->get()
-                ->map(fn ($item) => (int) substr($item->kode_dep, 3))
+                ->map(fn($item) => (int) substr($item->kode_dep, 3))
                 ->sortDesc()
                 ->first();
 

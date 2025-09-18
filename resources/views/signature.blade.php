@@ -78,6 +78,10 @@
             border-radius: 0;
             border: #fff;
         }
+
+        .modal-backdrop.show {
+            opacity: 0.2 !important;
+        }
     </style>
 </head>
 
