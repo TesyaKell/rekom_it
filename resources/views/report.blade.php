@@ -96,16 +96,18 @@
         <div class="container-2 mt-4 mb-5 me-5 ms-5 p-4">
             <form method="GET" action="{{ route('report') }}" class="mb-4">
                 <div class="row g-3">
+
                     <div class="col-md-12">
                         <label for="noRek" class="form-label">No. Rekomendasi</label>
                         <div class="input-group">
                             <input type="text" class="form-control" name="noRek" id="noRek"
-                                value="{{ request('id_rek') }}" placeholder="Dari">
+                                value="{{ request('noRek') }}" placeholder="Dari">
                             <span class="input-group-text">s/d</span>
                             <input type="text" class="form-control" name="noRek2" id="noRek2"
-                                value="{{ request('id_rek') }}" placeholder="Sampai">
+                                value="{{ request('noRek2') }}" placeholder="Sampai">
                         </div>
                     </div>
+
                     <div class="col-md-12">
                         <label for="tgl_awal" class="form-label">Periode Tanggal Masuk</label>
                         <div class="input-group">
@@ -116,17 +118,20 @@
                                 value="{{ request('tgl_akhir') }}">
                         </div>
                     </div>
+
                     <div class="col-md-12 mb-2">
-                        <label for="jabatan" class="form-label">Jabatan</label>
-                        <select class="form-select" name="jabatan" id="jabatan">
-                            <option value="">Semua Jabatan</option>
-                            @foreach ($jabatanList as $jabatan)
-                                <option value="{{ $jabatan }}"
-                                    {{ request('jabatan_receiver') == $jabatan ? 'selected' : '' }}>
-                                    {{ $jabatan }}</option>
+                        <label for="department" class="form-label">Department</label>
+                        <select class="form-select" name="department" id="department">
+                            <option value="">Semua Department</option>
+                            @foreach ($departmentList ?? [] as $department)
+                                <option value="{{ $department }}"
+                                    {{ request('department') == $department ? 'selected' : '' }}>
+                                    {{ $department }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
+
                     <div class="col-md-12 d-flex align-items-end">
                         <button type="submit" class="btn btn-success w-50">Tampilkan</button>
                     </div>
@@ -135,7 +140,7 @@
         </div>
 
         <div class="container-3 mt-3 mb-5 me-5 ms-5 p-2">
-            <p class="ps-2 pt-2">* Hasil Pencarian : {{ $data->count() }} data</p>
+            <p class="ps-2 pt-2">* Hasil Pencarian : {{ $results->count() }} data</p>
             <table class="table table-bordered table-sm align-middle me-5 mt-3">
                 <thead class="table-light">
                     <tr>
@@ -143,20 +148,21 @@
                         <th class="ps-2">No. PR</th>
                         <th class="ps-2">Jenis Unit</th>
                         <th class="ps-2">Nama Pengaju</th>
-                        <th class="ps-2">Department</th>
+                        <th class="ps-2">Jabatan</th>
                         <th class="ps-2">Tanggal Pengajuan</th>
                         <th class="ps-2">Status</th>
                         <th class="ps-2 text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($data as $item)
+                    @forelse ($results as $item)
                         <tr>
                             <td class="ps-2">{{ $item->id_rek }}</td>
                             <td class="ps-2">{{ $item->no_spb }}</td>
                             <td class="ps-2">{{ $item->jenis_unit }}</td>
                             <td class="ps-2">{{ $item->nama_rek }}</td>
-                            <td class="ps-2">{{ $item->jabatan }}</td>
+                            <td class="ps-2">{{ $item->jabatan_receiver }}</td>
+
                             <td class="ps-2">{{ $item->tgl_masuk }}</td>
                             <td class="ps-2">
                                 @if ($item->status == 'menunggu verifikasi Kabag')
