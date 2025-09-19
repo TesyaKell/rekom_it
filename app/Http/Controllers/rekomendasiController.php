@@ -119,26 +119,17 @@ class rekomendasiController extends Controller
 
         try {
             $user = DB::table('users')->where('id_user', session('loginId'))->first();
-            $isAdmin = ($user->jabatan == 'aa');
 
-            if ($isAdmin) {
-                $results = rekomendasi::query()
-                    ->when($req->filled('noRek') && $req->filled('noRek2'), fn ($q) =>
-                        $q->whereBetween('id_rek', [$req->noRek, $req->noRek2]))
-                    ->when($req->filled('tgl_awal') && $req->filled('tgl_akhir'), fn ($q) =>
-                        $q->whereBetween('tgl_masuk', [$req->tgl_awal, $req->tgl_akhir]))
-                    ->get();
-            } else {
-                $dep = DB::table('department')->where('kode_dep', $user->kode_dep)->first();
-                $nama_dep = $dep ? $dep->nama_dep : '';
-                $results = rekomendasi::query()
-                    ->when($req->filled('noRek') && $req->filled('noRek2'), fn ($q) =>
-                        $q->whereBetween('id_rek', [$req->noRek, $req->noRek2]))
-                    ->when($req->filled('tgl_awal') && $req->filled('tgl_akhir'), fn ($q) =>
-                        $q->whereBetween('tgl_masuk', [$req->tgl_awal, $req->tgl_akhir]))
-                    ->where('nama_dep', $nama_dep)
-                    ->get();
-            }
+            $dep = DB::table('department')->where('kode_dep', $user->kode_dep)->first();
+            $nama_dep = $dep ? $dep->nama_dep : '';
+            $results = rekomendasi::query()
+                ->when($req->filled('noRek') && $req->filled('noRek2'), fn ($q) =>
+                    $q->whereBetween('id_rek', [$req->noRek, $req->noRek2]))
+                ->when($req->filled('tgl_awal') && $req->filled('tgl_akhir'), fn ($q) =>
+                    $q->whereBetween('tgl_masuk', [$req->tgl_awal, $req->tgl_akhir]))
+                ->where('nama_dep', $nama_dep)
+                ->get();
+
             $departmentList = rekomendasi::select('nama_dep')->distinct()->pluck('nama_dep');
             \Log::info("sukses menampilkan data : {$results}");
         } catch (\Exception $e) {
