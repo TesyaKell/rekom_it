@@ -129,7 +129,7 @@
                     </li>
                     <li class="mb-2 d-flex align-items-center">
                         <span style="color: orange; font-size: 1.2em; margin-right: 3px;">●</span>
-                        <a class="nav-link p-2" href="#">Deleted Rekomendasi</a>
+                        <a class="nav-link p-2" href="{{ url('deleted_rekomendasi') }}">Deleted Rekomendasi</a>
                     </li>
                 </ul>
             </div>

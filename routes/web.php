@@ -18,6 +18,8 @@ Route::get('/home', function () {
 Route::post('/add_rekomendasi', [rekomendasiController::class, 'create'])->name('rekomendasi.create');
 Route::get('/add_rekomendasi', [rekomendasiController::class, 'index'])->name('rekomendasi.index');
 Route::get('/daftar_rekomendasi', [rekomendasiController::class, 'tampilData']);
+Route::get('/deleted_rekomendasi', [rekomendasiController::class, 'tampilDataTerhapus'])->name('rekomendasi.deleted');
+//Route::post('/rekomendasi/{id_rek}/restore', [rekomendasiController::class, 'restore'])->name('rekomendasi.restore');
 Route::get('/report', [rekomendasiController::class, 'laporan'])->name('report');
 Route::delete('/rekomendasi/{id_rek}', [rekomendasiController::class, 'destroy'])->name('rekomendasi.destroy');
 Route::get('/rekomendasi/{id_rek}/edit', [rekomendasiController::class, 'edit'])->name('rekomendasi.edit');

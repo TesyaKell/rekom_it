@@ -79,6 +79,18 @@ class rekomendasiController extends Controller
         $departments = department::all();
         return view('daftar_rekomendasi', compact('data', 'departments'));
     }
+
+    public function tampilDataTerhapus()
+    {
+        if (!session()->has('loginId')) {
+            return redirect('/login');
+        }
+
+        $data = DB::table('deleted')->get();
+        $departments = department::all();
+        return view('deleted_rekomendasi', compact('data', 'departments'));
+    }
+
     public function edit($id)
     {
         $rekomendasi = rekomendasi::findOrFail($id);
@@ -110,11 +122,11 @@ class rekomendasiController extends Controller
 
         try {
             $results = rekomendasi::query()
-                ->when($req->filled('noRek') && $req->filled('noRek2'), fn ($q) =>
+                ->when($req->filled('noRek') && $req->filled('noRek2'), fn($q) =>
                     $q->whereBetween('id_rek', [$req->noRek, $req->noRek2]))
-                ->when($req->filled('tgl_awal') && $req->filled('tgl_akhir'), fn ($q) =>
+                ->when($req->filled('tgl_awal') && $req->filled('tgl_akhir'), fn($q) =>
                     $q->whereBetween('tgl_masuk', [$req->tgl_awal, $req->tgl_akhir]))
-                ->when($req->filled('department'), fn ($q) =>
+                ->when($req->filled('department'), fn($q) =>
                     $q->whereRaw('LOWER(jabatan_receiver) = ?', [strtolower($req->department)]))
                 ->get();
 

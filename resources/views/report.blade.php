@@ -117,32 +117,31 @@
                     </div>
 
                     <div class="col-md-12">
-                        <div class="form-check">
-                            <label for="tgl_awal" class="form-label ms-2">Periode Tanggal Masuk</label>
-                            <div class="input-group">
-                                <input class="form-check-input me-3" type="checkbox" value=""
-                                    id="flexCheckDefault">
-                                <input type="date" class="form-control" name="tgl_awal" id="tgl_awal"
-                                    value="{{ request('tgl_awal') }}">
-                                <span class="input-group-text">s/d</span>
-                                <input type="date" class="form-control" name="tgl_akhir" id="tgl_akhir"
-                                    value="{{ request('tgl_akhir') }}">
-                            </div>
+                        <label for="tgl_awal" class="form-label">Periode Tanggal Masuk</label>
+                        <div class="input-group">
+                            <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
+                            <input type="date" class="form-control" name="tgl_awal" id="tgl_awal"
+                                value="{{ request('tgl_awal') }}">
+                            <span class="input-group-text">s/d</span>
+                            <input type="date" class="form-control" name="tgl_akhir" id="tgl_akhir"
+                                value="{{ request('tgl_akhir') }}">
                         </div>
                     </div>
 
                     <div class="col-md-12 mb-2">
                         <label for="department" class="form-label">Department</label>
-                        <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
-                        <select class="form-select" name="department" id="department">
-                            <option value="">Semua Department</option>
-                            @foreach ($departmentList ?? [] as $department)
-                                <option value="{{ $department }}"
-                                    {{ request('department') == $department ? 'selected' : '' }}>
-                                    {{ $department }}
-                                </option>
-                            @endforeach
-                        </select>
+                        <div class="input-group">
+                            <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
+                            <select class="form-select" name="department" id="department">
+                                <option value="">Semua Department</option>
+                                @foreach ($departmentList ?? [] as $department)
+                                    <option value="{{ $department }}"
+                                        {{ request('department') == $department ? 'selected' : '' }}>
+                                        {{ $department }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
 
                     <div class="col-md-12 d-flex align-items-end">
