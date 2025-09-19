@@ -33,7 +33,7 @@ class userController extends Controller
                 'loginId' => $user->id_user,
                 'login_type' => 'users'
             ]);
-            return redirect('/home')->with('success', 'Login successful');
+            return redirect('/report')->with('success', 'Login successful');
         }
 
         return back()->withErrors('Tidak terdaftar')->withInput();
