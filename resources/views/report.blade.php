@@ -107,6 +107,7 @@
                     <div class="col-md-12">
                         <label for="noRek" class="form-label">No. Rekomendasi</label>
                         <div class="input-group">
+                            <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
                             <input type="text" class="form-control" name="noRek" id="noRek"
                                 value="{{ request('noRek') }}" placeholder="Dari">
                             <span class="input-group-text">s/d</span>
@@ -132,6 +133,7 @@
 
                     <div class="col-md-12 mb-2">
                         <label for="department" class="form-label">Department</label>
+                        <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
                         <select class="form-select" name="department" id="department">
                             <option value="">Semua Department</option>
                             @foreach ($departmentList ?? [] as $department)
@@ -191,7 +193,8 @@
                                         style="background-color: rgb(249, 137, 0);">Menunggu
                                         Kabag</span>
                                 @elseif($item->status == 'menunggu verifikasi Tim IT')
-                                    <span class="badge
+                                    <span
+                                        class="badge
                                         bg-orange text-light p-1"
                                         style="background-color: rgb(41, 63, 230);">Menunggu
                                         Tim IT</span>
