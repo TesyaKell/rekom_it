@@ -97,12 +97,10 @@ class rekomendasiController extends Controller
             'jabatan_receiver' => 'required|string|max:255',
         ]);
 
-        $rekomendasi = rekomendasi::find($id_rek);
-        if ($rekomendasi) {
-            $rekomendasi->update($req->all());
-        }
+        $departments = rekomendasi::find($id_rek);
+        $departments->update($req->all());
 
-        return redirect()->route('rekomendasi.index');
+        return redirect()->route('rekomendasi.index', compact('departments'))->with('success', 'Data berhasil diperbarui!');
     }
 
     public function laporan(Request $req)
@@ -112,11 +110,11 @@ class rekomendasiController extends Controller
 
         try {
             $results = rekomendasi::query()
-                ->when($req->filled('noRek') && $req->filled('noRek2'), fn($q) =>
+                ->when($req->filled('noRek') && $req->filled('noRek2'), fn ($q) =>
                     $q->whereBetween('id_rek', [$req->noRek, $req->noRek2]))
-                ->when($req->filled('tgl_awal') && $req->filled('tgl_akhir'), fn($q) =>
+                ->when($req->filled('tgl_awal') && $req->filled('tgl_akhir'), fn ($q) =>
                     $q->whereBetween('tgl_masuk', [$req->tgl_awal, $req->tgl_akhir]))
-                ->when($req->filled('department'), fn($q) =>
+                ->when($req->filled('department'), fn ($q) =>
                     $q->whereRaw('LOWER(jabatan_receiver) = ?', [strtolower($req->department)]))
                 ->get();
 
@@ -163,11 +161,9 @@ class rekomendasiController extends Controller
             ->orWhere('id_rek', 'LIKE', '%' . $query . '%')
             ->get();
 
-        return view('daftar_rekomendasi', compact('data', 'query'));
+        $departments = department::all();
+        return view('daftar_rekomendasi', compact('data', 'departments', 'query'));
     }
-
-
-
 
     // // public function copy_request(Request $req, $id)
     // // {
