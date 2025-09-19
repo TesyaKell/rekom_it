@@ -34,7 +34,7 @@ class rekomendasiController extends Controller
 
         $user = DB::table('users')->where('id_user', session('loginId'))->first();
         $departments = \DB::table('department')->get();
-        $lastId = rekomendasi::max('id_rek'); // ambil id terakhir langsung dari tabel
+        $lastId = rekomendasi::max('id_rek');
 
         try {
             $req->validate([
@@ -114,29 +114,33 @@ class rekomendasiController extends Controller
 
     public function laporan(Request $req)
     {
-        $results = collect();
-        $departmentList = collect();
-
         try {
-            $user = DB::table('users')->where('id_user', session('loginId'))->first();
+            $query = rekomendasi::query();
 
-            $dep = DB::table('department')->where('kode_dep', $user->kode_dep)->first();
-            $nama_dep = $dep ? $dep->nama_dep : '';
-            $results = rekomendasi::query()
-                ->when($req->filled('noRek') && $req->filled('noRek2'), fn ($q) =>
-                    $q->whereBetween('id_rek', [$req->noRek, $req->noRek2]))
+            $query->when($req->filled('noRek') && $req->filled('noRek2'), fn ($q) =>
+                $q->whereBetween('id_rek', [$req->noRek, $req->noRek2]))
                 ->when($req->filled('tgl_awal') && $req->filled('tgl_akhir'), fn ($q) =>
-                    $q->whereBetween('tgl_masuk', [$req->tgl_awal, $req->tgl_akhir]))
-                ->where('nama_dep', $nama_dep)
-                ->get();
+                $q->whereBetween('tgl_masuk', [$req->tgl_awal, $req->tgl_akhir]));
 
+            // Cek jenis login
+            if (session('login_type') === 'users') {
+                $user = DB::table('users')->where('id_user', session('loginId'))->first();
+                $dep = DB::table('department')->where('kode_dep', $user->kode_dep)->first();
+                $nama_dep = $dep ? $dep->nama_dep : '';
+
+                $query->where('nama_dep', $nama_dep);
+            }
+
+            $results = $query->get();
             $departmentList = rekomendasi::select('nama_dep')->distinct()->pluck('nama_dep');
+
             \Log::info("sukses menampilkan data : {$results}");
         } catch (\Exception $e) {
             \Log::error("Gagal menampilkan data : {$e->getMessage()}");
         }
         return view('report', compact('results', 'departmentList'));
     }
+
 
     public function print($id)
     {
@@ -145,7 +149,7 @@ class rekomendasiController extends Controller
         }
 
         $data = rekomendasi::findOrFail($id);
-        // Pastikan variabel yang dikirim ke view adalah 'item'
+
         return view('print', compact('data'));
     }
 
@@ -185,16 +189,4 @@ class rekomendasiController extends Controller
 
     // //     return view('copy_rekomendasi', compact('baru'));
     // // }
-
-
-
-
-    //
-
-    // public function view()
-    // {
-    //     return view('view_rekomendasi');
-    // }
-
-
 }
