@@ -76,7 +76,10 @@ class rekomendasiController extends Controller
         }
 
         $data = rekomendasi::all();
+
         $departments = department::all();
+        //dd($data);
+        //dd($departments);
         return view('daftar_rekomendasi', compact('data', 'departments'));
     }
 
