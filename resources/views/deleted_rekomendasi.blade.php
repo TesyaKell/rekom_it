@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'Daftar Rekomendasi')
+@section('title', 'Deleted Rekomendasi')
 
 @php
-    $pageTitle = 'Daftar Rekomendasi';
+    $pageTitle = 'Deleted Rekomendasi';
 @endphp
 
 <!DOCTYPE html>
@@ -85,7 +85,7 @@
         </div>
         <div class="row-2">
             <div class="col-12">
-                <p class="pt-3 mt-3 ms-5 ps-5">Daftar Deleted Rekomendasi</p>
+                <p class="pt-3 mt-3 ms-5 ps-5">DAFTAR DELETED REKOMENDASI</p>
             </div>
         </div>
     </div>

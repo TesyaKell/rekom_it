@@ -85,7 +85,7 @@
         </div>
         <div class="row-2">
             <div class="col-12">
-                <p class="pt-3 mt-3 ms-5 ps-5">Daftar Rekomendasi & Servis Komputer</p>
+                <p class="pt-3 mt-3 ms-5 ps-5">DAFTAR REKOMENDASI & SERVIS KOMPUTER</p>
             </div>
         </div>
     </div>
@@ -146,7 +146,13 @@
                 <tbody>
                     @forelse ($data as $item)
                         <tr>
-                            <td class="ps-2">{{ $item->id_rek }}</td>
+                            <td class="ps-2">
+                                <a href="{{ route('rekomendasi.detail', $item->id_rek) }}"
+                                    class="text-decoration-none text-dark">
+                                    {{ $item->id_rek }}
+                                </a>
+                            </td>
+
                             <td class="ps-2">{{ $item->no_spb }}</td>
                             <td class="ps-2">{{ $item->jenis_unit }}</td>
                             <td class="ps-2">{{ $item->nama_rek }}</td>

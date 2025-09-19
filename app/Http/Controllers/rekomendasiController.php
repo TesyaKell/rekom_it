@@ -91,6 +91,17 @@ class rekomendasiController extends Controller
         return view('deleted_rekomendasi', compact('data', 'departments'));
     }
 
+    public function tampilDetail($id_rek)
+    {
+        if (!session()->has('loginId')) {
+            return redirect('/login');
+        }
+
+        $data = rekomendasi::where('id_rek', $id_rek)->get();
+        $departments = department::all();
+        return view('detailRekomendasi', compact('data', 'departments'));
+    }
+
     public function edit($id)
     {
         $rekomendasi = rekomendasi::findOrFail($id);

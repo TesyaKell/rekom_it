@@ -28,6 +28,10 @@ Route::get('search', [rekomendasiController::class, 'searchRekomendasi'])->name(
 Route::get('/print/{id}', [rekomendasiController::class, 'print'])->name('rekomendasi.print');
 
 
+Route::get('/detailRekomendasi/{id_rek}', [rekomendasiController::class, 'tampilDetail'])->name('rekomendasi.detail');
+
+
+
 // // SIGNATURE
 Route::get('/signature', [signatureController::class, 'index'])->name('signature.index');
 Route::post('/signature', [signatureController::class, 'create'])->name('signature.create');

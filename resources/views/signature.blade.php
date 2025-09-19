@@ -91,7 +91,7 @@
         <div class="row-2">
             <div class="row-2">
                 <div class="col-12">
-                    <p class="pt-3 ms-5 ps-5">Daftar signature</p>
+                    <p class="pt-3 ms-5 ps-5">DAFTAR SIGNATURE</p>
                 </div>
             </div>
         </div>

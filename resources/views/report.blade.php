@@ -93,7 +93,7 @@
         </div>
         <div class="row-2">
             <div class="col-12">
-                <p class="pt-3 mt-3 ms-5 ps-5">LAPORAN REKOMENDASI & SERVIS UNIT KOMPUTER</p>
+                <p class="pt-3 mt-3 ms-5 ps-5 fw-bold">LAPORAN REKOMENDASI & SERVIS UNIT KOMPUTER</p>
             </div>
         </div>
     </div>
@@ -229,8 +229,8 @@
 
 @extends('layouts.app')
 
-@section('title', 'Laporan Rekomendasi & Servis Unit Komputer')
+@section('title', 'Laporan Rekomendasi')
 
 @php
-    $pageTitle = 'Laporan Rekomendasi & Servis Unit Komputer';
+    $pageTitle = 'Laporan Rekomendasi';
 @endphp
