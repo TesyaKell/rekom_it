@@ -45,3 +45,10 @@ Route::post('/department', [departmentController::class, 'create'])->name('depar
 Route::get('/department/{kode_dep}/edit', [departmentController::class, 'edit'])->name('department.edit');
 Route::put('/department/{kode_dep}', [departmentController::class, 'update'])->name('department.update');
 Route::delete('/department/{kode_dep}', [departmentController::class, 'destroy'])->name('department.destroy');
+Route::post('/logout', function () {
+    Auth::logout();
+    session()->invalidate();
+    session()->regenerateToken();
+
+    return redirect('/login')->with('message', 'You have been logged out successfully.');
+})->name('logout');
