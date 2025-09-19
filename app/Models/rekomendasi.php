@@ -23,6 +23,7 @@ class rekomendasi extends Model
             'nama_receiver',
             'tgl_verif',
             'masukan',
+            'nama_dep',
             'status',
             'no_spb',
             'jabatan_receiver',
