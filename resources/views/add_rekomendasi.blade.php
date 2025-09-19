@@ -74,15 +74,12 @@
                             </div>
                             <div class="form-group mt-2">
                                 <label for="department" class="mb-1">Department</label>
-                                <select class="form-control" id="jabatan_receiver" name="jabatan_receiver">
+                                <select class="form-control" id="kode_dep" name="kode_dep">
                                     @foreach ($departments as $dep)
-                                        <option value="{{ $dep->nama_dep }}">{{ $dep->nama_dep }}</option>
+                                        <option value="{{ $dep->kode_dep }}">{{ $dep->nama_dep }}</option>
                                     @endforeach
                                 </select>
                             </div>
-
-
-
                     </div>
                     <div class="col">
 
@@ -98,8 +95,6 @@
                             <label for="alasan" class="mb-1">Alasan</label>
                             <textarea class="form-control" id="alasan" name="alasan_rek" rows="3"></textarea>
                         </div>
-
-
                         <div class="form-group mt-2">
                             <label for="estimasiharga" class="mb-1">Estimasi Harga (Rp)</label>
                             <input class="form-control" id="estimasiharga" name="estimasi_harga" placeholder="Rp.">
@@ -117,14 +112,9 @@
                             <button type="button" class="btn btn-danger fw-bold fs-6">Batal</button>
 
                         </div>
-
-
                         </form>
                     </div>
                 </div>
-
-
-
             </div>
         </div>
     @endsection

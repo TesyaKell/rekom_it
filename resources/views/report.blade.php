@@ -131,7 +131,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-12 mb-2">
+                    {{-- <div class="col-md-12 mb-2">
                         <label for="department" class="form-label">Department</label>
                         <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
                         <select class="form-select" name="department" id="department">
@@ -143,7 +143,7 @@
                                 </option>
                             @endforeach
                         </select>
-                    </div>
+                    </div> --}}
 
                     <div class="col-md-12 d-flex align-items-end">
                         <button type="submit" class="btn btn-success w-50">Tampilkan</button>
@@ -168,7 +168,7 @@
                         <th class="ps-2">Alasan</th>
                         <th class="ps-2">Estimasi Harga</th>
                         <th class="ps-2">Nama Pengaju</th>
-                        <th class="ps-2">Jabatan</th>
+                        <th class="ps-2">Department</th>
                         <th class="ps-2">Tanggal Pengajuan</th>
                         <th class="ps-2">Status</th>
                         <th class="ps-2">Tangal Realisasi</th>
@@ -184,8 +184,7 @@
                             <td class="ps-2">{{ $item->alasan_rek }}</td>
                             <td class="ps-2">{{ $item->estimasi_harga }}</td>
                             <td class="ps-2">{{ $item->nama_rek }}</td>
-                            <td class="ps-2">{{ $item->jabatan_receiver }}</td>
-
+                            <td class="ps-2">{{ $item->nama_dep }}</td>
                             <td class="ps-2">{{ $item->tgl_masuk }}</td>
                             <td class="ps-2">
                                 @if ($item->status == 'menunggu verifikasi Kabag')
@@ -193,8 +192,7 @@
                                         style="background-color: rgb(249, 137, 0);">Menunggu
                                         Kabag</span>
                                 @elseif($item->status == 'menunggu verifikasi Tim IT')
-                                    <span
-                                        class="badge
+                                    <span class="badge
                                         bg-orange text-light p-1"
                                         style="background-color: rgb(41, 63, 230);">Menunggu
                                         Tim IT</span>

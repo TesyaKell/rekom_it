@@ -150,7 +150,7 @@
                             <td class="ps-2">{{ $item->no_spb }}</td>
                             <td class="ps-2">{{ $item->jenis_unit }}</td>
                             <td class="ps-2">{{ $item->nama_rek }}</td>
-                            <td class="ps-2">{{ $item->jabatan_receiver }}</td>
+                            <td class="ps-2">{{ $item->nama_dep }}</td>
                             <td class="ps-2">{{ $item->tgl_masuk }}</td>
                             <td class="ps-2">
                                 @if ($item->status == 'menunggu verifikasi Kabag')
@@ -256,9 +256,10 @@
                                             name="tgl_masuk" value="{{ $item->tgl_masuk }}" readonly>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="jabatan_receiver{{ $item->id_rek }}"
+                                        <label for="nama_dep{{ $item->id_rek }}"
                                             class="form-label">Department</label>
-                                        <select class="form-control" id="jabatan_receiver" name="jabatan_receiver">
+                                        <select class="form-control" id="nama_dep{{ $item->id_rek }}"
+                                            name="nama_dep">
                                             @foreach ($departments as $dep)
                                                 <option value="{{ $dep->nama_dep }}">{{ $dep->nama_dep }}</option>
                                             @endforeach

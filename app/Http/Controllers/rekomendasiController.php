@@ -44,21 +44,29 @@ class rekomendasiController extends Controller
                 'ket_unit' => 'required|string|max:255',
                 'tgl_masuk' => 'required|date',
                 'estimasi_harga' => 'required|numeric',
-                'jabatan_receiver' => 'required|string|max:255',
+                'kode_dep' => 'required|string|max:255',
+                'alasan_rek' => 'nullable|string|max:255',
             ]);
+
+            $selectedDep = $departments->where('kode_dep', $req->kode_dep)->first();
+            $nama_dep = $selectedDep ? $selectedDep->nama_dep : '';
+            if (is_array($nama_dep)) {
+                $nama_dep = implode(', ', $nama_dep);
+            }
 
             rekomendasi::create([
                 'id_user' => $user->id_user,
+                'alasan_rek' => $req->alasan_rek ,
                 'nama_rek' => $req->nama_rek,
                 'jenis_unit' => $req->jenis_unit,
                 'no_spb' => $req->no_spb,
                 'ket_unit' => $req->ket_unit,
                 'tgl_masuk' => $req->tgl_masuk,
                 'status' => 'menunggu verifikasi Kabag',
-                'jabatan_receiver' => $req->jabatan_receiver,
+                'nama_dep' => $nama_dep,
                 'estimasi_harga' => $req->estimasi_harga,
             ]);
-
+            \Log::info("sukses : {$req->all()}");
             return redirect()->route('rekomendasi.index');
 
         } catch (\Exception $e) {
@@ -88,13 +96,14 @@ class rekomendasiController extends Controller
     public function update(Request $req, $id_rek)
     {
         $req->validate([
+            'alasan_rek' => 'nullable|string|max:255',
             'no_spb' => 'nullable|numeric',
             'nama_rek' => 'required|string|max:255',
             'jenis_unit' => 'required|string|max:255',
             'ket_unit' => 'required|string|max:255',
             'tgl_masuk' => 'required|date',
             'estimasi_harga' => 'required|numeric',
-            'jabatan_receiver' => 'required|string|max:255',
+            'nama_dep' => 'required|string|max:255',
         ]);
 
         $departments = rekomendasi::find($id_rek);
@@ -109,17 +118,29 @@ class rekomendasiController extends Controller
         $departmentList = collect();
 
         try {
-            $results = rekomendasi::query()
-                ->when($req->filled('noRek') && $req->filled('noRek2'), fn ($q) =>
-                    $q->whereBetween('id_rek', [$req->noRek, $req->noRek2]))
-                ->when($req->filled('tgl_awal') && $req->filled('tgl_akhir'), fn ($q) =>
-                    $q->whereBetween('tgl_masuk', [$req->tgl_awal, $req->tgl_akhir]))
-                ->when($req->filled('department'), fn ($q) =>
-                    $q->whereRaw('LOWER(jabatan_receiver) = ?', [strtolower($req->department)]))
-                ->get();
+            $user = DB::table('users')->where('id_user', session('loginId'))->first();
+            $isAdmin = ($user->jabatan == 'aa');
 
-            $departmentList = rekomendasi::select('jabatan_receiver')->distinct()->pluck('jabatan_receiver');
-
+            if ($isAdmin) {
+                $results = rekomendasi::query()
+                    ->when($req->filled('noRek') && $req->filled('noRek2'), fn ($q) =>
+                        $q->whereBetween('id_rek', [$req->noRek, $req->noRek2]))
+                    ->when($req->filled('tgl_awal') && $req->filled('tgl_akhir'), fn ($q) =>
+                        $q->whereBetween('tgl_masuk', [$req->tgl_awal, $req->tgl_akhir]))
+                    ->get();
+            } else {
+                $dep = DB::table('department')->where('kode_dep', $user->kode_dep)->first();
+                $nama_dep = $dep ? $dep->nama_dep : '';
+                $results = rekomendasi::query()
+                    ->when($req->filled('noRek') && $req->filled('noRek2'), fn ($q) =>
+                        $q->whereBetween('id_rek', [$req->noRek, $req->noRek2]))
+                    ->when($req->filled('tgl_awal') && $req->filled('tgl_akhir'), fn ($q) =>
+                        $q->whereBetween('tgl_masuk', [$req->tgl_awal, $req->tgl_akhir]))
+                    ->where('nama_dep', $nama_dep)
+                    ->get();
+            }
+            $departmentList = rekomendasi::select('nama_dep')->distinct()->pluck('nama_dep');
+            \Log::info("sukses menampilkan data : {$results}");
         } catch (\Exception $e) {
             \Log::error("Gagal menampilkan data : {$e->getMessage()}");
         }
