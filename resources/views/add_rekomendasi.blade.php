@@ -90,9 +90,13 @@
                             <label for="exampleFormControlInput1" class="mb-1">Jenis Unit</label>
                             <input class="form-control" id="jenisunit" name="jenis_unit" placeholder="Masukkan Jenis Unit">
                         </div>
+                        <div class="form-group">
+                            <label for="exampleFormControlInput1" class="mb-1">Keterangan</label>
+                            <input class="form-control" id="keterangan" name="ket_unit" placeholder="Masukkan Keterangan">
+                        </div>
                         <div class="form-group mt-2">
-                            <label for="keterangan" class="mb-1">Keterangan</label>
-                            <textarea class="form-control" id="keterangan" name="ket_unit" rows="3"></textarea>
+                            <label for="alasan" class="mb-1">Alasan</label>
+                            <textarea class="form-control" id="alasan" name="alasan_rek" rows="3"></textarea>
                         </div>
 
 

@@ -151,7 +151,7 @@
         </div>
 
         <div class="container-5 me-5 ms-5">
-            <p class="p-3 mt-4" style="color: #e68e00">* Hasil Pencarian : {{ $data->count() }} data</p>
+            <p class="p-3 mt-4" style="color: #e68e00">* Hasil Pencarian : {{ $results->count() }} data</p>
         </div>
 
         <div class="container-3 mt-3 mb-5 me-5 ms-5 p-2">
