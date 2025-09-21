@@ -17,7 +17,7 @@ class rekomendasiController extends Controller
             return redirect('/login');
         }
 
-        $user = DB::table('users')->where('id_user', session('loginId'))->first();
+        $user = \DB::table('users')->where('id_user', session('loginId'))->first();
 
         $rekomendasi = rekomendasi::where('id_user', $user->id_user)->get();
         $departments = \DB::table('department')->get();
@@ -32,7 +32,7 @@ class rekomendasiController extends Controller
             return redirect('/login');
         }
 
-        $user = DB::table('users')->where('id_user', session('loginId'))->first();
+        $user = \DB::table('users')->where('id_user', session('loginId'))->first();
         $departments = \DB::table('department')->get();
         $lastId = rekomendasi::max('id_rek');
 
@@ -50,9 +50,6 @@ class rekomendasiController extends Controller
 
             $selectedDep = $departments->where('kode_dep', $req->kode_dep)->first();
             $nama_dep = $selectedDep ? $selectedDep->nama_dep : '';
-            if (is_array($nama_dep)) {
-                $nama_dep = implode(', ', $nama_dep);
-            }
 
             rekomendasi::create([
                 'id_user' => $user->id_user,
@@ -66,31 +63,14 @@ class rekomendasiController extends Controller
                 'nama_dep' => $nama_dep,
                 'estimasi_harga' => $req->estimasi_harga,
             ]);
-            \Log::info("sukses : {$req->all()}");
-            return redirect()->route('rekomendasi.index');
 
+            \Log::info("Sukses tambah rekomendasi oleh user {$user->id_user}");
+            return redirect()->route('rekomendasi.daftar')->with('success', 'Data berhasil ditambahkan!');
         } catch (\Exception $e) {
             \Log::error("Gagal simpan data : {$e->getMessage()}");
-
             return view('add_rekomendasi', compact('departments', 'lastId'))
                 ->with('error', 'Gagal simpan data!');
         }
-    }
-
-    public function tampilData()
-    {
-        if (!session()->has('loginId')) {
-            return redirect('/login');
-        }
-
-        $data = rekomendasi::all();
-        $departments = department::all();
-        return view('daftar_rekomendasi', compact('data', 'departments'));
-    }
-    public function edit($id)
-    {
-        $rekomendasi = rekomendasi::findOrFail($id);
-        return view('rekomendasi_edit', compact('rekomendasi'));
     }
 
     public function update(Request $req, $id_rek)
@@ -106,40 +86,100 @@ class rekomendasiController extends Controller
             'nama_dep' => 'required|string|max:255',
         ]);
 
-        $departments = rekomendasi::find($id_rek);
-        $departments->update($req->all());
+        $rekomendasi = rekomendasi::findOrFail($id_rek);
+        $rekomendasi->update($req->all());
 
-        return redirect()->route('rekomendasi.index', compact('departments'))->with('success', 'Data berhasil diperbarui!');
+        return redirect()->route('rekomendasi.daftar')->with('success', 'Data berhasil diperbarui!');
     }
+
+    public function destroy($id_rek)
+    {
+        $rekomendasi = rekomendasi::where('id_rek', $id_rek)->first();
+        if ($rekomendasi) {
+            $data = $rekomendasi->toArray();
+            DB::table('deleted')->insert($data);
+            $rekomendasi->delete();
+        }
+        return redirect()->route('rekomendasi.daftar')->with('success', 'Data berhasil dihapus!');
+    }
+
+    public function tampilData()
+    {
+        if (!session()->has('loginId')) {
+            return redirect('/login');
+        }
+
+        $data = rekomendasi::all();
+
+        $departments = department::all();
+        return view('daftar_rekomendasi', compact('data', 'departments'));
+    }
+
+    public function tampilDataTerhapus()
+    {
+        if (!session()->has('loginId')) {
+            return redirect('/login');
+        }
+
+        $data = DB::table('deleted')->get();
+        $departments = department::all();
+        return view('deleted_rekomendasi', compact('data', 'departments'));
+    }
+
+    public function tampilDetail($id_rek)
+    {
+        if (!session()->has('loginId')) {
+            return redirect('/login');
+        }
+
+        $data = rekomendasi::where('id_rek', $id_rek)->get();
+        $departments = department::all();
+        return view('detailRekomendasi', compact('data', 'departments'));
+    }
+
+    public function edit($id)
+    {
+        $rekomendasi = rekomendasi::findOrFail($id);
+        return view('rekomendasi_edit', compact('rekomendasi'));
+    }
+
 
     public function laporan(Request $req)
     {
         try {
             $query = rekomendasi::query();
 
-            $query->when($req->filled('noRek') && $req->filled('noRek2'), fn ($q) =>
-                $q->whereBetween('id_rek', [$req->noRek, $req->noRek2]))
-                ->when($req->filled('tgl_awal') && $req->filled('tgl_akhir'), fn ($q) =>
-                $q->whereBetween('tgl_masuk', [$req->tgl_awal, $req->tgl_akhir]));
-
-            // Cek jenis login
-            if (session('login_type') === 'users') {
-                $user = DB::table('users')->where('id_user', session('loginId'))->first();
-                $dep = DB::table('department')->where('kode_dep', $user->kode_dep)->first();
-                $nama_dep = $dep ? $dep->nama_dep : '';
-
-                $query->where('nama_dep', $nama_dep);
+            if ($req->filled('noRek') && $req->filled('noRek2')) {
+                $query->whereBetween('id_rek', [$req->noRek, $req->noRek2]);
+            }
+            if ($req->filled('tgl_awal') && $req->filled('tgl_akhir')) {
+                $query->whereBetween('tgl_masuk', [$req->tgl_awal, $req->tgl_akhir]);
+            }
+            if ($req->filled('department')) {
+                $query->where('nama_dep', $req->department);
+            }
+            if (session('loginRole') !== 'IT') {
+                $user = \DB::table('users')->where('id_user', session('loginId'))->first();
+                if ($user) {
+                    $dep = \DB::table('department')->where('kode_dep', $user->kode_dep)->first();
+                    if ($dep) {
+                        $query->where('nama_dep', $dep->nama_dep);
+                    }
+                }
             }
 
             $results = $query->get();
-            $departmentList = rekomendasi::select('nama_dep')->distinct()->pluck('nama_dep');
+            $departmentList = \DB::table('department')->pluck('nama_dep');
 
-            \Log::info("sukses menampilkan data : {$results}");
+            \Log::info("Sukses menampilkan data laporan, total: " . $results->count());
         } catch (\Exception $e) {
-            \Log::error("Gagal menampilkan data : {$e->getMessage()}");
+            \Log::error("Gagal menampilkan data laporan : {$e->getMessage()}");
+            $results = collect();
+            $departmentList = collect();
         }
         return view('report', compact('results', 'departmentList'));
     }
+
 
 
     public function print($id)
@@ -153,17 +193,6 @@ class rekomendasiController extends Controller
         return view('print', compact('data'));
     }
 
-
-    public function destroy($id_rek)
-    {
-        $rekomendasi = rekomendasi::where('id_rek', $id_rek)->first();
-        if ($rekomendasi) {
-            $data = $rekomendasi->toArray();
-            DB::table('deleted')->insert($data);
-            $rekomendasi->delete();
-        }
-        return redirect()->route('rekomendasi.index');
-    }
 
     public function searchRekomendasi(Request $id_rek)
     {
@@ -180,13 +209,4 @@ class rekomendasiController extends Controller
         $departments = department::all();
         return view('daftar_rekomendasi', compact('data', 'departments', 'query'));
     }
-
-    // // public function copy_request(Request $req, $id)
-    // // {
-    // //     $copy = rekomendasi::find($id);
-    // //     $baru = $copy->replicate();
-    // //     $baru->save();
-
-    // //     return view('copy_rekomendasi', compact('baru'));
-    // // }
 }

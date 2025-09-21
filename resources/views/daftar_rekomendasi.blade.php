@@ -118,12 +118,15 @@
                 </div>
 
                 <div class="col-4 d-flex justify-content-end">
-                    <a href="{{ url('add_rekomendasi') }}">
-                        <button type="button" class="btn btn-success mt-2 mb-2 me-2 fw-bold fs-6">
-                            Tambah Data Rekomendasi
-                        </button>
-                    </a>
+                    @if (session('loginRole') === 'IT')
+                        <a href="{{ url('add_rekomendasi') }}">
+                            <button type="button" class="btn btn-success mt-2 mb-2 me-2 fw-bold fs-6">
+                                Tambah Data Rekomendasi
+                            </button>
+                        </a>
+                    @endif
                 </div>
+
             </div>
         </div>
 

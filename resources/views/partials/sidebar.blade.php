@@ -98,6 +98,7 @@
 
     <div class="nav flex-column p-3">
 
+        {{-- Semua role punya Home --}}
         <div class="y-sidebarItem r-hide-accordion">
             <a class="nav-link d-flex align-items-center" href="{{ url('home') }}">
                 <img class="me-2" src="{{ asset('images/home.png') }}" alt="Logo" width="20" height="20">
@@ -105,51 +106,70 @@
             </a>
         </div>
 
-        {{-- pertama --}}
-        <div class="y-sidebarItem r-hide-accordion">
-            <a class="nav-link d-flex align-items-center dropdown-toggle" href="#" id="rekomMenuToggle">
-                <img class="me-2" src="{{ asset('images/rekomendasi.png') }}" alt="Logo" width="20"
-                    height="20">
-                <span>Rekomendasi</span>
-                <span class="ms-auto">
-                    <path fill-rule="evenodd"
-                        d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
-                    </svg>
-                </span>
-            </a>
-            <div class="submenu ps-4" id="rekomMenu" style="display: none;">
-                <ul class="list-unstyled mb-0">
-                    <li class="mb-2 d-flex align-items-center">
-                        <span style="color: orange; font-size: 1.2em; margin-right: 3px;">●</span>
-                        <a class="nav-link p-2" href="{{ url('daftar_rekomendasi') }}">Daftar Rekomendasi</a>
-                    </li>
-                    <li class="mb-2 d-flex align-items-center">
-                        <span style="color: orange; font-size: 1.2em; margin-right: 3px;">●</span>
-                        <a class="nav-link p-2" href="{{ url('add_rekomendasi') }}">Add Rekomendasi</a>
-                    </li>
-                    <li class="mb-2 d-flex align-items-center">
-                        <span style="color: orange; font-size: 1.2em; margin-right: 3px;">●</span>
-                        <a class="nav-link p-2" href="#">Deleted Rekomendasi</a>
-                    </li>
-                </ul>
+        @if (session('loginRole') !== 'IT')
+            <div class="y-sidebarItem r-hide-accordion">
+                <a class="nav-link d-flex align-items-center" href="{{ url('daftar_rekomendasi') }}">
+                    <img class="me-2" src="{{ asset('images/rekomendasi.png') }}" alt="Logo" width="20"
+                        height="20">
+                    <span>Daftar Rekomendasi</span>
+                </a>
             </div>
-        </div>
+        @endif
 
-        {{-- kedua --}}
-        <div class="y-sidebarItem r-hide-accordion">
-            <a class="nav-link d-flex align-items-center" href="{{ url('department') }}">
-                <img class="me-2" src="{{ asset('images/department.png') }}" alt="Logo" width="20"
-                    height="20">
-                <span>Department</span>
-            </a>
-        </div>
-        <div class="y-sidebarItem r-hide-accordion">
-            <a class="nav-link d-flex align-items-center" href="{{ url('signature') }}">
-                <img class="me-2" src="{{ asset('images/signature.png') }}" alt="Logo" width="20"
-                    height="20">
-                <span>Signature</span>
-            </a>
-        </div>
+
+
+        {{-- Menu khusus IT --}}
+        @if (session('loginRole') === 'IT')
+            <div class="y-sidebarItem r-hide-accordion">
+                <a class="nav-link d-flex align-items-center dropdown-toggle" href="#" id="rekomMenuToggle">
+                    <img class="me-2" src="{{ asset('images/rekomendasi.png') }}" alt="Logo" width="20"
+                        height="20">
+                    <span>Rekomendasi</span>
+                </a>
+                <div class="submenu ps-4" id="rekomMenu" style="display: none;">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2 d-flex align-items-center">
+                            <span style="color: orange; font-size: 1.2em; margin-right: 3px;">●</span>
+                            <a class="nav-link p-2" href="{{ url('daftar_rekomendasi') }}">Daftar Rekomendasi</a>
+                        </li>
+                        <li class="mb-2 d-flex align-items-center">
+                            <span style="color: orange; font-size: 1.2em; margin-right: 3px;">●</span>
+                            <a class="nav-link p-2" href="{{ url('add_rekomendasi') }}">Add Rekomendasi</a>
+                        </li>
+                        <li class="mb-2 d-flex align-items-center">
+                            <span style="color: orange; font-size: 1.2em; margin-right: 3px;">●</span>
+                            <a class="nav-link p-2" href="#">Deleted Rekomendasi</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            {{-- Menu khusus IT lainnya --}}
+            <div class="y-sidebarItem r-hide-accordion">
+                <a class="nav-link d-flex align-items-center" href="{{ url('department') }}">
+                    <img class="me-2" src="{{ asset('images/department.png') }}" alt="Logo" width="20"
+                        height="20">
+                    <span>Department</span>
+                </a>
+            </div>
+
+            <div class="y-sidebarItem r-hide-accordion">
+                <a class="nav-link d-flex align-items-center" href="{{ url('signature') }}">
+                    <img class="me-2" src="{{ asset('images/signature.png') }}" alt="Logo" width="20"
+                        height="20">
+                    <span>Signature</span>
+                </a>
+            </div>
+
+            <div class="y-sidebarItem r-hide-accordion">
+                <a class="nav-link d-flex align-items-center" href="{{ url('jabatan') }}">
+                    <img class="me-2" src="{{ asset('images/jabatan.png') }}" alt="Logo" width="20"
+                        height="20">
+                    <span>Jabatan</span>
+                </a>
+            </div>
+        @endif
+        {{-- Semua role punya Report --}}
         <div class="y-sidebarItem r-hide-accordion">
             <a class="nav-link d-flex align-items-center" href="{{ url('report') }}">
                 <img class="me-2" src="{{ asset('images/report.png') }}" alt="Logo" width="20"
@@ -158,16 +178,18 @@
             </a>
         </div>
 
+        {{-- Logout semua role --}}
         <div class="y-sidebarItem r-hide-accordion" style="position: absolute; bottom: 20px; width: 215px;">
             <a class="nav-link d-flex align-items-center" href="{{ url('/login') }}">
                 <img class="me-2" src="{{ asset('images/logout.png') }}" alt="Logo" width="20"
                     height="20">
                 <span>Logout</span>
             </a>
-
         </div>
     </div>
+
 </div>
+
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -179,25 +201,33 @@
         const rekomMenuToggle = document.getElementById('rekomMenuToggle');
         const rekomMenu = document.getElementById('rekomMenu');
 
-        rekomMenuToggle.addEventListener('click', function(e) {
-            e.preventDefault();
-            if (rekomMenu.style.display === 'none') {
-                rekomMenu.style.display = 'block';
-            } else {
-                rekomMenu.style.display = 'none';
-            }
-        });
+        if (rekomMenuToggle && rekomMenu) {
+            rekomMenuToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (rekomMenu.style.display === 'none') {
+                    rekomMenu.style.display = 'block';
+                } else {
+                    rekomMenu.style.display = 'none';
+                }
+            });
+        }
 
-        hamburgerBtn.addEventListener('click', () => {
-            sidebarMenu.style.transform = 'translateX(0)';
-        });
+        if (hamburgerBtn && sidebarMenu) {
+            hamburgerBtn.addEventListener('click', () => {
+                sidebarMenu.style.transform = 'translateX(0)';
+            });
+        }
 
-        closeSidebar.addEventListener('click', () => {
-            sidebarMenu.style.transform = 'translateX(-100%)';
-        });
+        if (closeSidebar && sidebarMenu) {
+            closeSidebar.addEventListener('click', () => {
+                sidebarMenu.style.transform = 'translateX(-100%)';
+            });
+        }
 
         document.addEventListener('click', function(event) {
-            if (!sidebarMenu.contains(event.target) && !hamburgerBtn.contains(event.target)) {
+            if (sidebarMenu && hamburgerBtn &&
+                !sidebarMenu.contains(event.target) &&
+                !hamburgerBtn.contains(event.target)) {
                 sidebarMenu.style.transform = 'translateX(-100%)';
             }
         });

@@ -12,55 +12,26 @@ class userController extends Controller
 {
     public function login(Request $request)
     {
-        // Cek tabel login
-        $login = DB::table('login')
-            ->where('username', $request->username)
-            ->where('password', $request->password)
-            ->first();
+        $credentials = $request->only('username', 'password');
+        $user = User::where('username', $credentials['username'])->first();
 
-        if ($login) {
-            session([
-                'username' => $login->username,
-                'login_type' => 'login'
-            ]);
-            return redirect('/home')->with('success', 'Login signature successful');
+        if (!$user || $credentials['password'] !== $user->password) {
+            return back()->withErrors(['provider' => 'Username atau password salah'])->withInput();
         }
 
-        // Cek tabel user
-        $user = User::where('username', $request->username)->first();
-        if ($user && \Hash::check($request->password, $user->password)) {
-            session([
-                'loginId' => $user->id_user,
-                'login_type' => 'users'
-            ]);
-            return redirect('/report')->with('success', 'Login successful');
+        $user->load('jabatan', 'department');
+        if (!$user->jabatan || !$user->department) {
+            return back()->withErrors(['provider' => 'Data user tidak lengkap'])->withInput();
         }
 
-        return back()->withErrors('Tidak terdaftar')->withInput();
+        $role = (strcasecmp($user->department->nama_dep, 'IT') === 0) ? 'IT' : 'USER';
+
+        session([
+            'loginId'   => $user->id_user,
+            'loginRole' => $role,
+            'login_type' => 'users'
+        ]);
+
+        return redirect('/home')->with('success', 'Login successful');
     }
-
-
-    // public function register(Request $request)
-    // {
-    //     $request->validate([
-    //         'jabatan' => 'required|string|max:255',
-    //         'kode_dep' => 'required|string|max:255',
-    //         'username' => 'required|string|max:255|unique:users',
-    //         'password' => 'required|string|min:8|confirmed',
-    //         'nama_leng' => 'required|string|max:255',
-    //         'nip' => 'required|string|max:255|unique:users',
-    //     ]);
-
-    //     User::create([
-    //         'kode_dep' => $request->kode_dep,
-    //         'jabatan' => $request->jabatan,
-    //         'username' => $request->username,
-    //         'password' => bcrypt($request->password),
-    //         'nama_leng' => $request->nama_leng,
-    //         'nip' => $request->nip,
-    //     ]);
-
-    //     return redirect('/login')->with('status', 'berhasil registrasi!');
-
-    // }
 }

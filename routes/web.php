@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\signatureController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\departmentController;
@@ -17,7 +18,8 @@ Route::get('/home', function () {
 //REKOMENDASI
 Route::post('/add_rekomendasi', [rekomendasiController::class, 'create'])->name('rekomendasi.create');
 Route::get('/add_rekomendasi', [rekomendasiController::class, 'index'])->name('rekomendasi.index');
-Route::get('/daftar_rekomendasi', [rekomendasiController::class, 'tampilData']);
+Route::get('/daftar_rekomendasi', [rekomendasiController::class, 'tampilData'])
+    ->name('rekomendasi.daftar');
 Route::get('/report', [rekomendasiController::class, 'laporan'])->name('report');
 Route::delete('/rekomendasi/{id_rek}', [rekomendasiController::class, 'destroy'])->name('rekomendasi.destroy');
 Route::get('/rekomendasi/{id_rek}/edit', [rekomendasiController::class, 'edit'])->name('rekomendasi.edit');
@@ -40,3 +42,11 @@ Route::post('/department', [departmentController::class, 'create'])->name('depar
 Route::get('/department/{kode_dep}/edit', [departmentController::class, 'edit'])->name('department.edit');
 Route::put('/department/{kode_dep}', [departmentController::class, 'update'])->name('department.update');
 Route::delete('/department/{kode_dep}', [departmentController::class, 'destroy'])->name('department.destroy');
+
+
+//JABATAN
+Route::get('/jabatan', [JabatanController::class, 'index'])->name('jabatan.index');
+Route::post('/jabatan', [JabatanController::class, 'create'])->name('jabatan.create');
+Route::delete('/jabatan/{id}', [JabatanController::class, 'destroy'])->name('jabatan.destroy');
+Route::get('/jabatan/{id}/edit', [JabatanController::class, 'edit'])->name('jabatan.edit');
+Route::put('/jabatan/{id}', [JabatanController::class, 'update'])->name('jabatan.update');
