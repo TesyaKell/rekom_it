@@ -92,7 +92,7 @@
         <div class="row-2">
             <div class="row-2">
                 <div class="col-12">
-                    <p class="pt-3 ms-5 ps-5">Daftar Department</p>
+                    <p class="pt-3 ms-5 ps-5">DAFTAR DEPARTMENT</p>
                 </div>
             </div>
         </div>
@@ -119,6 +119,7 @@
 
                 <div class="row g-0 w-50">
                     <div class="col-4 d-flex justify-content-start p-3 fw-bold">Nama Department</div>
+
                     <div class="col-8 p-2"><input class="form-control" type="text"
                             placeholder="Masukkan nama Department" name="nama_dep">
 

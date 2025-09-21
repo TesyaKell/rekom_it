@@ -11,8 +11,11 @@ class signatureController extends Controller
 {
     public function index()
     {
-        $username = session('username');
-        $user = DB::table('login')->where('username', $username)->first();
+        if (!session()->has('loginId')) {
+            return redirect('/login');
+        }
+
+        $user = \DB::table('users')->where('id_user', session('loginId'))->first();
         if ($user) {
             $signatures = signature::all();
             $lastId = signature::max('id_sign');
@@ -28,7 +31,7 @@ class signatureController extends Controller
             return redirect('/login');
         }
 
-        $user = DB::table(table: 'users')->where('id_user', session('loginId'))->first();
+        $user = DB::table('users')->where('id_user', session('loginId'))->first();
 
         try {
             $request->validate([

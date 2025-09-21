@@ -104,48 +104,58 @@
             <form method="GET" action="{{ route('report') }}" class="mb-4">
                 <div class="row g-3">
 
+                    {{-- No. Rekomendasi --}}
                     <div class="col-md-12">
                         <label for="noRek" class="form-label">No. Rekomendasi</label>
                         <div class="input-group">
-                            <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
+                            <input class="form-check-input me-3" type="checkbox" id="chkNoRek">
                             <input type="text" class="form-control" name="noRek" id="noRek"
-                                value="{{ request('noRek') }}" placeholder="Dari">
+                                value="{{ request('noRek') }}" placeholder="Dari" disabled>
                             <span class="input-group-text">s/d</span>
                             <input type="text" class="form-control" name="noRek2" id="noRek2"
-                                value="{{ request('noRek2') }}" placeholder="Sampai">
+                                value="{{ request('noRek2') }}" placeholder="Sampai" disabled>
                         </div>
                     </div>
+
 
                     <div class="col-md-12">
-                        <label for="tgl_awal" class="form-label">Periode Tanggal Masuk</label>
+                        <label for="tgl_awal" class="form-label ms-2">Periode Tanggal Masuk</label>
                         <div class="input-group">
-                            <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
+                            <input class="form-check-input me-3" type="checkbox" id="chkTanggal">
                             <input type="date" class="form-control" name="tgl_awal" id="tgl_awal"
-                                value="{{ request('tgl_awal') }}">
+                                value="{{ request('tgl_awal') }}" disabled>
                             <span class="input-group-text">s/d</span>
                             <input type="date" class="form-control" name="tgl_akhir" id="tgl_akhir"
-                                value="{{ request('tgl_akhir') }}">
+                                value="{{ request('tgl_akhir') }}" disabled>
                         </div>
                     </div>
 
-                    {{-- <div class="col-md-12 mb-2">
-                        <label for="department" class="form-label">Department</label>
-                        <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
-                        <select class="form-select" name="department" id="department">
-                            <option value="">Semua Department</option>
-                            @foreach ($departmentList ?? [] as $department)
-                                <option value="{{ $department }}"
-                                    {{ request('department') == $department ? 'selected' : '' }}>
-                                    {{ $department }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div> --}}
 
+                    <div class="col-md-12 mb-2">
+                        @if (session('loginRole') === 'IT')
+                            <label for="department" class="form-label">Department</label>
+                            <div class="input-group">
+                                <input class="form-check-input me-3" type="checkbox" id="chkDepartment">
+                                <select class="form-select" name="department" id="department" disabled>
+                                    <option value="">Semua Department</option>
+                                    @foreach ($departmentList ?? [] as $department)
+                                        <option value="{{ $department }}"
+                                            {{ request('department') == $department ? 'selected' : '' }}>
+                                            {{ $department }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
+                    </div>
+
+                    {{-- Tombol --}}
                     <div class="col-md-12 d-flex align-items-end">
                         <button type="submit" class="btn btn-success w-50">Tampilkan</button>
                     </div>
+
                 </div>
+
             </form>
         </div>
 
@@ -189,7 +199,8 @@
                                         style="background-color: rgb(249, 137, 0);">Menunggu
                                         Kabag</span>
                                 @elseif($item->status == 'menunggu verifikasi Tim IT')
-                                    <span class="badge
+                                    <span
+                                        class="badge
                                         bg-orange text-light p-1"
                                         style="background-color: rgb(41, 63, 230);">Menunggu
                                         Tim IT</span>
@@ -230,3 +241,32 @@
 @php
     $pageTitle = 'Laporan Rekomendasi & Servis Unit Komputer';
 @endphp
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const chkNoRek = document.getElementById("chkNoRek");
+        const noRek = document.getElementById("noRek");
+        const noRek2 = document.getElementById("noRek2");
+
+        chkNoRek.addEventListener("change", function() {
+            noRek.disabled = !this.checked;
+            noRek2.disabled = !this.checked;
+        });
+
+        const chkTanggal = document.getElementById("chkTanggal");
+        const tglAwal = document.getElementById("tgl_awal");
+        const tglAkhir = document.getElementById("tgl_akhir");
+
+        chkTanggal.addEventListener("change", function() {
+            tglAwal.disabled = !this.checked;
+            tglAkhir.disabled = !this.checked;
+        });
+
+        const chkDepartment = document.getElementById("chkDepartment");
+        const department = document.getElementById("department");
+
+        chkDepartment.addEventListener("change", function() {
+            department.disabled = !this.checked;
+        });
+    });
+</script>
