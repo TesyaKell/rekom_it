@@ -93,81 +93,46 @@
 
     <body>
 
-        <div class="container mt-4">
-            <table class="table table-sm align-middle m-3">
-                <thead class="table-light">
-                    <tr>
-                        <th class="ps-2">No. Rek</th>
-                        <th class="ps-2">No. PR</th>
-                        <th class="ps-2">Jenis Unit</th>
-                        <th class="ps-2">Nama Pengaju</th>
-                        <th class="ps-2">Department</th>
-                        <th class="ps-2">Tanggal Pengajuan</th>
-                        <th class="ps-2">Status</th>
-                        <th class="ps-2 text-center">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
+        <div class="container mt-3 mb-5 me-5 ms-5 p-2">
+            <table class="table table-bordered table-sm align-middle me-5 mt-3 bg-light">
+                <tbody class="table-light">
                     @forelse ($data as $item)
                         <tr>
-                            <td class="ps-2">{{ $item->id_rek }}</td>
-                            <td class="ps-2">{{ $item->no_spb }}</td>
-                            <td class="ps-2">{{ $item->jenis_unit }}</td>
-                            <td class="ps-2">{{ $item->nama_rek }}</td>
-                            <td class="ps-2">{{ $item->jabatan_receiver }}</td>
-                            <td class="ps-2">{{ $item->tgl_masuk }}</td>
-                            <td class="ps-2">
-                                @if ($item->status == 'menunggu verifikasi Kabag')
-                                    <span class="badge text-light p-1"
-                                        style="background-color: rgb(249, 137, 0);">Menunggu
-                                        Kabag</span>
-                                @elseif($item->status == 'menunggu verifikasi Tim IT')
-                                    <span class="badge
-                                        bg-orange text-light p-1"
-                                        style="background-color: rgb(249, 137, 0);">Menunggu
-                                        Tim IT</span>
-                                @elseif($item->status == 'Ditolak')
-                                    <span class="badge bg-danger p-1">Ditolak</span>
-                                @elseif($item->status == 'Diterima')
-                                    <span class="badge bg-success p-1">Diterima</span>
-                                @else
-                                    <span class="badge bg-secondary">{{ $item->status }}</span>
-                                @endif
-                            </td>
-                            <td>
-                                <div class="dropdown d-flex justify-content-center align-items-center">
-                                    <button class="btn btn-light border p-0" type="button"
-                                        id="dropdownMenuButton{{ $item->id_rek }}" data-bs-toggle="dropdown"
-                                        id="dropdownMenuButton{{ $item->id_rek }}" data-bs-toggle="dropdown"
-                                        aria-expanded="false">
-                                        <span class="fw-bold fs-4 d-flex justify-content-center align-items-center"
-                                            style="height: 100%;">⋮</span>
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $item->id_rek }}">
-                                        <li>
-                                            <a class="dropdown-item"
-                                                href="{{ url('/print/' . $item->id_rek) }}">Print</a>
-                                        </li>
-                                        <li>
-                                            <button class="dropdown-item" data-bs-toggle="modal"
-                                                data-bs-target="#editModal{{ $item->id_rek }}">
-                                                Edit
-                                            </button>
-                                        </li>
-                                        <li>
-                                            <form action="{{ url("rekomendasi/{$item->id_rek}") }}" method="POST"
-                                                onsubmit="return confirm('Are you sure you want to delete this item?')"
-                                                style="display:inline;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="dropdown-item text-danger">Hapus</button>
-                                            </form>
-                                        </li>
+                            <td class="ps-3" style="width: 170px;">No. Rek</td>
+                            <td class="ps-3">{{ $item->id_rek }}</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-3" style="width: 170px;">No. PR</th>
+                            <td class="ps-3">{{ $item->no_spb }}</td>
+                        </tr>
 
-
-                                    </ul>
-                                </div>
-                            </td>
+                        <tr>
+                            <td class="ps-3" style="width: 170px;">Nama Pengaju</td>
+                            <td class="ps-3">{{ $item->nama_rek }}</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-3" style="width: 170px;">Department</td>
+                            <td class="ps-3">{{ $item->jabatan_receiver }}</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-3" style="width: 170px;">Tanggal Pengajuan</td>
+                            <td class="ps-3">{{ $item->tgl_masuk }}</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-3" style="width: 170px;">Jenis Unit</td>
+                            <td class="ps-3">{{ $item->jenis_unit }}</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-3" style="width: 170px;">Keterangan</td>
+                            <td class="ps-3">{{ $item->alasan_rek }}</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-3" style="width: 170px;">Rekomendasi</td>
+                            <td class="ps-3">{{ $item->ket_unit }}</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-3" style="width: 170px;">Harga Estimasi</td>
+                            <td class="ps-3">Rp. {{ $item->estimasi_harga }}</td>
                         </tr>
                     @empty
                         <tr>
@@ -175,7 +140,9 @@
                         </tr>
                     @endforelse
                 </tbody>
+
             </table>
+
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
