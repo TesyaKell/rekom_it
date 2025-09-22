@@ -15,9 +15,7 @@ class rekomendasi extends Model
             'id_rek',
             'id_user',
             'id_sign',
-            'nama_rek',
-            'jenis_unit',
-            'ket_unit',
+            'nama_lengkap',
             'alasan_rek',
             'tgl_masuk',
             'nama_receiver',
@@ -27,9 +25,7 @@ class rekomendasi extends Model
             'status',
             'no_spb',
             'jabatan_receiver',
-            'estimasi_harga',
-            'harga_akhir',
-            'bukti'
+            'bukti_pembelian'
         ];
 
     public function user()

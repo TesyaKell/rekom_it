@@ -34,40 +34,39 @@ class rekomendasiController extends Controller
 
         $user = \DB::table('users')->where('id_user', session('loginId'))->first();
         $departments = \DB::table('department')->get();
-        $lastId = rekomendasi::max('id_rek');
 
         try {
-            $req->validate([
-                'no_spb' => 'nullable|numeric',
-                'nama_rek' => 'required|string|max:255',
-                'jenis_unit' => 'required|string|max:255',
-                'ket_unit' => 'required|string|max:255',
-                'tgl_masuk' => 'required|date',
-                'estimasi_harga' => 'required|numeric',
-                'kode_dep' => 'required|string|max:255',
-                'alasan_rek' => 'nullable|string|max:255',
-            ]);
-
+            // Simpan data utama ke tabel rekomendasi
             $selectedDep = $departments->where('kode_dep', $req->kode_dep)->first();
             $nama_dep = $selectedDep ? $selectedDep->nama_dep : '';
 
-            rekomendasi::create([
+            $rekomendasi = \App\Models\rekomendasi::create([
                 'id_user' => $user->id_user,
-                'alasan_rek' => $req->alasan_rek ,
-                'nama_rek' => $req->nama_rek,
-                'jenis_unit' => $req->jenis_unit,
                 'no_spb' => $req->no_spb,
-                'ket_unit' => $req->ket_unit,
+                'nama_lengkap' => $req->nama_lengkap,
                 'tgl_masuk' => $req->tgl_masuk,
-                'status' => 'menunggu verifikasi Kabag',
+                'alasan_rek' => $req->alasan_rek,
                 'nama_dep' => $nama_dep,
-                'estimasi_harga' => $req->estimasi_harga,
+                'status' => 'menunggu verifikasi Kabag',
             ]);
+
+            // Simpan detail rekomendasi ke tabel detail_rekomendasi
+            if ($req->has('detail_rekomendasi')) {
+                foreach ($req->detail_rekomendasi as $detail) {
+                    \DB::table('detail_rekomendasi')->insert([
+                        'id_rek' => $rekomendasi->id_rek,
+                        'jenis_unit' => $detail['jenis_unit'] ?? null,
+                        'ket_unit' => $detail['ket_unit'] ?? null,
+                        'estimasi_harga' => $detail['estimasi_harga'] ?? null,
+                    ]);
+                }
+            }
 
             \Log::info("Sukses tambah rekomendasi oleh user {$user->id_user}");
             return redirect()->route('rekomendasi.daftar')->with('success', 'Data berhasil ditambahkan!');
         } catch (\Exception $e) {
             \Log::error("Gagal simpan data : {$e->getMessage()}");
+            $lastId = \App\Models\rekomendasi::max('id_rek');
             return view('add_rekomendasi', compact('departments', 'lastId'))
                 ->with('error', 'Gagal simpan data!');
         }
@@ -212,3 +211,4 @@ class rekomendasiController extends Controller
         return view('daftar_rekomendasi', compact('data', 'departments', 'query'));
     }
 }
+
