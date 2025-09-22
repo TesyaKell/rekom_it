@@ -24,19 +24,19 @@ class JabatanController extends Controller
 
     public function create(Request $request)
     {
-        if (!session()->has('loginId')) {
-            return redirect('/login');
+        if (session('loginRole') !== 'IT') {
+            return redirect('/home')->withErrors(['access' => 'Anda tidak punya akses']);
         }
-
-        $user = DB::table('users')->where('id_user', session('loginId'))->first();
-
         try {
+            $user = DB::table('users')->where('id_user', session('loginId'))->first();
+
             $request->validate([
                 'nama_jab' => 'required|string|max:255',
             ]);
 
             Jabatan::create([
                 'nama_jab' => $request->nama_jab,
+                'created_by' => $user ? $user->nama_leng : 'Unknown',
             ]);
 
             Log::info("Data jabatan: ", $request->all());
@@ -60,38 +60,24 @@ class JabatanController extends Controller
         ]);
 
         $jabatan = Jabatan::findOrFail($id);
-        $jabatan->update($request->only(['nama_jab']));
+        $user = DB::table('users')->where('id_user', session('loginId'))->first();
 
+        $jabatan->update([
+            'nama_jab'   => $request->nama_jab,
+            'updated_by' => $user ? $user->nama_leng : 'Unknown',
+        ]);
+        \Log::info("Jabatan ID: {$jabatan->id_jab} diperbarui oleh user ID: " . session('loginId'));
         return redirect()->route('jabatan.index')->with('success', 'Data berhasil diperbarui!');
     }
 
     public function destroy($id)
     {
         $jabatan = Jabatan::find($id);
+        $user = DB::table('users')->where('id_user', session('loginId'))->first();
 
-        if ($jabatan) {
-            $deletedBy = session('loginId');
-
-            DB::table('log_jabatan')->insert([
-                'id_jab'     => $jabatan->id_jab,
-                'nama_jab'   => $jabatan->nama_jab,
-                'deleted_by' => $deletedBy,
-                'deleted_at' => now(),
-            ]);
-
-            Log::info("Jabatan {$jabatan->nama_jab} (ID: {$jabatan->id_jab}) dihapus oleh user ID: {$deletedBy}");
-            $jabatan->delete();
-        }
-
+        $jabatan->update([
+            'deleted_by' => $user ? $user->nama_leng : 'Unknown',
+             ]);
         return redirect()->route('jabatan.index');
-    }
-
-    public function search(Request $req)
-    {
-        $query = $req->input('query');
-
-        $results = Jabatan::where('nama_jab', 'LIKE', '%' . $query . '%')->get();
-
-        return view('search_jabatan', compact('results', 'query'));
     }
 }
