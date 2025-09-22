@@ -81,7 +81,7 @@
             height: 250px;
             width: 480px;
             padding: 15px;
-            border-radius: 10px;
+            border-radius: 5px;
         }
 
         .card-3 .card-body-3 {
@@ -89,7 +89,7 @@
             height: auto;
             width: 880px;
             padding: 15px;
-            border-radius: 10px;
+            border-radius: 5px;
         }
     </style>
 </head>

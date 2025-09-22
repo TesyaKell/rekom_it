@@ -32,7 +32,10 @@ Route::get('/daftar_rekomendasi', [rekomendasiController::class, 'tampilData'])
 Route::get('/report', [rekomendasiController::class, 'laporan'])->name('report');
 Route::delete('/rekomendasi/{id_rek}', [rekomendasiController::class, 'destroy'])->name('rekomendasi.destroy');
 Route::get('/rekomendasi/{id_rek}/edit', [rekomendasiController::class, 'edit'])->name('rekomendasi.edit');
+
 Route::put('/rekomendasi/{id_rek}', [rekomendasiController::class, 'update'])->name('rekomendasi.update');
+Route::post('/rekomendasi/{id_rek}/approve', [rekomendasiController::class, 'updateStatus'])->name('rekomendasi.approve');
+
 Route::get('search', [rekomendasiController::class, 'searchRekomendasi'])->name('searchRekomendasi');
 Route::get('/print/{id}', [rekomendasiController::class, 'print'])->name('rekomendasi.print');
 

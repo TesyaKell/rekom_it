@@ -77,11 +77,8 @@ class rekomendasiController extends Controller
         $req->validate([
             'alasan_rek' => 'nullable|string|max:255',
             'no_spb' => 'nullable|numeric',
-            'nama_rek' => 'required|string|max:255',
-            'jenis_unit' => 'required|string|max:255',
-            'ket_unit' => 'required|string|max:255',
+            'nama_lengkap' => 'required|string|max:255',
             'tgl_masuk' => 'required|date',
-            'estimasi_harga' => 'required|numeric',
             'nama_dep' => 'required|string|max:255',
         ]);
 
@@ -89,6 +86,28 @@ class rekomendasiController extends Controller
         $rekomendasi->update($req->all());
 
         return redirect()->route('rekomendasi.daftar')->with('success', 'Data berhasil diperbarui!');
+    }
+
+
+    public function updateStatus(Request $req, $id_rek)
+    {
+        $rekomendasi = rekomendasi::findOrFail($id_rek);
+
+        // Cek role user dari session
+        $role = session('loginRole');
+
+        if ($role === 'IT') {
+            $rekomendasi->status = 'Selesai';
+        } elseif ($role === 'Kepala Bagian') {
+            $rekomendasi->status = 'menunggu verifikasi Tim IT';
+        } else {
+            // Jika role lain, gunakan status dari request (atau default)
+            $rekomendasi->status = $req->input('status', $rekomendasi->status);
+        }
+
+        $rekomendasi->save();
+
+        return redirect()->route('rekomendasi.approve')->with('success', 'Status berhasil diperbarui!');
     }
 
     public function destroy($id_rek)
