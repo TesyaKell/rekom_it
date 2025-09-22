@@ -93,7 +93,8 @@
 
     <body>
 
-        <div class="container mt-3 mb-5 me-5 ms-5 p-2">
+        <div class="container mt-1 mb-5 me-5 ms-5 p-2">
+            <h6 class="mt-3 mb-2 fw-bold">Rekomendasi</h6>
             <table class="table table-bordered table-sm align-middle me-5 mt-3 bg-light">
                 <tbody class="table-light">
                     {{-- Tampilkan data rekomendasi utama --}}
@@ -109,7 +110,7 @@
                         </tr>
                         <tr>
                             <td class="ps-3" style="width: 170px;">Nama Pengaju</td>
-                            <td class="ps-3">{{ $header->nama_rek }}</td>
+                            <td class="ps-3">{{ $header->nama_lengkap }}</td>
                         </tr>
                         <tr>
                             <td class="ps-3" style="width: 170px;">Department</td>
@@ -131,7 +132,7 @@
                 </tbody>
             </table>
 
-            <h6 class="mt-4 mb-2">Detail Rekomendasi</h6>
+            <h6 class="mt-4 mb-2 fw-bold">Detail Rekomendasi</h6>
             <table class="table table-bordered table-sm align-middle bg-light">
                 <thead>
                     <tr>

@@ -135,7 +135,10 @@ class rekomendasiController extends Controller
 
         $data = rekomendasi::where('id_rek', $id_rek)->get();
         $departments = department::all();
-        return view('detailRekomendasi', compact('data', 'departments'));
+        $details = \DB::table('detail_rekomendasi')->where('id_rek', $id_rek)->get();
+
+        // Pastikan view 'detailRekomendasi' menampilkan variable 'details'
+        return view('detailRekomendasi', compact('data', 'departments', 'details'));
     }
 
     public function edit($id)

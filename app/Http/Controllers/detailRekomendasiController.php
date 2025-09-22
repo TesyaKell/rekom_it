@@ -48,17 +48,4 @@ class detailRekomendasiController extends Controller
     }
 
 
-    public function tampilDetail($id_rek)
-    {
-        try {
-            $departments = \DB::table('department')->get();
-            $data = \DB::table('rekomendasi')->where('id_rek', $id_rek)->get();
-            $details = \DB::table('detail_rekomendasi')->where('id_rek', $id_rek)->get();
-            return view('detailRekomendasi', compact('data', 'departments', 'details'));
-        } catch (\Exception $e) {
-            \Log::error("Gagal menampilkan data : {$e->getMessage()}");
-            return redirect()->route('rekomendasi.daftar')->with('error', 'Gagal menampilkan data!');
-        }
-    }
-
 }
