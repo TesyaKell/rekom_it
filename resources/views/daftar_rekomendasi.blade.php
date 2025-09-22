@@ -144,7 +144,7 @@
                             <th class="ps-2">Tanggal Pengajuan</th>
                             <th class="ps-2">Status</th>
                             <th class="ps-2 text-center">Action</th>
-                            @if (auth()->user() && auth()->user()->id_jab == 6)
+                            @if (session('loginRole') === 'Kepala Bagian')
                                 <th class="ps-2 text-center">Approval</th>
                             @else
                                 <td class="ps-2">Tidak Kedetect</td>
@@ -162,7 +162,7 @@
                                 </td>
                                 <td class="ps-2">{{ $item->no_spb }}</td>
                                 <td class="ps-2">{{ $item->nama_lengkap }}</td>
-                                <td class="ps-2">{{ $item->jabatan_receiver }}</td>
+                                <td class="ps-2">{{ $item->nama_dep }}</td>
                                 <td class="ps-2">{{ $item->tgl_masuk }}</td>
                                 <td class="ps-2">
                                     @if ($item->status == 'menunggu verifikasi Kabag')
@@ -216,7 +216,7 @@
                                         </ul>
                                     </div>
                                 </td>
-                                @if (auth()->user() && auth()->user()->id_jab == 6)
+                                @if (session('loginRole') === 'Kepala Bagian')
                                     <td class="ps-2">
                                         <div class="d-flex gap-2 mt-3 justify-content-center">
                                             <button type="submit"
@@ -226,7 +226,7 @@
                                         </div>
                                     </td>
                                 @else
-                                    <td class="ps-2">gg</td>
+                                    <td class="ps-2">gh</td>
                                 @endif
 
                             </tr>

@@ -202,11 +202,16 @@ class rekomendasiController extends Controller
     {
         $query = $id_rek->input('query');
 
-        $data = rekomendasi::where('nama_rek', 'LIKE', '%' . $query . '%')
-            ->orWhere('jenis_unit', 'LIKE', '%' . $query . '%')
+        $data = rekomendasi::where('nama_lengkap', 'LIKE', '%' . $query . '%')
+            ->orWhereIn('id_rek', function ($sub) use ($query) {
+                $sub->select('id_rek')
+                    ->from('detail_rekomendasi')
+                    ->where('jenis_unit', 'LIKE', '%' . $query . '%');
+            })
             ->orWhere('status', 'LIKE', '%' . $query . '%')
             ->orWhere('nama_receiver', 'LIKE', '%' . $query . '%')
             ->orWhere('jabatan_receiver', 'LIKE', '%' . $query . '%')
+            ->orWhere('nama_dep', 'LIKE', '%' . $query . '%')
             ->orWhere('id_rek', 'LIKE', '%' . $query . '%')
             ->get();
 
