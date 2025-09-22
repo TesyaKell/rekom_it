@@ -180,7 +180,8 @@
 
         {{-- Logout semua role --}}
         <div class="y-sidebarItem r-hide-accordion" style="position: absolute; bottom: 20px; width: 215px;">
-            <a class="nav-link d-flex align-items-center" href="{{ url('/login') }}">
+            <a class="nav-link d-flex align-items-center" href="#" id="logoutBtn" data-bs-toggle="modal"
+                data-bs-target="#logoutModal">
                 <img class="me-2" src="{{ asset('images/logout.png') }}" alt="Logo" width="20"
                     height="20">
                 <span>Logout</span>
@@ -190,6 +191,24 @@
 
 </div>
 
+<!-- Logout Confirmation Modal -->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="logoutModalLabel" style="color: #333;">Konfirmasi Logout</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="color: #333;">
+                Apakah Anda yakin ingin keluar dari sistem?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-danger" id="confirmLogout">Keluar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -230,6 +249,26 @@
                 !hamburgerBtn.contains(event.target)) {
                 sidebarMenu.style.transform = 'translateX(-100%)';
             }
+        });
+
+        // Logout confirmation
+        const confirmLogout = document.getElementById('confirmLogout');
+        confirmLogout.addEventListener('click', function() {
+            // Create a form to submit logout request
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = "{{ route('logout') }}";
+
+            // Add CSRF token
+            const csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = '_token';
+            csrfToken.value = "{{ csrf_token() }}";
+            form.appendChild(csrfToken);
+
+            // Add to body and submit
+            document.body.appendChild(form);
+            form.submit();
         });
     });
 </script>

@@ -31,6 +31,9 @@ Route::get('search', [rekomendasiController::class, 'searchRekomendasi'])->name(
 Route::get('/print/{id}', [rekomendasiController::class, 'print'])->name('rekomendasi.print');
 
 
+Route::get('/detailRekomendasi/{id_rek}', [rekomendasiController::class, 'tampilDetail'])->name('rekomendasi.detail');
+
+
 
 // // SIGNATURE
 Route::get('/signature', [signatureController::class, 'index'])->name('signature.index');
@@ -45,6 +48,13 @@ Route::post('/department', [departmentController::class, 'create'])->name('depar
 Route::get('/department/{kode_dep}/edit', [departmentController::class, 'edit'])->name('department.edit');
 Route::put('/department/{kode_dep}', [departmentController::class, 'update'])->name('department.update');
 Route::delete('/department/{kode_dep}', [departmentController::class, 'destroy'])->name('department.destroy');
+Route::post('/logout', function () {
+    Auth::logout();
+    session()->invalidate();
+    session()->regenerateToken();
+
+    return redirect('/login')->with('message', 'You have been logged out successfully.');
+})->name('logout');
 
 
 //JABATAN
