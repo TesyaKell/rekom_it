@@ -151,12 +151,16 @@
                         <tr>
                             <th class="ps-2">No. Rek</th>
                             <th class="ps-2">No. PR</th>
-                            <th class="ps-2">Jenis Unit</th>
                             <th class="ps-2">Nama Pengaju</th>
                             <th class="ps-2">Department</th>
                             <th class="ps-2">Tanggal Pengajuan</th>
                             <th class="ps-2">Status</th>
                             <th class="ps-2 text-center">Action</th>
+                            {{-- @if (session('loginRole') === 'Kepala Bagian') --}}
+                            <th class="ps-2 text-center">Approval</th>
+                            {{-- @else
+                                <td class="ps-2">Tidak Kedetect</td>
+                            @endif --}}
                         </tr>
                     </thead>
                     <tbody>
@@ -169,8 +173,7 @@
                                     </a>
                                 </td>
                                 <td class="ps-2">{{ $item->no_spb }}</td>
-                                <td class="ps-2">{{ $item->jenis_unit }}</td>
-                                <td class="ps-2">{{ $item->nama_rek }}</td>
+                                <td class="ps-2">{{ $item->nama_lengkap }}</td>
                                 <td class="ps-2">{{ $item->nama_dep }}</td>
                                 <td class="ps-2">{{ $item->tgl_masuk }}</td>
                                 <td class="ps-2">
@@ -225,6 +228,22 @@
                                         </ul>
                                     </div>
                                 </td>
+                                {{-- @if (session('loginRole') === 'Kepala Bagian') --}}
+                                <td class="ps-2">
+                                    <div class="d-flex gap-2 mt-3 justify-content-center">
+                                        <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
+                                            method="POST" style="display:inline;">
+                                            @csrf
+                                            <button type="submit"
+                                                class="btn btn-primary btn-lg active btn-sm fw-bold">Approved</button>
+                                        </form>
+                                        <button type="button" class="btn btn-danger btn-sm fw-bold">Tolak</button>
+                                    </div>
+                                </td>
+                                {{-- @else
+                                    <td class="ps-2">gh</td>
+                                @endif --}}
+
                             </tr>
                         @empty
                             <tr>

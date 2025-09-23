@@ -75,6 +75,22 @@
             font-weight: 600;
             color: #000000cb;
         }
+
+        .card-2 .card-body-2 {
+            background-color: #ffffff;
+            height: 250px;
+            width: 480px;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .card-3 .card-body-3 {
+            background-color: #ffffff;
+            height: auto;
+            width: 880px;
+            padding: 15px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 
@@ -93,56 +109,79 @@
 
     <body>
 
-        <div class="container mt-3 mb-5 me-5 ms-5 p-2">
-            <table class="table table-bordered table-sm align-middle me-5 mt-3 bg-light">
-                <tbody class="table-light">
-                    @forelse ($data as $item)
-                        <tr>
-                            <td class="ps-3" style="width: 170px;">No. Rek</td>
-                            <td class="ps-3">{{ $item->id_rek }}</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-3" style="width: 170px;">No. PR</th>
-                            <td class="ps-3">{{ $item->no_spb }}</td>
-                        </tr>
+        <div class="container mt-1 mb-5 me-5 ms-5 p-2">
+            <h6 class="mt-3 mb-2 fw-bold">Rekomendasi</h6>
+            <div class="card-2">
+                <div class="card-body-2">
+                    <table class="table table-bordered table-sm align-middle bg-light" style="width: 450px;">
+                        <tbody class="table-light">
+                            {{-- Tampilkan data rekomendasi utama --}}
+                            @if ($data->count())
+                                @php $header = $data->first(); @endphp
+                                <tr>
+                                    <td class="ps-3 p-2" style="width: 170px;">No. Rek</td>
+                                    <td class="ps-3">{{ $header->id_rek }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-3 p-2" style="width: 170px;">No. PR</td>
+                                    <td class="ps-3">{{ $header->no_spb }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-3 p-2" style="width: 170px;">Nama Pengaju</td>
+                                    <td class="ps-3">{{ $header->nama_lengkap }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-3 p-2" style="width: 170px;">Department</td>
+                                    <td class="ps-3">{{ $header->nama_dep ?? $header->jabatan_receiver }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-3 p-2" style="width: 170px;">Tanggal Pengajuan</td>
+                                    <td class="ps-3">{{ $header->tgl_masuk }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-3 p-2" style="width: 170px;">Alasan</td>
+                                    <td class="ps-3">{{ $header->alasan_rek }}</td>
+                                </tr>
+                            @else
+                                <tr>
+                                    <td colspan="2" class="text-center">Data tidak ditemukan.</td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-                        <tr>
-                            <td class="ps-3" style="width: 170px;">Nama Pengaju</td>
-                            <td class="ps-3">{{ $item->nama_rek }}</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-3" style="width: 170px;">Department</td>
-                            <td class="ps-3">{{ $item->nama_dep }}</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-3" style="width: 170px;">Tanggal Pengajuan</td>
-                            <td class="ps-3">{{ $item->tgl_masuk }}</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-3" style="width: 170px;">Jenis Unit</td>
-                            <td class="ps-3">{{ $item->jenis_unit }}</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-3" style="width: 170px;">Keterangan</td>
-                            <td class="ps-3">{{ $item->alasan_rek }}</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-3" style="width: 170px;">Rekomendasi</td>
-                            <td class="ps-3">{{ $item->ket_unit }}</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-3" style="width: 170px;">Harga Estimasi</td>
-                            <td class="ps-3">Rp. {{ $item->estimasi_harga }}</td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="8" class="text-center">Data tidak ditemukan.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-
-            </table>
-
+            <h6 class="mt-4 mb-2 fw-bold">Detail Rekomendasi</h6>
+            <div class="card-3">
+                <div class="card-body-3">
+                    <table class="table table-bordered table-sm align-middle bg-light">
+                        <thead>
+                            <tr>
+                                <th class="ps-3">Jenis Unit</th>
+                                <th class="ps-3">Keterangan</th>
+                                <th class="ps-3">Estimasi Harga</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (isset($details) && count($details))
+                                @foreach ($details as $detail)
+                                    <tr>
+                                        <td class="ps-3">{{ $detail->jenis_unit }}</td>
+                                        <td class="ps-3">{{ $detail->ket_unit }}</td>
+                                        <td class="ps-3">Rp. {{ number_format($detail->estimasi_harga, 0, ',', '.') }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="3" class="text-center">Detail tidak ditemukan.</td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"

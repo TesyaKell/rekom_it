@@ -33,40 +33,39 @@ class rekomendasiController extends Controller
 
         $user = \DB::table('users')->where('id_user', session('loginId'))->first();
         $departments = \DB::table('department')->get();
-        $lastId = rekomendasi::max('id_rek');
 
         try {
-            $req->validate([
-                'no_spb' => 'nullable|numeric',
-                'nama_rek' => 'required|string|max:255',
-                'jenis_unit' => 'required|string|max:255',
-                'ket_unit' => 'required|string|max:255',
-                'tgl_masuk' => 'required|date',
-                'estimasi_harga' => 'required|numeric',
-                'kode_dep' => 'required|string|max:255',
-                'alasan_rek' => 'nullable|string|max:255',
-            ]);
-
+            // Simpan data utama ke tabel rekomendasi
             $selectedDep = $departments->where('kode_dep', $req->kode_dep)->first();
             $nama_dep = $selectedDep ? $selectedDep->nama_dep : '';
 
-            rekomendasi::create([
+            $rekomendasi = \App\Models\rekomendasi::create([
                 'id_user' => $user->id_user,
-                'alasan_rek' => $req->alasan_rek ,
-                'nama_rek' => $req->nama_rek,
-                'jenis_unit' => $req->jenis_unit,
                 'no_spb' => $req->no_spb,
-                'ket_unit' => $req->ket_unit,
+                'nama_lengkap' => $req->nama_lengkap,
                 'tgl_masuk' => $req->tgl_masuk,
-                'status' => 'menunggu verifikasi Kabag',
+                'alasan_rek' => $req->alasan_rek,
                 'nama_dep' => $nama_dep,
-                'estimasi_harga' => $req->estimasi_harga,
+                'status' => 'menunggu verifikasi Kabag',
             ]);
+
+            // Simpan detail rekomendasi ke tabel detail_rekomendasi
+            if ($req->has('detail_rekomendasi')) {
+                foreach ($req->detail_rekomendasi as $detail) {
+                    \DB::table('detail_rekomendasi')->insert([
+                        'id_rek' => $rekomendasi->id_rek,
+                        'jenis_unit' => $detail['jenis_unit'] ?? null,
+                        'ket_unit' => $detail['ket_unit'] ?? null,
+                        'estimasi_harga' => $detail['estimasi_harga'] ?? null,
+                    ]);
+                }
+            }
 
             \Log::info("Sukses tambah rekomendasi oleh user {$user->id_user}");
             return redirect()->route('rekomendasi.daftar')->with('success', 'Data berhasil ditambahkan!');
         } catch (\Exception $e) {
             \Log::error("Gagal simpan data : {$e->getMessage()}");
+            $lastId = \App\Models\rekomendasi::max('id_rek');
             return view('add_rekomendasi', compact('departments', 'lastId'))
                 ->with('error', 'Gagal simpan data!');
         }
@@ -77,11 +76,8 @@ class rekomendasiController extends Controller
         $req->validate([
             'alasan_rek' => 'nullable|string|max:255',
             'no_spb' => 'nullable|numeric',
-            'nama_rek' => 'required|string|max:255',
-            'jenis_unit' => 'required|string|max:255',
-            'ket_unit' => 'required|string|max:255',
+            'nama_lengkap' => 'required|string|max:255',
             'tgl_masuk' => 'required|date',
-            'estimasi_harga' => 'required|numeric',
             'nama_dep' => 'required|string|max:255',
         ]);
 
@@ -89,6 +85,28 @@ class rekomendasiController extends Controller
         $rekomendasi->update($req->all());
 
         return redirect()->route('rekomendasi.daftar')->with('success', 'Data berhasil diperbarui!');
+    }
+
+
+    public function updateStatus(Request $req, $id_rek)
+    {
+        $rekomendasi = rekomendasi::findOrFail($id_rek);
+
+        // Cek role user dari session
+        $role = session('loginRole');
+
+        if ($role === 'IT') {
+            $rekomendasi->status = 'Selesai';
+        } elseif ($role === 'Kepala Bagian') {
+            $rekomendasi->status = 'menunggu verifikasi Tim IT';
+        } else {
+            // Jika role lain, gunakan status dari request (atau default)
+            $rekomendasi->status = $req->input('status', $rekomendasi->status);
+        }
+
+        $rekomendasi->save();
+
+        return redirect()->route('rekomendasi.approve')->with('success', 'Status berhasil diperbarui!');
     }
 
     public function destroy($id_rek)
@@ -131,7 +149,10 @@ class rekomendasiController extends Controller
 
         $data = rekomendasi::where('id_rek', $id_rek)->get();
         $departments = department::all();
-        return view('detailRekomendasi', compact('data', 'departments'));
+        $details = \DB::table('detail_rekomendasi')->where('id_rek', $id_rek)->get();
+
+        // Pastikan view 'detailRekomendasi' menampilkan variable 'details'
+        return view('detailRekomendasi', compact('data', 'departments', 'details'));
     }
 
     public function edit($id)
@@ -217,34 +238,20 @@ class rekomendasiController extends Controller
     {
         $query = $id_rek->input('query');
 
-        $data = rekomendasi::where('nama_rek', 'LIKE', '%' . $query . '%')
-           ->orWhere('status', 'LIKE', '%' . $query . '%')
+        $data = rekomendasi::where('nama_lengkap', 'LIKE', '%' . $query . '%')
+            ->orWhereIn('id_rek', function ($sub) use ($query) {
+                $sub->select('id_rek')
+                    ->from('detail_rekomendasi')
+                    ->where('jenis_unit', 'LIKE', '%' . $query . '%');
+            })
+            ->orWhere('status', 'LIKE', '%' . $query . '%')
             ->orWhere('nama_receiver', 'LIKE', '%' . $query . '%')
             ->orWhere('jabatan_receiver', 'LIKE', '%' . $query . '%')
+            ->orWhere('nama_dep', 'LIKE', '%' . $query . '%')
             ->orWhere('id_rek', 'LIKE', '%' . $query . '%')
             ->get();
 
         $departments = department::all();
         return view('daftar_rekomendasi', compact('data', 'departments', 'query'));
     }
-
-    public function filterStatus(Request $request)
-    {
-        $status = $request->input('status');
-
-        if (empty($status) || $status == 'Semua Rekomendasi') {
-            $data = rekomendasi::all();
-        } elseif ($status == 'Belum Realisasi') {
-            $data = rekomendasi::whereIn('status', [
-                'menunggu verifikasi Kabag',
-                'menunggu verifikasi Tim IT',
-                'Ditolak'
-            ])->get();
-        } else {
-            $data = rekomendasi::where('status', $status)->get();
-        }
-        $departments = department::all();
-        return view('daftar_rekomendasi', compact('data', 'departments'));
-    }
-
 }

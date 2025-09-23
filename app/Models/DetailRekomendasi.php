@@ -11,6 +11,7 @@ class DetailRekomendasi extends Model
     public $primaryKey = 'id_detail_rekomendasi';
     protected $fillable =
         [
+            'id_detail_rekomendasi',
             'id_rek',
             'jenis_unit',
             'ket_unit',
@@ -19,8 +20,8 @@ class DetailRekomendasi extends Model
             'harga_akhir',
         ];
 
-    public function user()
+    public function rekomendasi()
     {
-        return $this->belongsTo(User::class, 'id_user', 'id_user');
+        return $this->belongsTo(Rekomendasi::class, 'id_rek', 'id_rek');
     }
 }

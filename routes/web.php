@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\detailRekomendasiController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\signatureController;
 use Illuminate\Support\Facades\Route;
@@ -15,9 +16,14 @@ Route::get('/home', function () {
     return view('home');
 });
 
-//Route::get('/print-rekomendasi', [rekomendasiController::class, 'index'])->name('rekomendasi.index');
+
 //REKOMENDASI
+//Route::get('/detailRekomendasi/{id_rek}', [detailRekomendasiController::class, 'tampilDetail'])->name('rekomendasi.daftar');
+Route::get('/detailRekomendasi/{id_rek}', [rekomendasiController::class, 'tampilDetail'])->name('rekomendasi.detail');
+
+
 Route::post('/add_rekomendasi', [rekomendasiController::class, 'create'])->name('rekomendasi.create');
+
 Route::get('/add_rekomendasi', [rekomendasiController::class, 'index'])->name('rekomendasi.index');
 
 Route::get('/deleted_rekomendasi', [rekomendasiController::class, 'tampilDataTerhapus'])->name('rekomendasi.deleted');
@@ -27,13 +33,19 @@ Route::get('/daftar_rekomendasi', [rekomendasiController::class, 'tampilData'])
 Route::get('/report', [rekomendasiController::class, 'laporan'])->name('report');
 Route::delete('/rekomendasi/{id_rek}', [rekomendasiController::class, 'destroy'])->name('rekomendasi.destroy');
 Route::get('/rekomendasi/{id_rek}/edit', [rekomendasiController::class, 'edit'])->name('rekomendasi.edit');
+
 Route::put('/rekomendasi/{id_rek}', [rekomendasiController::class, 'update'])->name('rekomendasi.update');
+Route::post('/rekomendasi/{id_rek}/approve', [rekomendasiController::class, 'updateStatus'])->name('rekomendasi.approve');
+
 Route::get('search', [rekomendasiController::class, 'searchRekomendasi'])->name('searchRekomendasi');
 Route::get('/print/{id}', [rekomendasiController::class, 'print'])->name('rekomendasi.print');
 
 
+<<<<<<< HEAD
 Route::get('/detailRekomendasi/{id_rek}', [rekomendasiController::class, 'tampilDetail'])->name('rekomendasi.detail');
 Route::get('/rekomendasi/filter', [RekomendasiController::class, 'filterStatus'])->name('rekomendasi.filter');
+=======
+>>>>>>> 7ab5517804d85cfde3fe7be5c387dc50c79c2824
 
 
 
@@ -64,4 +76,5 @@ Route::get('/jabatan', [JabatanController::class, 'index'])->name('jabatan.index
 Route::post('/jabatan', [JabatanController::class, 'create'])->name('jabatan.create');
 Route::delete('/jabatan/{id}', [JabatanController::class, 'destroy'])->name('jabatan.destroy');
 Route::get('/jabatan/{id}/edit', [JabatanController::class, 'edit'])->name('jabatan.edit');
+Route::put('/jabatan/{id}', [JabatanController::class, 'update'])->name('jabatan.update');
 Route::put('/jabatan/{id}', [JabatanController::class, 'update'])->name('jabatan.update');
