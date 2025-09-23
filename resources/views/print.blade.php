@@ -68,6 +68,7 @@
 
         <div class="container mt-3 mb-5 me-5 ms-5 p-2">
 
+            {{-- Tabel Data Rekomendasi --}}
             <table class="table table-bordered table-sm align-middle me-5 mt-3 bg-light">
                 <tbody class="table-light">
                     @if ($data)
@@ -76,10 +77,9 @@
                             <td class="ps-3">{{ $data->id_rek }}</td>
                         </tr>
                         <tr>
-                            <td class="ps-3" style="width: 170px;">No. PR</th>
+                            <td class="ps-3" style="width: 170px;">No. PR</td>
                             <td class="ps-3">{{ $data->no_spb }}</td>
                         </tr>
-
                         <tr>
                             <td class="ps-3" style="width: 170px;">Nama Pengaju</td>
                             <td class="ps-3">{{ $data->nama_lengkap }}</td>
@@ -92,29 +92,10 @@
                             <td class="ps-3" style="width: 170px;">Tanggal Pengajuan</td>
                             <td class="ps-3">{{ $data->tgl_masuk }}</td>
                         </tr>
-                    @else
-                        <tr>
-                            <td colspan="8" class="text-center">Data tidak ditemukan.</td>
-                        </tr>
-                    @endif
-
-                    @if ($details && $details->first())
-                        <tr>
-                            <td class="ps-3" style="width: 170px;">Keterangan</td>
-                            <td class="ps-3">{{ $details->first()->ket_unit }}</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-3" style="width: 170px;">Jenis Unit</td>
-                            <td class="ps-3">{{ $details->first()->jenis_unit }}</td>
-                        </tr>
-                    @endif
-
-                    @if ($data)
                         <tr>
                             <td class="ps-3" style="width: 170px;">Alasan</td>
                             <td class="ps-3">{{ $data->alasan_rek }}</td>
                         </tr>
-
                         <tr>
                             <td class="ps-3" style="width: 170px;">Harga Estimasi</td>
                             <td class="ps-3">Rp. {{ $data->estimasi_harga }}</td>
@@ -124,9 +105,37 @@
                             <td colspan="8" class="text-center">Data tidak ditemukan.</td>
                         </tr>
                     @endif
-
                 </tbody>
+            </table>
 
+            {{-- Tabel Data Detail Rekomendasi --}}
+            <table class="table table-bordered table-sm align-middle me-5 mt-3 bg-light">
+                <thead>
+                    <tr>
+                        <th class="ps-3">No</th>
+                        <th class="ps-3">Jenis Unit</th>
+                        <th class="ps-3">Keterangan Unit</th>
+                        <th class="ps-3">Estimasi Harga</th>
+                        <th class="ps-3">Masukan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if ($details && count($details))
+                        @foreach ($details as $idx => $detail)
+                            <tr>
+                                <td class="ps-3">{{ $idx + 1 }}</td>
+                                <td class="ps-3">{{ $detail->jenis_unit }}</td>
+                                <td class="ps-3">{{ $detail->ket_unit }}</td>
+                                <td class="ps-3">Rp. {{ $detail->estimasi_harga }}</td>
+                                <td class="ps-3">{{ $detail->masukan }}</td>
+                            </tr>
+                        @endforeach
+                    @else
+                        <tr>
+                            <td colspan="5" class="text-center">Detail rekomendasi tidak ditemukan.</td>
+                        </tr>
+                    @endif
+                </tbody>
             </table>
 
             <table style="width:100%; text-align:end; margin-top: 50px;">
