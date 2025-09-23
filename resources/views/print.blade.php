@@ -82,28 +82,39 @@
 
                         <tr>
                             <td class="ps-3" style="width: 170px;">Nama Pengaju</td>
-                            <td class="ps-3">{{ $data->nama_rek }}</td>
+                            <td class="ps-3">{{ $data->nama_lengkap }}</td>
                         </tr>
                         <tr>
                             <td class="ps-3" style="width: 170px;">Department</td>
-                            <td class="ps-3">{{ $data->jabatan_receiver }}</td>
+                            <td class="ps-3">{{ $data->nama_dep }}</td>
                         </tr>
                         <tr>
                             <td class="ps-3" style="width: 170px;">Tanggal Pengajuan</td>
                             <td class="ps-3">{{ $data->tgl_masuk }}</td>
                         </tr>
+                    @else
                         <tr>
-                            <td class="ps-3" style="width: 170px;">Jenis Unit</td>
-                            <td class="ps-3">{{ $data->jenis_unit }}</td>
+                            <td colspan="8" class="text-center">Data tidak ditemukan.</td>
                         </tr>
+                    @endif
+
+                    @if ($details && $details->first())
                         <tr>
                             <td class="ps-3" style="width: 170px;">Keterangan</td>
-                            <td class="ps-3">{{ $data->alasan_rek }}</td>
+                            <td class="ps-3">{{ $details->first()->ket_unit }}</td>
                         </tr>
                         <tr>
-                            <td class="ps-3" style="width: 170px;">Rekomendasi</td>
-                            <td class="ps-3">{{ $data->ket_unit }}</td>
+                            <td class="ps-3" style="width: 170px;">Jenis Unit</td>
+                            <td class="ps-3">{{ $details->first()->jenis_unit }}</td>
                         </tr>
+                    @endif
+
+                    @if ($data)
+                        <tr>
+                            <td class="ps-3" style="width: 170px;">Alasan</td>
+                            <td class="ps-3">{{ $data->alasan_rek }}</td>
+                        </tr>
+
                         <tr>
                             <td class="ps-3" style="width: 170px;">Harga Estimasi</td>
                             <td class="ps-3">Rp. {{ $data->estimasi_harga }}</td>
@@ -113,67 +124,64 @@
                             <td colspan="8" class="text-center">Data tidak ditemukan.</td>
                         </tr>
                     @endif
+
                 </tbody>
 
             </table>
 
-            <table class="table table-bordered table-sm align-middle me-5 mt-5 bg-light">
-                <tbody class="table-light">
-                    @if ($data)
-                        <tr class="mt-5">
-                            <td class="ps-3 d-flex justify-content-end me-4">Labuhan Ratu,
-                                {{ \Carbon\Carbon::now()->format('d F Y') }}</td>
-                        </tr>
-                    @else
-                        <tr>
-                            <td colspan="8" class="text-center">Data tidak ditemukan.</td>
-                        </tr>
-                    @endif
-                </tbody>
-            </table>
-
-            <table class="table table-bordered table-sm align-middle me-5 bg-light">
-                <tbody class="table-light">
-                    <tr>
-                        <td class="ps-3" style="width: 400px;">Disetujui,</td>
-                        <td class="ps-3" style="width: 400px;">Diketahui Oleh,</td>
-                        <td class="ps-3">Diminta Oleh,</td>
+            <table style="width:100%; text-align:end; margin-top: 50px;">
+                @if ($data)
+                    <tr class="mt-5">
+                        <td class="ps-3 d-flex justify-content-end me-4">Labuhan Ratu,
+                            {{ \Carbon\Carbon::now()->format('d F Y') }}</td>
                     </tr>
-                </tbody>
+                @else
+                    <tr>
+                        <td colspan="8" class="text-center">Data tidak ditemukan.</td>
+                    </tr>
+                @endif
+
             </table>
 
-            <table class="table table-bordered table-sm align-middle me-5 bg-light">
-                <tbody class="table-light">
-                    @if ($data)
-                        <tr>
-                            @if ($data->status === 'Diterima')
-                                @if (!empty($sign_approval))
-                                    <img src="{{ asset($sign_approval) }}" alt="Tanda Tangan" class="signature-image">
-                                @endif
-                                <td class="ps-3" style="width: 400px;">{{ $nama_approval ?? 'Ella' }}</td>
-                                <td class="ps-3" style="width: 400px;">Kabag {{ $data->nama_dep ?? 'Accounting' }}
-                                </td>
+            <div style="margin-top:10px; margin-bottom:20px;">
+                <table style="width:100%; text-align:center;">
+                    <tr>
+                        <td style="width:33%;">Disetujui,</td>
+                        <td style="width:33%;">Diketahui Oleh,</td>
+                        <td style="width:33%;">Diminta Oleh,</td>
+                    </tr>
+                    <tr>
+                        <td style="height:80px;">
+                            @if ($data && $data->status === 'Diterima' && !empty($sign_approval))
+                                <img src="{{ asset($sign_approval) }}" alt="Tanda Tangan" style="height:60px;">
                             @endif
-
-                            @if ($data->status === 'Diterima')
-                                @if (!empty($sign_user))
-                                    <img src="{{ asset($sign_user) }}" alt="Tanda Tangan" class="signature-image">
-                                @endif
-                                <td class="ps-3" style="width: 400px;">{{ $nama_leng ?? 'Andi Prasetyo' }}</td>
-                                <td class="ps-3" style="width: 400px;">IT</td>
+                        </td>
+                        <td style="height:80px;">
+                            @if ($data && $data->status === 'Diterima' && !empty($sign_user))
+                                <img src="{{ asset($sign_user) }}" alt="Tanda Tangan" style="height:60px;">
                             @endif
-
-                            <div style="height: 80px;"></div>
-                            <td class="ps-3" style="width: 400px;">{{ $data->nama_rek ?? 'Dani' }}</td>
-                            <td class="ps-3" style="width: 400px;">Pemohon
-                        </tr>
-                    @else
-                        <tr>
-                            <td colspan="8" class="text-center">Data tidak ditemukan.</td>
-                        </tr>
-                    @endif
-                </tbody>
-            </table>
+                        </td>
+                        <td style="height:80px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="padding-top:10px;">
+                            <u>{{ $nama_approval ?? 'Ella' }}</u><br>
+                            <span style="font-size:13px;">Kabag {{ $data->nama_dep ?? 'Accounting' }}</span>
+                        </td>
+                        <td style="padding-top:10px;">
+                            <u>{{ $nama_leng ?? 'Andi Prasetyo' }}</u><br>
+                            <span style="font-size:13px;">Dept IT</span>
+                        </td>
+                        <td style="padding-top:10px;">
+                            <u>{{ $data->nama_rek ?? 'Dani' }}</u><br>
+                            <span style="font-size:13px;">Pemohon</span>
+                        </td>
+                    </tr>
+                </table>
+                @if (!$data)
+                    <div class="text-center mt-3">Data tidak ditemukan.</div>
+                @endif
+            </div>
 
 
 

@@ -211,19 +211,21 @@ class rekomendasiController extends Controller
 
         // Ambil signature berdasarkan jabatan (untuk nama_approval)
         $signature_approval = DB::table('signature')
-                                ->where('jabatan', $nama_dep)
-                                ->first();
+            ->where('jabatan', $nama_dep)
+            ->first();
         $nama_approval = $signature_approval ? $signature_approval->nama_approval : 'Unknown';
         $sign_approval = $signature_approval ? $signature_approval->sign : null;
 
         // Ambil signature berdasarkan nama_leng (langsung bandingkan dengan nama_approval)
         $signature_user = DB::table('signature')
-                            ->where('nama_approval', $nama_leng)
-                            ->first();
+            ->where('nama_approval', $nama_leng)
+            ->first();
         $sign_user = $signature_user ? $signature_user->sign : null;
+        $details = \DB::table('detail_rekomendasi')->where('id_rek', $id)->get();
 
         return view('print', compact(
             'data',
+            'details',
             'nama_leng',
             'nama_dep',
             'nama_approval',
