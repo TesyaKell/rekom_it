@@ -90,22 +90,29 @@ class rekomendasiController extends Controller
 
     public function updateStatus(Request $req, $id_rek)
     {
-        $rekomendasi = rekomendasi::findOrFail($id_rek);
-        $user = \DB::table('users')->where('id_user', session('loginId'))->first();
+        try {
+            $rekomendasi = rekomendasi::findOrFail($id_rek);
+            $user = \DB::table('users')->where('id_user', session('loginId'))->first();
 
-        if ($req->input('action') === 'acc') {
-            $rekomendasi->nama_receiver = $user ? $user->nama_leng : 'Unknown';
-            $rekomendasi->tgl_verif_kabag = now();
-            $rekomendasi->status = 'Menunggu verifikasi Tim IT';
-        } elseif ($req->input('action') === 'tolak') {
-            $rekomendasi->status = 'Ditolak';
+            if ($req->input('action') === 'acc') {
+                $rekomendasi->nama_receiver = $user ? $user->nama_leng : 'Unknown';
+                $rekomendasi->tgl_verif_kabag = now();
+                $rekomendasi->status = 'Menunggu verifikasi Tim IT';
+            } elseif ($req->input('action') === 'tolak') {
+                $rekomendasi->status = 'Ditolak';
+            } elseif ($req->input('action') === 'acc_it') {
+                $rekomendasi->tgl_verif_it = now();
+                $rekomendasi->status = 'Diterima';
+            }
+
+            $rekomendasi->save();
+            \Log::info("Input status rekomendasi oleh user {$user->id_user}");
+            return redirect()->route('rekomendasi.daftar')->with('success', 'Status berhasil diperbarui!');
+        } catch (\Exception $e) {
+            \Log::error("Gagal update status : {$e->getMessage()}");
+            return redirect()->route('rekomendasi.daftar')->with('error', 'Gagal update status!');
         }
-
-        $rekomendasi->save();
-
-        return redirect()->route('rekomendasi.daftar')->with('success', 'Status berhasil diperbarui!');
     }
-
     public function destroy($id_rek)
     {
         $rekomendasi = rekomendasi::where('id_rek', $id_rek)->first();

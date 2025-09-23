@@ -261,7 +261,7 @@
                                                     <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
                                                         method="POST" style="display:inline;">
                                                         @csrf
-                                                        <input type="hidden" name="action" value="acc">
+                                                        <input type="hidden" name="action" value="acc_it">
                                                         <button type="submit"
                                                             class="btn btn-primary btn-lg active btn-sm fw-bold">Approved</button>
                                                     </form>
