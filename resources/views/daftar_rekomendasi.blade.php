@@ -153,11 +153,12 @@
             </div>
         </div>
 
-
-        <div class="container-5 w-90 h-50 ms-3 me-3 " style="max-width: 100%;">
-            <p class="p-3 mt-4" style="color: #e68e00">* Tim IT dapat melakukan Approval jika Kepala Bagian telah
-                Approved</p>
-        </div>
+        @if (session('loginRole') === 'IT')
+            <div class="container-5 w-90 h-50 ms-3 me-3 " style="max-width: 100%;">
+                <p class="p-3 mt-4" style="color: #e68e00">* Tim IT dapat melakukan Approval jika Kepala Bagian telah
+                    Approved</p>
+            </div>
+        @endif
         <div class="container-2 w-90 h-100 ms-3 me-3 mt-3 pt-2 pb-2 overflow-auto" style="max-width: 100%;">
             <div class="table-responsive ms-3 me-3 mt-2 mb-2">
                 <table class="table table-sm align-middle m-0">
