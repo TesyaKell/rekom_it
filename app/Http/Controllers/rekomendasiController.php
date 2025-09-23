@@ -188,6 +188,8 @@ class rekomendasiController extends Controller
 
             $results = $query->get();
             $departmentList = \DB::table('department')->pluck('nama_dep');
+            $details = \DB::table('detail_rekomendasi')->where('id_rek', $req)->get();
+
 
             \Log::info("Sukses menampilkan data laporan, total: " . $results->count());
         } catch (\Exception $e) {
@@ -195,7 +197,7 @@ class rekomendasiController extends Controller
             $results = collect();
             $departmentList = collect();
         }
-        return view('report', compact('results', 'departmentList'));
+        return view('report', compact('results', 'departmentList', 'details'));
     }
 
     public function print($id)
