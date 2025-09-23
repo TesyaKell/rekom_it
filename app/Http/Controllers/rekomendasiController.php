@@ -90,25 +90,29 @@ class rekomendasiController extends Controller
 
     public function updateStatus(Request $req, $id_rek)
     {
-        $rekomendasi = rekomendasi::findOrFail($id_rek);
+        try {
+            $rekomendasi = rekomendasi::findOrFail($id_rek);
+            $user = \DB::table('users')->where('id_user', session('loginId'))->first();
 
-        // Cek role user dari session
-        $role = session('loginRole');
+            if ($req->input('action') === 'acc') {
+                $rekomendasi->nama_receiver = $user ? $user->nama_leng : 'Unknown';
+                $rekomendasi->tgl_verif_kabag = now();
+                $rekomendasi->status = 'Menunggu verifikasi Tim IT';
+            } elseif ($req->input('action') === 'tolak') {
+                $rekomendasi->status = 'Ditolak';
+            } elseif ($req->input('action') === 'acc_it') {
+                $rekomendasi->tgl_verif_it = now();
+                $rekomendasi->status = 'Diterima';
+            }
 
-        if ($role === 'IT') {
-            $rekomendasi->status = 'Selesai';
-        } elseif ($role === 'Kepala Bagian') {
-            $rekomendasi->status = 'menunggu verifikasi Tim IT';
-        } else {
-            // Jika role lain, gunakan status dari request (atau default)
-            $rekomendasi->status = $req->input('status', $rekomendasi->status);
+            $rekomendasi->save();
+            \Log::info("Input status rekomendasi oleh user {$user->id_user}");
+            return redirect()->route('rekomendasi.daftar')->with('success', 'Status berhasil diperbarui!');
+        } catch (\Exception $e) {
+            \Log::error("Gagal update status : {$e->getMessage()}");
+            return redirect()->route('rekomendasi.daftar')->with('error', 'Gagal update status!');
         }
-
-        $rekomendasi->save();
-
-        return redirect()->route('rekomendasi.approve')->with('success', 'Status berhasil diperbarui!');
     }
-
     public function destroy($id_rek)
     {
         $rekomendasi = rekomendasi::where('id_rek', $id_rek)->first();
@@ -125,9 +129,20 @@ class rekomendasiController extends Controller
         if (!session()->has('loginId')) {
             return redirect('/login');
         }
-        $data = rekomendasi::all();
+        $query = rekomendasi::query();
+
+        $user = \DB::table('users')->where('id_user', session('loginId'))->first();
+        $isKabag = $user && $user->id_jab == 6;
+        if ($isKabag) {
+            $dep = \DB::table('department')->where('kode_dep', $user->kode_dep)->first();
+            if ($dep) {
+                $query->where('nama_dep', $dep->nama_dep);
+            }
+        }
+
+        $data = $query->get();
         $departments = department::all();
-        return view('daftar_rekomendasi', compact('data', 'departments'));
+        return view('daftar_rekomendasi', compact('data', 'departments', 'isKabag'));
     }
 
     public function tampilDataTerhapus()

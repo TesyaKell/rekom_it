@@ -128,7 +128,6 @@
                     </form>
                 </div>
 
-
                 <div class="col-4 d-flex justify-content-end">
                     @if (session('loginRole') === 'IT')
                         <a href="{{ url('add_rekomendasi') }}">
@@ -156,11 +155,13 @@
                             <th class="ps-2">Tanggal Pengajuan</th>
                             <th class="ps-2">Status</th>
                             <th class="ps-2 text-center">Action</th>
-                            {{-- @if (session('loginRole') === 'Kepala Bagian') --}}
-                            <th class="ps-2 text-center">Approval</th>
-                            {{-- @else
-                                <td class="ps-2">Tidak Kedetect</td>
-                            @endif --}}
+                            @if ($isKabag)
+                                <th class="ps-2 text-center">Approval</th>
+                            @else
+                                @if (session('loginRole') === 'IT')
+                                    <th class="ps-2 text-center">Approval</th>
+                                @endif
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -228,27 +229,66 @@
                                         </ul>
                                     </div>
                                 </td>
-                                {{-- @if (session('loginRole') === 'Kepala Bagian') --}}
-                                <td class="ps-2">
-                                    <div class="d-flex gap-2 mt-3 justify-content-center">
-                                        <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
-                                            method="POST" style="display:inline;">
-                                            @csrf
-                                            <button type="submit"
-                                                class="btn btn-primary btn-lg active btn-sm fw-bold">Approved</button>
-                                        </form>
-                                        <button type="button" class="btn btn-danger btn-sm fw-bold">Tolak</button>
-                                    </div>
-                                </td>
-                                {{-- @else
-                                    <td class="ps-2">gh</td>
-                                @endif --}}
-
+                                @if ($isKabag)
+                                    <td class="ps-2">
+                                        <div class="d-flex gap-2 mt-3 justify-content-center">
+                                            <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
+                                                method="POST" style="display:inline;">
+                                                @csrf
+                                                <input type="hidden" name="action" value="acc">
+                                                <button type="submit"
+                                                    class="btn btn-primary btn-lg active btn-sm fw-bold">Approved</button>
+                                            </form>
+                                            <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
+                                                method="POST" style="display:inline;">
+                                                @csrf
+                                                <input type="hidden" name="action" value="tolak">
+                                                <button type="submit"
+                                                    class="btn btn-danger btn-sm fw-bold">Tolak</button>
+                                            </form>
+                                            @if ($item->status === 'acc')
+                                                <span class="badge bg-success">Menunggu verifikasi Tim IT</span>
+                                            @elseif ($item->status === 'tolak')
+                                                <span class="badge bg-danger">Ditolak</span>
+                                            @endif
+                                        </div>
+                                    </td>
+                                @else
+                                    @if (session('loginRole') === 'IT')
+                                        @if ($item->status === 'Menunggu verifikasi Tim IT')
+                                            <td class="ps-2">
+                                                <div class="d-flex gap-2 mt-3 justify-content-center">
+                                                    <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
+                                                        method="POST" style="display:inline;">
+                                                        @csrf
+                                                        <input type="hidden" name="action" value="acc_it">
+                                                        <button type="submit"
+                                                            class="btn btn-primary btn-lg active btn-sm fw-bold">Approved</button>
+                                                    </form>
+                                                    <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
+                                                        method="POST" style="display:inline;">
+                                                        @csrf
+                                                        <input type="hidden" name="action" value="tolak">
+                                                        <button type="submit"
+                                                            class="btn btn-danger btn-sm fw-bold">Tolak</button>
+                                                    </form>
+                                                    @if ($item->status === 'acc_it')
+                                                        <span class="badge bg-success">Diterima</span>
+                                                    @elseif ($item->status === 'tolak')
+                                                        <span class="badge bg-danger">Ditolak</span>
+                                                    @endif
+                                                </div>
+                                            </td>
+                                        @else
+                                            <td class="ps-2 text-center"></td>
+                                        @endif
+                                    @endif
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="8" class="text-center">Data tidak ditemukan.</td>
-                            </tr>
+                        @endif
+                    @empty
+                        <tr>
+                            <td colspan="8" class="text-center">Data tidak ditemukan.</td>
+                        </tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -272,10 +312,11 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="mb-3">
-                                        <label for="nama_rek{{ $item->id_rek }}" class="form-label">Nama
+                                        <label for="nama_lengkap{{ $item->id_rek }}" class="form-label">Nama
                                             Pengaju</label>
-                                        <input type="text" class="form-control" id="nama_rek{{ $item->id_rek }}"
-                                            name="nama_rek" value="{{ $item->nama_rek }}" required>
+                                        <input type="text" class="form-control"
+                                            id="nama_lengkap{{ $item->id_rek }}" name="nama_lengkap"
+                                            value="{{ $item->nama_lengkap }}" required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="jenis_unit{{ $item->id_rek }}" class="form-label">Jenis
