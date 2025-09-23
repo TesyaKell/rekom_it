@@ -230,29 +230,33 @@
                                     </div>
                                 </td>
                                 @if ($isKabag)
-                                    <td class="ps-2">
-                                        <div class="d-flex gap-2 mt-3 justify-content-center">
-                                            <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
-                                                method="POST" style="display:inline;">
-                                                @csrf
-                                                <input type="hidden" name="action" value="acc">
-                                                <button type="submit"
-                                                    class="btn btn-primary btn-lg active btn-sm fw-bold">Approved</button>
-                                            </form>
-                                            <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
-                                                method="POST" style="display:inline;">
-                                                @csrf
-                                                <input type="hidden" name="action" value="tolak">
-                                                <button type="submit"
-                                                    class="btn btn-danger btn-sm fw-bold">Tolak</button>
-                                            </form>
-                                            @if ($item->status === 'acc')
-                                                <span class="badge bg-success">Menunggu verifikasi Tim IT</span>
-                                            @elseif ($item->status === 'tolak')
-                                                <span class="badge bg-danger">Ditolak</span>
-                                            @endif
-                                        </div>
-                                    </td>
+                                    @if ($item->status === 'menunggu verifikasi Kabag')
+                                        <td class="ps-2">
+                                            <div class="d-flex gap-2 mt-3 justify-content-center">
+                                                <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
+                                                    method="POST" style="display:inline;">
+                                                    @csrf
+                                                    <input type="hidden" name="action" value="acc">
+                                                    <button type="submit"
+                                                        class="btn btn-primary btn-lg active btn-sm fw-bold">Approved</button>
+                                                </form>
+                                                <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
+                                                    method="POST" style="display:inline;">
+                                                    @csrf
+                                                    <input type="hidden" name="action" value="tolak">
+                                                    <button type="submit"
+                                                        class="btn btn-danger btn-sm fw-bold">Tolak</button>
+                                                </form>
+                                                @if ($item->status === 'acc')
+                                                    <span class="badge bg-success">Menunggu verifikasi Tim IT</span>
+                                                @elseif ($item->status === 'tolak')
+                                                    <span class="badge bg-danger">Ditolak</span>
+                                                @endif
+                                            </div>
+                                        </td>
+                                    @else
+                                        <td class="ps-2 text-center"></td>
+                                    @endif
                                 @else
                                     @if (session('loginRole') === 'IT')
                                         @if ($item->status === 'Menunggu verifikasi Tim IT')
