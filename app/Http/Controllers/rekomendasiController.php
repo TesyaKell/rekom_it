@@ -126,8 +126,6 @@ class rekomendasiController extends Controller
 
         $user = \DB::table('users')->where('id_user', session('loginId'))->first();
         $isKabag = $user && $user->id_jab == 6;
-
-
         if ($isKabag) {
             $dep = \DB::table('department')->where('kode_dep', $user->kode_dep)->first();
             if ($dep) {
