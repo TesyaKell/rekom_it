@@ -272,9 +272,8 @@
                                                         <button type="submit"
                                                             class="btn btn-danger btn-sm fw-bold">Tolak</button>
                                                     </form>
-                                                    @if ($item->status === 'acc')
-                                                        <span class="badge bg-success">Menunggu verifikasi Tim
-                                                            IT</span>
+                                                    @if ($item->status === 'acc_it')
+                                                        <span class="badge bg-success">Diterima</span>
                                                     @elseif ($item->status === 'tolak')
                                                         <span class="badge bg-danger">Ditolak</span>
                                                     @endif
