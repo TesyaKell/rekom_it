@@ -272,13 +272,13 @@
                                             </div>
                                         </td>
                                     @else
-                                        <td class="ps-2 text-center fw-bold" style="color: green;">Approved
+                                        <td class="ps-2 text-center fw-bold" style="color: green;">Selesai
                                         </td>
                                     @endif
                                 @else
                                     @if (session('loginRole') === 'IT')
                                         @if ($item->status === 'Diterima' || $item->status === 'acc_it')
-                                            <td class="ps-2 text-center fw-bold" style="color: green;">Approved</td>
+                                            <td class="ps-2 text-center fw-bold" style="color: green;">Selesai</td>
                                         @elseif ($item->status === 'menunggu verifikasi Tim IT')
                                             <td class="ps-2">
                                                 <div class="d-flex gap-2 mt-3 justify-content-center">
