@@ -22,7 +22,7 @@ class departmentController extends Controller
             $lastNumber = department::withTrashed()
                 ->select('kode_dep')
                 ->get()
-                ->map(fn($item) => (int) substr($item->kode_dep, 3))
+                ->map(fn ($item) => (int) substr($item->kode_dep, 3))
                 ->sortDesc()
                 ->first();
 
@@ -41,12 +41,8 @@ class departmentController extends Controller
         if (!session()->has('loginId')) {
             return redirect('/login');
         }
-
         $user = DB::table('users')->where('id_user', session('loginId'))->first();
-
         try {
-
-
             $req->validate([
                 'nama_dep' => 'required|string|max:255',
             ]);
@@ -54,6 +50,7 @@ class departmentController extends Controller
             department::create([
                 'kode_dep' => $this->generateDepartmentId(),
                 'nama_dep' => $req->nama_dep,
+                'created_by' => $user ? $user->nama_leng : 'Unknown',
             ]);
 
             \Log::info("Data department: ", $req->all());
@@ -74,6 +71,8 @@ class departmentController extends Controller
     public function update(Request $req, $id)
     {
         $edit = department::where('kode_dep', $id)->firstOrFail();
+        $user = DB::table('users')->where('id_user', session('loginId'))->first();
+
 
         $req->validate(
             [
@@ -82,28 +81,23 @@ class departmentController extends Controller
         );
         $edit->update([
             'nama_dep' => $req->nama_dep,
+            'updated_by' => $user ? $user->nama_leng : 'Unknown',
         ]);
 
         return redirect()->route('department.index');
     }
 
-    public function destroy($kode_dep)
+    public function destroy($id)
     {
-        $departments = department::find($kode_dep);
+        $departments = department::find($id);
+
+        $user = DB::table('users')->where('id_user', session('loginId'))->first();
+        $deletedBy = $user ? $user->nama_leng : 'Unknown';
+
+        $departments->deleted_by = $deletedBy;
+        $departments->save();
         $departments->delete();
-
-        return redirect()->route('department.index');
+        \Log::info("Department {$departments->nama_dep} (ID: {$departments->kode_dep}) dihapus oleh user ID: " . session('loginId'));
+        return redirect()->route('department.index')->with('success', 'Department berhasil dihapus.');
     }
-
-    // public function search(Request $request)
-    // {
-    //     $query = $request->input('query');
-
-    //     $result = department::where('nama_dep', 'LIKE', '%' . $query . '%')
-    //         ->orWhere('kode_dep', 'LIKE', '%' . $query . '%')
-    //         ->get();
-
-    //     return view('search_department', compact('result', 'query'));
-    // }
-
 }

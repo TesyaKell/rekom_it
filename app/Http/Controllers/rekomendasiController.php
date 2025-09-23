@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\department;
-use App\Models\signature;
-use Auth;
 use Illuminate\Http\Request;
 use App\Models\rekomendasi;
 use Illuminate\Support\Facades\DB;
@@ -26,6 +24,7 @@ class rekomendasiController extends Controller
 
         return view('add_rekomendasi', compact('user', 'departments', 'lastId', 'data'));
     }
+
     public function create(Request $req)
     {
         if (!session()->has('loginId')) {
@@ -108,12 +107,8 @@ class rekomendasiController extends Controller
         if (!session()->has('loginId')) {
             return redirect('/login');
         }
-
         $data = rekomendasi::all();
-
         $departments = department::all();
-        //dd($data);
-        //dd($departments);
         return view('daftar_rekomendasi', compact('data', 'departments'));
     }
 
@@ -182,18 +177,40 @@ class rekomendasiController extends Controller
         return view('report', compact('results', 'departmentList'));
     }
 
-
-
     public function print($id)
     {
         if (!session()->has('loginId')) {
             return redirect('/login');
         }
-
+        $user = DB::table('users')->where('id_user', session('loginId'))->first();
         $data = rekomendasi::findOrFail($id);
 
-        return view('print', compact('data'));
+        $nama_leng = $user ? $user->nama_leng : 'Unknown';
+        $nama_dep = $data->nama_dep ?? 'Unknown';
+
+        // Ambil signature berdasarkan jabatan (untuk nama_approval)
+        $signature_approval = DB::table('signature')
+                                ->where('jabatan', $nama_dep)
+                                ->first();
+        $nama_approval = $signature_approval ? $signature_approval->nama_approval : 'Unknown';
+        $sign_approval = $signature_approval ? $signature_approval->sign : null;
+
+        // Ambil signature berdasarkan nama_leng (langsung bandingkan dengan nama_approval)
+        $signature_user = DB::table('signature')
+                            ->where('nama_approval', $nama_leng)
+                            ->first();
+        $sign_user = $signature_user ? $signature_user->sign : null;
+
+        return view('print', compact(
+            'data',
+            'nama_leng',
+            'nama_dep',
+            'nama_approval',
+            'sign_approval',
+            'sign_user'
+        ));
     }
+
 
 
     public function searchRekomendasi(Request $id_rek)
@@ -201,8 +218,7 @@ class rekomendasiController extends Controller
         $query = $id_rek->input('query');
 
         $data = rekomendasi::where('nama_rek', 'LIKE', '%' . $query . '%')
-            ->orWhere('jenis_unit', 'LIKE', '%' . $query . '%')
-            ->orWhere('status', 'LIKE', '%' . $query . '%')
+           ->orWhere('status', 'LIKE', '%' . $query . '%')
             ->orWhere('nama_receiver', 'LIKE', '%' . $query . '%')
             ->orWhere('jabatan_receiver', 'LIKE', '%' . $query . '%')
             ->orWhere('id_rek', 'LIKE', '%' . $query . '%')
@@ -211,4 +227,24 @@ class rekomendasiController extends Controller
         $departments = department::all();
         return view('daftar_rekomendasi', compact('data', 'departments', 'query'));
     }
+
+    public function filterStatus(Request $request)
+    {
+        $status = $request->input('status');
+
+        if (empty($status) || $status == 'Semua Rekomendasi') {
+            $data = rekomendasi::all();
+        } elseif ($status == 'Belum Realisasi') {
+            $data = rekomendasi::whereIn('status', [
+                'menunggu verifikasi Kabag',
+                'menunggu verifikasi Tim IT',
+                'Ditolak'
+            ])->get();
+        } else {
+            $data = rekomendasi::where('status', $status)->get();
+        }
+        $departments = department::all();
+        return view('daftar_rekomendasi', compact('data', 'departments'));
+    }
+
 }

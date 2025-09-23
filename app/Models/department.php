@@ -13,6 +13,11 @@ class department extends Model
 
     protected $table = 'department';
     protected $primaryKey = 'kode_dep';
-    protected $fillable = ['kode_dep', 'nama_dep'];
+    protected $fillable = [
+        'kode_dep',
+    'nama_dep',
+    'created_by',
+        'updated_by',
+        'deleted_by'];
 
 }

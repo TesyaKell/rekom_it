@@ -5,6 +5,7 @@ use App\Http\Controllers\signatureController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\departmentController;
 use App\Http\Controllers\rekomendasiController;
+use App\Http\Controllers\detailRekomendasiController;
 
 Route::get('/login', function () {
     return view('login');
@@ -32,6 +33,7 @@ Route::get('/print/{id}', [rekomendasiController::class, 'print'])->name('rekome
 
 
 Route::get('/detailRekomendasi/{id_rek}', [rekomendasiController::class, 'tampilDetail'])->name('rekomendasi.detail');
+Route::get('/rekomendasi/filter', [RekomendasiController::class, 'filterStatus'])->name('rekomendasi.filter');
 
 
 

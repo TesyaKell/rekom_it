@@ -3,13 +3,22 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class signature extends Model
 {
-    protected $table = 'signature';
+    use SoftDeletes;
     public $timestamps = false;
+    protected $table = 'signature';
+
     public $primaryKey = 'id_sign';
-    protected $fillable = [ 'id_user', 'sign', 'nama_approval', 'jabatan'];
+    protected $fillable = [ 'id_user',
+     'sign',
+     'nama_approval',
+     'jabatan',
+     'created_by',
+        'updated_by',
+        'deleted_by', ];
 
     public function user()
     {

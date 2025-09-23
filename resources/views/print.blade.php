@@ -146,9 +146,26 @@
                 <tbody class="table-light">
                     @if ($data)
                         <tr>
-                            <td class="ps-3" style="width: 400px;">Dept. IT</td>
-                            <td class="ps-3" style="width: 400px;">{{ $data->nama_receiver }}</td>
-                            <td class="ps-3">{{ $data->nama_rek }}</td>
+                            @if ($data->status === 'Diterima')
+                                @if (!empty($sign_approval))
+                                    <img src="{{ asset($sign_approval) }}" alt="Tanda Tangan" class="signature-image">
+                                @endif
+                                <td class="ps-3" style="width: 400px;">{{ $nama_approval ?? 'Ella' }}</td>
+                                <td class="ps-3" style="width: 400px;">Kabag {{ $data->nama_dep ?? 'Accounting' }}
+                                </td>
+                            @endif
+
+                            @if ($data->status === 'Diterima')
+                                @if (!empty($sign_user))
+                                    <img src="{{ asset($sign_user) }}" alt="Tanda Tangan" class="signature-image">
+                                @endif
+                                <td class="ps-3" style="width: 400px;">{{ $nama_leng ?? 'Andi Prasetyo' }}</td>
+                                <td class="ps-3" style="width: 400px;">IT</td>
+                            @endif
+
+                            <div style="height: 80px;"></div>
+                            <td class="ps-3" style="width: 400px;">{{ $data->nama_rek ?? 'Dani' }}</td>
+                            <td class="ps-3" style="width: 400px;">Pemohon
                         </tr>
                     @else
                         <tr>

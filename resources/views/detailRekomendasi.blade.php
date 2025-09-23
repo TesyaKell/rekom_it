@@ -112,7 +112,7 @@
                         </tr>
                         <tr>
                             <td class="ps-3" style="width: 170px;">Department</td>
-                            <td class="ps-3">{{ $item->jabatan_receiver }}</td>
+                            <td class="ps-3">{{ $item->nama_dep }}</td>
                         </tr>
                         <tr>
                             <td class="ps-3" style="width: 170px;">Tanggal Pengajuan</td>

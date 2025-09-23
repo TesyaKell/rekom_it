@@ -96,7 +96,7 @@
             </div>
         </div>
 
-        <form method="POST" action="/signature">
+        <form method="POST" action="/signature" enctype="multipart/form-data">
             <div class="container tight-rows table-grid mt-3 ms-3">
                 <div class="row g-0 w-50">
                     <div class="col-4 d-flex align-items-center p-3 fw-bold">
@@ -116,8 +116,19 @@
                 </div>
                 <div class="row g-0 w-50">
                     <div class="col-4 d-flex justify-content-start p-3 fw-bold">Jabatan</div>
-                    <div class="col-8 p-2"><input class="form-control" type="text" placeholder="Masukkan jabatan"
-                            name="jabatan">
+                    <div class="col-8 p-2">
+                        <select class="form-control" name="jabatan" required>
+                            <option value="">Pilih jabatan</option>
+                            @foreach ($department as $jabatan)
+                                <option value="{{ $jabatan }}">{{ $jabatan }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="row g-0 w-50">
+                    <div class="col-4 d-flex justify-content-start p-3 fw-bold">Tanda Tangan</div>
+                    <div class="col-8 p-2">
+                        <input class="form-control" type="file" name="sign" accept="image/*">
                     </div>
                 </div>
                 <div class="row g-0 w-50">
@@ -206,7 +217,8 @@
 
                             <div class="mb-3">
                                 <label class="form-label">No. signature</label>
-                                <input type="text" class="form-control" value="{{ $signature->id_sign }}" disabled>
+                                <input type="text" class="form-control" value="{{ $signature->id_sign }}"
+                                    disabled>
                             </div>
 
                             <div class="mb-3">
@@ -219,6 +231,13 @@
                                 <label class="form-label">Jabatan</label>
                                 <input type="text" class="form-control" name="jabatan"
                                     value="{{ $signature->jabatan }}" required>
+                            </div>
+
+                            <div class="row g-0 w-50">
+                                <div class="col-4 d-flex justify-content-start p-3 fw-bold">Tanda Tangan</div>
+                                <div class="col-8 p-2">
+                                    <input class="form-control" type="file" name="sign" accept="image/*">
+                                </div>
                             </div>
 
                         </div>

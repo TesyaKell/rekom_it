@@ -72,12 +72,16 @@ class JabatanController extends Controller
 
     public function destroy($id)
     {
-        $jabatan = Jabatan::find($id);
-        $user = DB::table('users')->where('id_user', session('loginId'))->first();
+        $jabatan = Jabatan::findOrFail($id);
 
-        $jabatan->update([
-            'deleted_by' => $user ? $user->nama_leng : 'Unknown',
-             ]);
-        return redirect()->route('jabatan.index');
+        $user = DB::table('users')->where('id_user', session('loginId'))->first();
+        $deletedBy = $user ? $user->nama_leng : 'Unknown';
+
+        $jabatan->deleted_by = $deletedBy;
+        $jabatan->save();
+        $jabatan->delete();
+        \Log::info("Jabatan {$jabatan->nama_jab} (ID: {$jabatan->id_jab}) dihapus oleh user ID: " . session('loginId'));
+        return redirect()->route('jabatan.index')->with('success', 'Jabatan berhasil dihapus.');
     }
+
 }

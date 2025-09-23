@@ -104,18 +104,30 @@
                 </div>
 
                 <div class="col-4 d-flex justify-content-start">
-                    <div class="dropdown mt-2">
-                        <button type="button" class="btn dropdown-toggle fw-bold" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            Semua Rekomendasi
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Semua Rekomendasi</a></li>
-                            <li><a class="dropdown-item" href="#">Belum Realisasi</a></li>
-                            <li><a class="dropdown-item" href="#">Sudah Realisasi</a></li>
-                        </ul>
-                    </div>
+                    <form action="{{ route('rekomendasi.filter') }}" method="GET">
+                        <div class="dropdown mt-2">
+                            <button class="btn dropdown-toggle fw-bold" type="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                Semua Rekomendasi
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <button class="dropdown-item" type="submit" name="status" value="">Semua
+                                        Rekomendasi</button>
+                                </li>
+                                <li>
+                                    <button class="dropdown-item" type="submit" name="status"
+                                        value="Belum Realisasi">Belum Realisasi</button>
+                                </li>
+                                <li>
+                                    <button class="dropdown-item" type="submit" name="status" value="Diterima">Sudah
+                                        Realisasi</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </form>
                 </div>
+
 
                 <div class="col-4 d-flex justify-content-end">
                     @if (session('loginRole') === 'IT')
@@ -159,7 +171,7 @@
                                 <td class="ps-2">{{ $item->no_spb }}</td>
                                 <td class="ps-2">{{ $item->jenis_unit }}</td>
                                 <td class="ps-2">{{ $item->nama_rek }}</td>
-                                <td class="ps-2">{{ $item->jabatan_receiver }}</td>
+                                <td class="ps-2">{{ $item->nama_dep }}</td>
                                 <td class="ps-2">{{ $item->tgl_masuk }}</td>
                                 <td class="ps-2">
                                     @if ($item->status == 'menunggu verifikasi Kabag')
