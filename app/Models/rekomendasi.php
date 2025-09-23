@@ -25,7 +25,9 @@ class rekomendasi extends Model
             'status',
             'no_spb',
             'jabatan_receiver',
-            'bukti_pembelian'
+            'bukti_pembelian',
+            'tgl_verif_it',
+            'tgl_verif_kabag'
         ];
 
     public function user()
