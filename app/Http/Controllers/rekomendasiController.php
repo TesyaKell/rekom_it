@@ -97,7 +97,7 @@ class rekomendasiController extends Controller
             if ($req->input('action') === 'acc') {
                 $rekomendasi->nama_receiver = $user ? $user->nama_leng : 'Unknown';
                 $rekomendasi->tgl_verif_kabag = now();
-                $rekomendasi->status = 'Menunggu verifikasi Tim IT';
+                $rekomendasi->status = 'menunggu verifikasi Tim IT';
             } elseif ($req->input('action') === 'tolak') {
                 $rekomendasi->status = 'Ditolak';
             } elseif ($req->input('action') === 'acc_it') {
