@@ -272,13 +272,15 @@
                                             </div>
                                         </td>
                                     @else
-                                        <td class="ps-2 text-center fw-bold" style="color: green;">Selesai
-                                        </td>
+                                        <span class="badge bg-success">Selesai</span>
                                     @endif
                                 @else
                                     @if (session('loginRole') === 'IT')
-                                        @if ($item->status === 'Diterima' || $item->status === 'acc_it')
-                                            <td class="ps-2 text-center fw-bold" style="color: green;">Selesai</td>
+                                        @if ($item->status === 'Diterima' || $item->status === 'acc_it' || $item->status === 'Ditolak')
+                                            <td class="ps-2 text-center">
+                                                <span class="badge p-2"
+                                                    style="font-size: small; background-color: rgba(0, 128, 0, 0.463);">Selesai</span>
+                                            </td>
                                         @elseif ($item->status === 'menunggu verifikasi Tim IT')
                                             <td class="ps-2">
                                                 <div class="d-flex gap-2 mt-3 justify-content-center">
