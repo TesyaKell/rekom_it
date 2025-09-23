@@ -179,13 +179,13 @@
                                 <td class="ps-2">
                                     @if ($item->status == 'menunggu verifikasi Kabag')
                                         <span class="badge text-light p-1"
-                                            style="background-color: rgb(249, 137, 0);">Menunggu
+                                            style="background-color: rgb(245, 139, 9);">Menunggu
                                             Kabag</span>
                                     @elseif($item->status == 'menunggu verifikasi Tim IT')
                                         <span
                                             class="badge
                                             bg-orange text-light p-1"
-                                            style="background-color: rgb(249, 137, 0);">Menunggu
+                                            style="background-color: rgb(245, 139, 9);">Menunggu
                                             Tim IT</span>
                                     @elseif($item->status == 'Ditolak')
                                         <span class="badge bg-danger p-1">Ditolak</span>

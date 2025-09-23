@@ -144,29 +144,29 @@
                 </div>
             </div>
 
-            {{-- Menu khusus IT lainnya --}}
+
             <div class="y-sidebarItem r-hide-accordion">
-                <a class="nav-link d-flex align-items-center" href="{{ url('department') }}">
+                <a class="nav-link d-flex align-items-center dropdown-toggle" href="#" id="masterDataMenuToggle">
                     <img class="me-2" src="{{ asset('images/department.png') }}" alt="Logo" width="20"
                         height="20">
-                    <span>Department</span>
+                    <span>Master Data</span>
                 </a>
-            </div>
-
-            <div class="y-sidebarItem r-hide-accordion">
-                <a class="nav-link d-flex align-items-center" href="{{ url('signature') }}">
-                    <img class="me-2" src="{{ asset('images/signature.png') }}" alt="Logo" width="20"
-                        height="20">
-                    <span>Signature</span>
-                </a>
-            </div>
-
-            <div class="y-sidebarItem r-hide-accordion">
-                <a class="nav-link d-flex align-items-center" href="{{ url('jabatan') }}">
-                    <img class="me-2" src="{{ asset('images/jabatan.png') }}" alt="Logo" width="20"
-                        height="20">
-                    <span>Jabatan</span>
-                </a>
+                <div class="submenu ps-4" id="masterDataMenu" style="display: none;">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2 d-flex align-items-center">
+                            <span style="color: orange; font-size: 1.2em; margin-right: 3px;">●</span>
+                            <a class="nav-link p-2" href="{{ url('department') }}">Daftar Department</a>
+                        </li>
+                        <li class="mb-2 d-flex align-items-center">
+                            <span style="color: orange; font-size: 1.2em; margin-right: 3px;">●</span>
+                            <a class="nav-link p-2" href="{{ url('signature') }}">Daftar Signature</a>
+                        </li>
+                        <li class="mb-2 d-flex align-items-center">
+                            <span style="color: orange; font-size: 1.2em; margin-right: 3px;">●</span>
+                            <a class="nav-link p-2" href="{{ url('jabatan') }}">Daftar Jabatan</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         @endif
         {{-- Semua role punya Report --}}
@@ -219,6 +219,8 @@
         const closeSidebar = document.getElementById('hamburgerBtnn');
         const rekomMenuToggle = document.getElementById('rekomMenuToggle');
         const rekomMenu = document.getElementById('rekomMenu');
+        const masterDataMenuToggle = document.getElementById('masterDataMenuToggle');
+        const masterDataMenu = document.getElementById('masterDataMenu');
 
         if (rekomMenuToggle && rekomMenu) {
             rekomMenuToggle.addEventListener('click', function(e) {
@@ -227,6 +229,18 @@
                     rekomMenu.style.display = 'block';
                 } else {
                     rekomMenu.style.display = 'none';
+                }
+            });
+        }
+
+        // Tambahkan event listener untuk Master Data dropdown
+        if (masterDataMenuToggle && masterDataMenu) {
+            masterDataMenuToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (masterDataMenu.style.display === 'none') {
+                    masterDataMenu.style.display = 'block';
+                } else {
+                    masterDataMenu.style.display = 'none';
                 }
             });
         }
