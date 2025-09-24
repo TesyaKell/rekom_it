@@ -190,8 +190,12 @@ class rekomendasiController extends Controller
 
     public function edit($id)
     {
-        $rekomendasi = rekomendasi::findOrFail($id);
-        return view('rekomendasi_edit', compact('rekomendasi'));
+        // Ambil data rekomendasi (bisa lebih dari satu, gunakan get() agar konsisten dengan view)
+        $data = rekomendasi::where('id_rek', $id)->get();
+        $departments = department::all();
+        $details = \DB::table('detail_rekomendasi')->where('id_rek', $id)->get();
+
+        return view('edit_rekomendasi', compact('data', 'departments', 'details'));
     }
 
 

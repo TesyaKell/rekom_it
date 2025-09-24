@@ -74,6 +74,31 @@ class detailRekomendasiController extends Controller
         }
     }
 
+    public function update(Request $req, $id_detail_rekomendasi)
+    {
+        if (!session()->has('loginId')) {
+            return redirect('/login');
+        }
+
+        $req->validate([
+            'jenis_unit' => 'required|string|max:255',
+            'ket_unit' => 'required|string|max:255',
+            'estimasi_harga' => 'required|numeric',
+            'masukan' => 'nullable|string|max:255',
+        ]);
+
+        \DB::table('detail_rekomendasi')
+            ->where('id_detail_rekomendasi', $id_detail_rekomendasi)
+            ->update([
+                'jenis_unit' => $req->jenis_unit,
+                'ket_unit' => $req->ket_unit,
+                'estimasi_harga' => $req->estimasi_harga,
+                'masukan' => $req->masukan,
+            ]);
+
+        return back()->with('success', 'Detail rekomendasi berhasil diperbarui!');
+    }
+
     //     Error
 // Call to undefined method App\Http\Controllers\detailRekomendasiController::masukan()
 

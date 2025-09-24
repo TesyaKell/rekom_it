@@ -144,7 +144,7 @@
                     @if (session('loginRole') === 'IT')
                         <a href="{{ url('add_rekomendasi') }}">
                             <button type="button" class="btn btn-success mt-2 mb-2 me-2 fw-bold fs-6">
-                                Tambah Data Rekomendasi
+                                Tambah Data Rekomendasi [+]
                             </button>
                         </a>
                     @endif
@@ -155,8 +155,8 @@
 
         @if (session('loginRole') === 'IT')
             <div class="container-5 w-90 h-50 ms-3 me-3 " style="max-width: 100%;">
-                <p class="p-3 mt-4" style="color: #e68e00">* Tim IT dapat melakukan Approval jika Kepala Bagian telah
-                    Approved</p>
+                <p class="p-3 mt-4" style="color: #e68e00">* Tim IT hanya dapat melakukan approval jika Kepala Bagian
+                    telah memberikan persetujuan</p>
             </div>
         @endif
         <div class="container-2 w-90 h-100 ms-3 me-3 mt-3 pt-2 pb-2 overflow-auto" style="max-width: 100%;">
@@ -227,10 +227,10 @@
                                                     href="{{ url('/print/' . $item->id_rek) }}">Print</a>
                                             </li>
                                             <li>
-                                                <button class="dropdown-item" data-bs-toggle="modal"
-                                                    data-bs-target="#editModal{{ $item->id_rek }}">
+                                                <a class="dropdown-item"
+                                                    href="{{ route('rekomendasi.edit', $item->id_rek) }}">
                                                     Edit
-                                                </button>
+                                                </a>
                                             </li>
                                             <li>
                                                 <form action="{{ url("rekomendasi/{$item->id_rek}") }}"
