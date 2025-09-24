@@ -144,7 +144,7 @@
                     @if (session('loginRole') === 'IT')
                         <a href="{{ url('add_rekomendasi') }}">
                             <button type="button" class="btn btn-success mt-2 mb-2 me-2 fw-bold fs-6">
-                                Tambah Data Rekomendasi [+]
+                                Tambah Data Rekomendasi
                             </button>
                         </a>
                     @endif
