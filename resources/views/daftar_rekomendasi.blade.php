@@ -171,13 +171,10 @@
                             <th class="ps-2">Tanggal Pengajuan</th>
                             <th class="ps-2">Status</th>
                             <th class="ps-2 text-center">Action</th>
-                            @if ($isKabag)
+                            @if (session('loginRole') === 'IT' || session('loginRole') === 'Kabag')
                                 <th class="ps-2 text-center">Approval</th>
-                            @else
-                                @if (session('loginRole') === 'IT')
-                                    <th class="ps-2 text-center">Approval</th>
-                                @endif
                             @endif
+
                         </tr>
                     </thead>
                     <tbody>
@@ -246,7 +243,8 @@
                                         </ul>
                                     </div>
                                 </td>
-                                @if ($isKabag)
+                                @if (session('loginRole') === 'Kabag')
+
                                     @if ($item->status === 'menunggu verifikasi Kabag')
                                         <td class="ps-2">
                                             <div class="d-flex gap-2 mt-2 mb-2 justify-content-center">
@@ -255,7 +253,7 @@
                                                     $allMasukanFilled =
                                                         \DB::table('detail_rekomendasi')
                                                             ->where('id_rek', $item->id_rek)
-                                                            ->whereNull('masukan')
+                                                            ->whereNull('masukan_kabag')
                                                             ->count() === 0;
                                                 @endphp
                                                 @if ($allMasukanFilled)
@@ -264,7 +262,7 @@
                                                         @csrf
                                                         <input type="hidden" name="action" value="acc">
                                                         {{-- Tambahkan input hidden masukan agar controller updateStatus bisa masuk ke blok perubahan status --}}
-                                                        <input type="hidden" name="masukan"
+                                                        <input type="hidden" name="masukan_kabag"
                                                             value="Sudah ada masukan">
                                                         <button type="submit"
                                                             class="btn btn-primary btn-lg active btn-sm fw-bold">
@@ -312,7 +310,7 @@
                                                         $allMasukanFilled =
                                                             \DB::table('detail_rekomendasi')
                                                                 ->where('id_rek', $item->id_rek)
-                                                                ->whereNull('masukan')
+                                                                ->whereNull('masukan_it')
                                                                 ->count() === 0;
                                                     @endphp
                                                     @if ($allMasukanFilled)
@@ -327,10 +325,11 @@
                                                             @php
                                                                 $detailMasukan = \DB::table('detail_rekomendasi')
                                                                     ->where('id_rek', $item->id_rek)
-                                                                    ->pluck('masukan', 'id_detail_rekomendasi');
+                                                                    ->pluck('masukan_kabag', 'id_detail_rekomendasi');
                                                             @endphp
                                                             @foreach ($detailMasukan as $id_detail => $masukan)
-                                                                <input type="hidden" name="masukan"
+                                                                <input type="hidden"
+                                                                    name="masukan_kabag[{{ $id_detail }}]"
                                                                     value="{{ $masukan }}">
                                                             @endforeach
 
@@ -476,7 +475,7 @@
                         <div class="modal-body">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="Tidak ada masukan"
-                                    id="tidakAdaMasukanCheckbox" name="masukan">
+                                    id="tidakAdaMasukanCheckbox" name="masukan_kabag">
                                 <label class="form-check-label" for="tidakAdaMasukanCheckbox">
                                     Tidak ada masukan
                                 </label>
@@ -500,9 +499,9 @@
             document.addEventListener('DOMContentLoaded', function() {
                 @foreach ($data as $item)
                     @php
-                        $allMasukanFilled = \DB::table('detail_rekomendasi')->where('id_rek', $item->id_rek)->whereNull('masukan')->count() === 0;
+                        $allMasukanFilled = \DB::table('detail_rekomendasi')->where('id_rek', $item->id_rek)->whereNull('masukan_kabag')->count() === 0;
                     @endphp
-                    @if ($isKabag && $item->status === 'menunggu verifikasi Kabag' && !$allMasukanFilled)
+                    @if (session('loginRole') === 'Kabag' && $item->status === 'menunggu verifikasi Kabag' && !$allMasukanFilled)
                         var btnKabag = document.getElementById('approveBtnKabag{{ $item->id_rek }}');
                         if (btnKabag) {
                             btnKabag.addEventListener('click', function(e) {

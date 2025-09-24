@@ -17,7 +17,6 @@ Route::get('/home', function () {
 
 
 //REKOMENDASI
-//Route::get('/detailRekomendasi/{id_rek}', [detailRekomendasiController::class, 'tampilDetail'])->name('rekomendasi.daftar');
 Route::get('/detailRekomendasi/{id_rek}', [rekomendasiController::class, 'tampilDetail'])->name('rekomendasi.detail');
 
 
@@ -42,7 +41,6 @@ Route::get('search', [rekomendasiController::class, 'searchRekomendasi'])->name(
 Route::get('/print/{id}', [rekomendasiController::class, 'print'])->name('rekomendasi.print');
 
 
-Route::get('/detailRekomendasi/{id_rek}', [rekomendasiController::class, 'tampilDetail'])->name('rekomendasi.detail');
 Route::get('/rekomendasi/filter', [RekomendasiController::class, 'filterStatus'])->name('rekomendasi.filter');
 
 

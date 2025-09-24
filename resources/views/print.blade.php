@@ -116,7 +116,8 @@
                         <th class="ps-3">Jenis Unit</th>
                         <th class="ps-3">Keterangan Unit</th>
                         <th class="ps-3">Estimasi Harga</th>
-                        <th class="ps-3">Masukan</th>
+                        <th class="ps-3">Masukan Kabag</th>
+                        <th class ="ps-3">Masukan IT</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -127,7 +128,8 @@
                                 <td class="ps-3">{{ $detail->jenis_unit }}</td>
                                 <td class="ps-3">{{ $detail->ket_unit }}</td>
                                 <td class="ps-3">Rp. {{ $detail->estimasi_harga }}</td>
-                                <td class="ps-3">{{ $detail->masukan }}</td>
+                                <td class="ps-3">{{ $detail->masukan_kabag }}</td>
+                                <td class="ps-3">{{ $detail->masukan_it }}</td>
                             </tr>
                         @endforeach
                     @else
@@ -174,7 +176,7 @@
                     </tr>
                     <tr>
                         <td style="padding-top:10px;">
-                            <u>{{ $nama_approval ?? 'Ella' }}</u><br>
+                            <u>{{ $nama_approval ?? '' }}</u><br>
                             <span style="font-size:13px;">Kabag {{ $data->nama_dep ?? 'Accounting' }}</span>
                         </td>
                         <td style="padding-top:10px;">

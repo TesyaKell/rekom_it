@@ -6,7 +6,6 @@ use App\Models\department;
 use Illuminate\Http\Request;
 use App\Models\rekomendasi;
 use Illuminate\Support\Facades\DB;
-use Log;
 
 class rekomendasiController extends Controller
 {
@@ -48,6 +47,7 @@ class rekomendasiController extends Controller
                 'alasan_rek' => $req->alasan_rek,
                 'nama_dep' => $nama_dep,
                 'status' => 'menunggu verifikasi Kabag',
+                'created_by' => $user->nama_leng ?? 'Unknown',
             ]);
 
             // Simpan detail rekomendasi ke tabel detail_rekomendasi
@@ -58,11 +58,13 @@ class rekomendasiController extends Controller
                         'jenis_unit' => $detail['jenis_unit'] ?? null,
                         'ket_unit' => $detail['ket_unit'] ?? null,
                         'estimasi_harga' => $detail['estimasi_harga'] ?? null,
+
+
                     ]);
                 }
             }
 
-            \Log::info("Sukses tambah rekomendasi oleh user {$user->id_user}");
+            \Log::info("Sukses tambah rekomendasi oleh user {$user->nama_leng}");
             return redirect()->route('rekomendasi.daftar')->with('success', 'Data berhasil ditambahkan!');
         } catch (\Exception $e) {
             \Log::error("Gagal simpan data : {$e->getMessage()}");
@@ -91,20 +93,6 @@ class rekomendasiController extends Controller
 
     public function updateStatus(Request $req, $id_rek = null)
     {
-<<<<<<< HEAD
-        $rekomendasi = rekomendasi::findOrFail($id_rek);
-        $user = \DB::table('users')->where('id_user', session('loginId'))->first();
-
-        if ($req->input('action') === 'acc') {
-            $rekomendasi->nama_receiver = $user ? $user->nama_leng : 'Unknown';
-            $rekomendasi->tgl_verif_kabag = now();
-            $rekomendasi->status = 'menunggu verifikasi Tim IT';
-        } elseif ($req->input('action') === 'tolak') {
-            $rekomendasi->status = 'Ditolak';
-        } elseif ($req->input('action') === 'acc_it') {
-            $rekomendasi->tgl_verif_it = now();
-            $rekomendasi->status = 'Diterima';
-=======
         try {
             $id_rek = $req->input('id_rek') ?? $id_rek;
             if (!$id_rek) {
@@ -118,52 +106,51 @@ class rekomendasiController extends Controller
 
             $user = \DB::table('users')->where('id_user', session('loginId'))->first();
 
-            // Status berubah ketika tombol Simpan pada modal diklik (udah bukan dari button Approve lagi)
-            if ($req->filled('masukan') && $req->input('action') === 'acc') {
+            if ($req->input('action') === 'acc') {
                 $rekomendasi->nama_receiver = $user ? $user->nama_leng : 'Unknown';
                 $rekomendasi->tgl_verif_kabag = now();
                 $rekomendasi->status = 'menunggu verifikasi Tim IT';
 
-                \DB::table('detail_rekomendasi')
-                    ->where('id_rek', $id_rek)
-                    ->update(['masukan' => $req->input('masukan')]);
-            } elseif ($req->filled('masukan') && $req->input('action') === 'acc_it') {
+                // Jika centang "Tidak ada masukan", update semua detail_rekomendasi yang belum ada masukan_kabag
+                if ($req->has('masukan_kabag') && $req->input('masukan_kabag') === 'Tidak ada masukan') {
+                    \DB::table('detail_rekomendasi')
+                        ->where('id_rek', $id_rek)
+                        ->whereNull('masukan_kabag')
+                        ->update(['masukan_kabag' => 'Tidak ada masukan']);
+                }
+                $rekomendasi->save();
+            } elseif ($req->input('action') === 'acc_it') {
                 $rekomendasi->tgl_verif_it = now();
                 $rekomendasi->status = 'Diterima';
 
-                \DB::table('detail_rekomendasi')
-                    ->where('id_rek', $id_rek)
-                    ->update(['masukan' => $req->input('masukan')]);
+                // Jika centang "Tidak ada masukan", update semua detail_rekomendasi yang belum ada masukan_it
+                if ($req->has('masukan_kabag') && $req->input('masukan_kabag') === 'Tidak ada masukan') {
+                    \DB::table('detail_rekomendasi')
+                        ->where('id_rek', $id_rek)
+                        ->whereNull('masukan_it')
+                        ->update(['masukan_it' => 'Tidak ada masukan']);
+                }
+                $rekomendasi->save();
             } elseif ($req->input('action') === 'tolak') {
                 $rekomendasi->status = 'Ditolak';
+                $rekomendasi->save();
             }
 
-            $rekomendasi->save();
             \Log::info("Input status rekomendasi oleh user " . ($user ? $user->id_user : 'Unknown'));
             return redirect()->route('rekomendasi.daftar')->with('success', 'Status berhasil diperbarui!');
         } catch (\Exception $e) {
             \Log::error("Gagal update status : {$e->getMessage()}");
             return redirect()->route('rekomendasi.daftar')->with('error', 'Gagal update status!');
->>>>>>> 744b2718a154b66aac82ba0ce8b9ae7f5e57b5e1
         }
     }
     public function destroy($id_rek)
     {
-        $user = DB::table('users')->where('id_user', session('loginId'))->first();
-
         $rekomendasi = rekomendasi::where('id_rek', $id_rek)->first();
         if ($rekomendasi) {
             $data = $rekomendasi->toArray();
-            $deletedBy = $user ? $user->nama_leng : 'Unknown';
-            $data['deleted_by'] = $deletedBy; // pastikan field ini ikut diinsert
-
             DB::table('deleted')->insert($data);
-
-            $rekomendasi->deleted_by = $deletedBy;
-            $rekomendasi->save();
             $rekomendasi->delete();
         }
-        Log::info("Rekomendasi {$rekomendasi->deleted_by} (ID: {$rekomendasi->id_rek}) dihapus oleh user ID: " . session('loginId'));
         return redirect()->route('rekomendasi.daftar')->with('success', 'Data berhasil dihapus!');
     }
 
@@ -175,8 +162,8 @@ class rekomendasiController extends Controller
         $query = rekomendasi::query();
 
         $user = \DB::table('users')->where('id_user', session('loginId'))->first();
-        $isKabag = $user && $user->id_jab == 6;
-        if ($isKabag) {
+
+        if (session('loginRole') === 'Kabag') {
             $dep = \DB::table('department')->where('kode_dep', $user->kode_dep)->first();
             if ($dep) {
                 $query->where('nama_dep', $dep->nama_dep);
@@ -185,7 +172,7 @@ class rekomendasiController extends Controller
 
         $data = $query->get();
         $departments = department::all();
-        return view('daftar_rekomendasi', compact('data', 'departments', 'isKabag'));
+        return view('daftar_rekomendasi', compact('data', 'departments'));
     }
 
     public function tampilDataTerhapus()
@@ -205,13 +192,18 @@ class rekomendasiController extends Controller
             return redirect('/login');
         }
 
-        $data = rekomendasi::where('id_rek', $id_rek)->get();
+        $user = \DB::table('users')->where('id_user', session('loginId'))->first();
+        $data = rekomendasi::where('id_rek', $id_rek)->first(); // langsung first
         $departments = department::all();
-        $details = \DB::table('detail_rekomendasi')->where('id_rek', $id_rek)->get();
+        $status = $data?->status;
+        $namauser = $user?->nama_leng ?? '';
 
-        // Pastikan view 'detailRekomendasi' menampilkan variable 'details'
-        return view('detailRekomendasi', compact('data', 'departments', 'details'));
+        $details = \DB::table('detail_rekomendasi')->where('id_rek', $id_rek)->get();
+        \Log::info($status);
+
+        return view('detailRekomendasi', compact('namauser', 'data', 'departments', 'details', 'status'));
     }
+
 
     public function edit($id)
     {
@@ -326,10 +318,44 @@ class rekomendasiController extends Controller
         $deleted = DB::table('deleted')->where('id_rek', $id_rek)->first();
         if ($deleted) {
             $data = (array) $deleted;
-            unset($data['deleted_by']); // jika field ini tidak ada di tabel rekomendasi
-            DB::table('rekomendasi')->insert($data);
+
+            // Data khusus untuk tabel rekomendasi
+            $rekData = $data;
+            unset(
+                $rekData['id_rek'],        // <-- buang supaya auto increment
+                $rekData['deleted_by'],
+                $rekData['jenis_unit'],
+                $rekData['ket_unit'],
+                $rekData['masukan'],
+                $rekData['masukan_kabag'],
+                $rekData['masukan_it'],
+                $rekData['estimasi_harga'],
+                $rekData['harga_akhir']
+            );
+
+            // Insert ke rekomendasi dan ambil id_rek baru
+            $newIdRek = DB::table('rekomendasi')->insertGetId($rekData);
+
+            // Data untuk detail_rekomendasi
+            $detailData = [
+                'id_rek'         => $newIdRek,
+                'jenis_unit'     => $data['jenis_unit'] ?? '-',
+                'ket_unit'       => $data['ket_unit'] ?? null,
+                'masukan_kabag'  => $data['masukan_kabag'] ?? null,
+                'masukan_it'     => $data['masukan_it'] ?? null,
+                'estimasi_harga' => $data['estimasi_harga'] ?? null,
+                'harga_akhir'    => $data['harga_akhir'] ?? null,
+            ];
+
+            DB::table('detail_rekomendasi')->insert($detailData);
+
+            // Hapus dari deleted
             DB::table('deleted')->where('id_rek', $id_rek)->delete();
         }
+
         return redirect()->route('rekomendasi.deleted')->with('success', 'Data berhasil direstore!');
     }
+
+
+
 }
