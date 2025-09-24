@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\DetailRekomendasi;
-
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
 class detailRekomendasiController extends Controller
@@ -15,7 +15,7 @@ class detailRekomendasiController extends Controller
 
         $user = \DB::table('users')->where('id_user', session('loginId'))->first();
         $departments = \DB::table('department')->get();
-        $lastId = DetailRekomendasi::max('id_detail_rekomendasi');
+        $lastId = \DB::table('detail_rekomendasi')->max('id_detail_rekomendasi');
 
         try {
             $req->validate([
@@ -47,5 +47,34 @@ class detailRekomendasiController extends Controller
         }
     }
 
+
+    public function masukan(Request $req, $id_detail_rekomendasi)
+    {
+        if (!session()->has('loginId')) {
+            return redirect('/login');
+        }
+
+        $user = \DB::table('users')->where('id_user', session('loginId'))->first();
+
+        try {
+            $req->validate([
+                'masukan' => 'required|string|max:255',
+            ]);
+
+            // Update masukan pada detail rekomendasi yang sesuai
+            \DB::table('detail_rekomendasi')
+                ->where('id_detail_rekomendasi', $id_detail_rekomendasi)
+                ->update(['masukan' => $req->masukan]);
+
+            \Log::info("Sukses update masukan oleh user {$user->id_user}");
+            return back()->with('success', 'Masukan berhasil disimpan!');
+        } catch (\Exception $e) {
+            \Log::error("Gagal simpan masukan : {$e->getMessage()}");
+            return back()->with('error', 'Gagal simpan masukan!');
+        }
+    }
+
+    //     Error
+// Call to undefined method App\Http\Controllers\detailRekomendasiController::masukan()
 
 }

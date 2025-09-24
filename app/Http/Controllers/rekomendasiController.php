@@ -88,25 +88,43 @@ class rekomendasiController extends Controller
     }
 
 
-    public function updateStatus(Request $req, $id_rek)
+    public function updateStatus(Request $req, $id_rek = null)
     {
         try {
-            $rekomendasi = rekomendasi::findOrFail($id_rek);
+            $id_rek = $req->input('id_rek') ?? $id_rek;
+            if (!$id_rek) {
+                return redirect()->route('rekomendasi.daftar')->with('error', 'ID rekomendasi tidak ditemukan!');
+            }
+
+            $rekomendasi = rekomendasi::find($id_rek);
+            if (!$rekomendasi) {
+                return redirect()->route('rekomendasi.daftar')->with('error', 'Data rekomendasi tidak ditemukan!');
+            }
+
             $user = \DB::table('users')->where('id_user', session('loginId'))->first();
 
-            if ($req->input('action') === 'acc') {
+            // Status berubah ketika tombol Simpan pada modal diklik (udah bukan dari button Approve lagi)
+            if ($req->filled('masukan') && $req->input('action') === 'acc') {
                 $rekomendasi->nama_receiver = $user ? $user->nama_leng : 'Unknown';
                 $rekomendasi->tgl_verif_kabag = now();
                 $rekomendasi->status = 'menunggu verifikasi Tim IT';
-            } elseif ($req->input('action') === 'tolak') {
-                $rekomendasi->status = 'Ditolak';
-            } elseif ($req->input('action') === 'acc_it') {
+
+                \DB::table('detail_rekomendasi')
+                    ->where('id_rek', $id_rek)
+                    ->update(['masukan' => $req->input('masukan')]);
+            } elseif ($req->filled('masukan') && $req->input('action') === 'acc_it') {
                 $rekomendasi->tgl_verif_it = now();
                 $rekomendasi->status = 'Diterima';
+
+                \DB::table('detail_rekomendasi')
+                    ->where('id_rek', $id_rek)
+                    ->update(['masukan' => $req->input('masukan')]);
+            } elseif ($req->input('action') === 'tolak') {
+                $rekomendasi->status = 'Ditolak';
             }
 
             $rekomendasi->save();
-            \Log::info("Input status rekomendasi oleh user {$user->id_user}");
+            \Log::info("Input status rekomendasi oleh user " . ($user ? $user->id_user : 'Unknown'));
             return redirect()->route('rekomendasi.daftar')->with('success', 'Status berhasil diperbarui!');
         } catch (\Exception $e) {
             \Log::error("Gagal update status : {$e->getMessage()}");

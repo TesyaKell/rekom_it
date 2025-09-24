@@ -44,6 +44,8 @@ Route::get('/detailRekomendasi/{id_rek}', [rekomendasiController::class, 'tampil
 Route::get('/rekomendasi/filter', [RekomendasiController::class, 'filterStatus'])->name('rekomendasi.filter');
 
 
+Route::post('/detail-rekomendasi/masukan/{id}', [App\Http\Controllers\DetailRekomendasiController::class, 'masukan'])->name('detailRekomendasi.masukan');
+
 
 // // SIGNATURE
 Route::get('/signature', [signatureController::class, 'index'])->name('signature.index');

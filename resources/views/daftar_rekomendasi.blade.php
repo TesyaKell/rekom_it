@@ -250,13 +250,11 @@
                                     @if ($item->status === 'menunggu verifikasi Kabag')
                                         <td class="ps-2">
                                             <div class="d-flex gap-2 mt-2 mb-2 justify-content-center">
-                                                <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
-                                                    method="POST" style="display:inline;">
-                                                    @csrf
-                                                    <input type="hidden" name="action" value="acc">
-                                                    <button type="submit"
-                                                        class="btn btn-primary btn-lg active btn-sm fw-bold">Approve</button>
-                                                </form>
+                                                <button type="button"
+                                                    class="btn btn-primary btn-lg active btn-sm fw-bold"
+                                                    id="approveBtnKabag{{ $item->id_rek }}">
+                                                    Approve
+                                                </button>
                                                 <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
                                                     method="POST" style="display:inline;">
                                                     @csrf
@@ -287,15 +285,11 @@
                                         @elseif ($item->status === 'menunggu verifikasi Tim IT')
                                             <td class="ps-2">
                                                 <div class="d-flex gap-2 mt-3 justify-content-center">
-                                                    <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
-                                                        method="POST" style="display:inline;">
-                                                        @csrf
-                                                        <input type="hidden" name="action" value="acc_it">
-                                                        <button type="submit"
-                                                            class="btn btn-primary btn-lg active btn-sm fw-bold">
-                                                            Approve
-                                                        </button>
-                                                    </form>
+                                                    <button type="button"
+                                                        class="btn btn-primary btn-lg active btn-sm fw-bold"
+                                                        id="approveBtnIT{{ $item->id_rek }}">
+                                                        Approve
+                                                    </button>
                                                     <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
                                                         method="POST" style="display:inline;">
                                                         @csrf
@@ -392,7 +386,7 @@
                                             id="estimasi_harga{{ $item->id_rek }}" name="estimasi_harga"
                                             value="{{ $item->estimasi_harga }}" required>
                                     </div>
-                                    <!-- Tambahkan field lain sesuai kebutuhan -->
+
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary"
@@ -407,9 +401,87 @@
 
         </div>
 
+        <div class="modal fade" id="approveMasukanModal" tabindex="-1" aria-labelledby="approveMasukanModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <form id="approveMasukanForm" method="POST">
+                    @csrf
+                    <input type="hidden" name="action" id="approveMasukanAction" value="acc">
+                    <input type="hidden" name="id_rek" id="approveMasukanIdRek">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="approveMasukanModalLabel">Berikan Masukan pada Rekomendasi
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Tidak ada masukan"
+                                    id="tidakAdaMasukanCheckbox" name="masukan">
+                                <label class="form-check-label" for="tidakAdaMasukanCheckbox">
+                                    Tidak ada masukan
+                                </label>
+                            </div>
+                            <div id="masukanError" class="text-danger mt-2" style="display:none;">Silakan centang
+                                jika tidak ada masukan.</div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kembali</button>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
         </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                @foreach ($data as $item)
+                    @if ($isKabag && $item->status === 'menunggu verifikasi Kabag')
+                        var btnKabag = document.getElementById('approveBtnKabag{{ $item->id_rek }}');
+                        if (btnKabag) {
+                            btnKabag.addEventListener('click', function(e) {
+                                document.getElementById('approveMasukanIdRek').value = '{{ $item->id_rek }}';
+                                document.getElementById('approveMasukanForm').action =
+                                    "{{ route('rekomendasi.approve', $item->id_rek) }}";
+                                document.getElementById('approveMasukanAction').value = 'acc'; // Kabag
+                                document.getElementById('tidakAdaMasukanCheckbox').checked = false;
+                                document.getElementById('masukanError').style.display = 'none';
+                                var modal = new bootstrap.Modal(document.getElementById('approveMasukanModal'));
+                                modal.show();
+                            });
+                        }
+                    @endif
+                    @if (session('loginRole') === 'IT' && $item->status === 'menunggu verifikasi Tim IT')
+                        var btnIT = document.getElementById('approveBtnIT{{ $item->id_rek }}');
+                        if (btnIT) {
+                            btnIT.addEventListener('click', function(e) {
+                                document.getElementById('approveMasukanIdRek').value = '{{ $item->id_rek }}';
+                                document.getElementById('approveMasukanForm').action =
+                                    "{{ route('rekomendasi.approve', $item->id_rek) }}";
+                                document.getElementById('approveMasukanAction').value = 'acc_it'; // IT
+                                document.getElementById('tidakAdaMasukanCheckbox').checked = false;
+                                document.getElementById('masukanError').style.display = 'none';
+                                var modal = new bootstrap.Modal(document.getElementById('approveMasukanModal'));
+                                modal.show();
+                            });
+                        }
+                    @endif
+                @endforeach
+
+                document.getElementById('approveMasukanForm').addEventListener('submit', function(e) {
+                    if (!document.getElementById('tidakAdaMasukanCheckbox').checked) {
+                        e.preventDefault();
+                        document.getElementById('masukanError').style.display = 'block';
+                    }
+                });
+            });
+        </script>
+
     </body>
 
 </html>
