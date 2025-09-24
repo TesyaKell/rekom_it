@@ -27,7 +27,10 @@ class rekomendasi extends Model
             'jabatan_receiver',
             'bukti_pembelian',
             'tgl_verif_it',
-            'tgl_verif_kabag'
+            'tgl_verif_kabag',
+            'created_by',
+            'updated_by',
+            'deleted_by',
         ];
 
     public function user()

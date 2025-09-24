@@ -15,7 +15,8 @@ class DetailRekomendasi extends Model
             'id_rek',
             'jenis_unit',
             'ket_unit',
-            'masukan',
+            'masukan_kabag',
+            'masukan_it',
             'estimasi_harga',
             'harga_akhir',
         ];

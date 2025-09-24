@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\DetailRekomendasi;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -21,7 +22,8 @@ class detailRekomendasiController extends Controller
             $req->validate([
                 'jenis_unit' => 'required|string|max:255',
                 'ket_unit' => 'required|string|max:255',
-                'masukan' => 'nullable|string|max:255',
+                'masukan_kabag' => 'nullable|string|max:255',
+                'masukan_it' => 'nullable|string|max:255',
                 'estimasi_harga' => 'required|numeric',
                 'harga_akhir' => 'nullable|numeric',
             ]);
@@ -34,7 +36,8 @@ class detailRekomendasiController extends Controller
                 'jenis_unit' => $req->jenis_unit,
                 'ket_unit' => $req->ket_unit,
                 'estimasi_harga' => $req->estimasi_harga,
-                'masukan' => $req->masukan,
+                'masukan_kabag' => $req->masukan_kabag,
+                'masukan_it' => $req->masukan_it,
                 'harga_akhir' => $req->harga_akhir,
             ]);
 
@@ -57,19 +60,27 @@ class detailRekomendasiController extends Controller
         $user = \DB::table('users')->where('id_user', session('loginId'))->first();
 
         try {
-            $req->validate([
-                'masukan' => 'required|string|max:255',
-            ]);
-
-            // Update masukan pada detail rekomendasi yang sesuai
-            \DB::table('detail_rekomendasi')
-                ->where('id_detail_rekomendasi', $id_detail_rekomendasi)
-                ->update(['masukan' => $req->masukan]);
+            // Validasi sesuai role
+            if (session('loginRole') === 'IT') {
+                $req->validate([
+                    'masukan_it' => 'required|string|max:255',
+                ]);
+                \DB::table('detail_rekomendasi')
+                    ->where('id_detail_rekomendasi', $id_detail_rekomendasi)
+                    ->update(['masukan_it' => $req->masukan_it]);
+            } elseif (session('loginRole') === 'Kabag') {
+                $req->validate([
+                    'masukan_kabag' => 'required|string|max:255',
+                ]);
+                \DB::table('detail_rekomendasi')
+                    ->where('id_detail_rekomendasi', $id_detail_rekomendasi)
+                    ->update(['masukan_kabag' => $req->masukan_kabag]);
+            }
 
             \Log::info("Sukses update masukan oleh user {$user->id_user}");
             return back()->with('success', 'Masukan berhasil disimpan!');
         } catch (\Exception $e) {
-            \Log::error("Gagal simpan masukan : {$e->getMessage()}");
+            \Log::info("Gagal simpan masukan : " . $e->getMessage());
             return back()->with('error', 'Gagal simpan masukan!');
         }
     }
@@ -100,6 +111,6 @@ class detailRekomendasiController extends Controller
     }
 
     //     Error
-// Call to undefined method App\Http\Controllers\detailRekomendasiController::masukan()
+    // Call to undefined method App\Http\Controllers\detailRekomendasiController::masukan()
 
 }

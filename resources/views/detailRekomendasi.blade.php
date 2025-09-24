@@ -17,8 +17,6 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
-
     <style>
         body {
             background-color: #efefef;
@@ -106,9 +104,7 @@
         </div>
     </div>
 
-
     <body>
-
         <div class="container mt-1 mb-5 me-5 ms-5 p-2">
             <h6 class="mt-3 mb-2 fw-bold">Rekomendasi</h6>
             <div class="card-2">
@@ -160,7 +156,13 @@
                                 <th class="ps-3">Jenis Unit</th>
                                 <th class="ps-3">Keterangan</th>
                                 <th class="ps-3">Estimasi Harga</th>
-                                <th class="ps-3">Berikan Masukan</th>
+                                @if (session('loginRole') === 'IT')
+                                    <th class="ps-3">Berikan Masukan</th>
+                                @elseif (session('loginRole') === 'Kabag')
+                                    <th class="ps-3">Berikan Masukan Kabag</th>
+                                @else
+                                    <th class="ps-3">Masukan dari Tim IT</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -171,21 +173,59 @@
                                         <td class="ps-3">{{ $detail->ket_unit }}</td>
                                         <td class="ps-3">Rp. {{ number_format($detail->estimasi_harga, 0, ',', '.') }}
                                         </td>
-                                        <td class="ps-3">
-                                            @if ($detail->masukan)
-                                                <span class="text-success">{{ $detail->masukan }}</span>
-                                            @else
-                                                <form method="POST"
-                                                    action="{{ route('detailRekomendasi.masukan', $detail->id_detail_rekomendasi) }}"
-                                                    class="d-flex align-items-center masukan-form">
-                                                    @csrf
-                                                    <input class="form-control me-2 masukan-input" type="text"
-                                                        name="masukan" placeholder="Berikan masukan">
-                                                    <button type="submit"
-                                                        class="btn btn-sm btn-primary">Simpan</button>
-                                                </form>
-                                            @endif
-                                        </td>
+                                        @if (session('loginRole') === 'IT')
+                                            <td class="ps-3">
+                                                @if ($detail->masukan_it)
+                                                    <span class="text-success">{{ $detail->masukan_it }}</span>
+                                                @else
+                                                    @if ($status == 'menunggu verifikasi Tim IT')
+                                                        <form method="POST"
+                                                            action="{{ route('detailRekomendasi.masukan', $detail->id_detail_rekomendasi) }}"
+                                                            class="d-flex align-items-center masukan-form">
+                                                            @csrf
+                                                            <input class="form-control me-2 masukan-input"
+                                                                type="text" name="masukan_it"
+                                                                placeholder="Berikan masukan IT">
+                                                            <button type="submit"
+                                                                class="btn btn-sm btn-primary">Simpan</button>
+                                                        </form>
+                                                    @else
+                                                        <span class="text-muted">Belum bisa beri masukan karena belum di
+                                                            ACC Kabag</span>
+                                                    @endif
+                                                @endif
+                                            </td>
+                                        @elseif (session('loginRole') === 'Kabag')
+                                            <td class="ps-3">
+                                                @if ($detail->masukan_kabag)
+                                                    <span class="text-success">{{ $detail->masukan_kabag }}</span>
+                                                @else
+                                                    @if ($status == 'menunggu verifikasi Kabag')
+                                                        <form method="POST"
+                                                            action="{{ route('detailRekomendasi.masukan', $detail->id_detail_rekomendasi) }}"
+                                                            class="d-flex align-items-center masukan-form">
+                                                            @csrf
+                                                            <input class="form-control me-2 masukan-input"
+                                                                type="text" name="masukan_kabag"
+                                                                placeholder="Berikan masukan Kabag">
+                                                            <button type="submit"
+                                                                class="btn btn-sm btn-primary">Simpan</button>
+                                                        </form>
+                                                    @else
+                                                        <span class="text-muted">sudah di acc</span>
+                                                    @endif
+                                                @endif
+                                            </td>
+                                        @else
+                                            <td class="ps-3">
+                                                @if ($detail->masukan_it)
+                                                    <span class="text-success">{{ $detail->masukan_it }}</span>
+                                                @else
+                                                    <span class="text-muted">Belum ada masukan</span>
+                                                @endif
+                                            </td>
+                                        @endif
+
                                     </tr>
                                 @endforeach
                             @else

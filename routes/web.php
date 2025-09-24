@@ -17,7 +17,6 @@ Route::get('/home', function () {
 
 
 //REKOMENDASI
-//Route::get('/detailRekomendasi/{id_rek}', [detailRekomendasiController::class, 'tampilDetail'])->name('rekomendasi.daftar');
 Route::get('/detailRekomendasi/{id_rek}', [rekomendasiController::class, 'tampilDetail'])->name('rekomendasi.detail');
 
 
@@ -26,7 +25,7 @@ Route::post('/add_rekomendasi', [rekomendasiController::class, 'create'])->name(
 Route::get('/add_rekomendasi', [rekomendasiController::class, 'index'])->name('rekomendasi.index');
 
 Route::get('/deleted_rekomendasi', [rekomendasiController::class, 'tampilDataTerhapus'])->name('rekomendasi.deleted');
-//Route::post('/rekomendasi/{id_rek}/restore', [rekomendasiController::class, 'restore'])->name('rekomendasi.restore');
+Route::post('/rekomendasi/{id_rek}/restore', [rekomendasiController::class, 'restore'])->name('rekomendasi.restore');
 Route::get('/daftar_rekomendasi', [rekomendasiController::class, 'tampilData'])
     ->name('rekomendasi.daftar');
 Route::get('/report', [rekomendasiController::class, 'laporan'])->name('report');
@@ -42,7 +41,6 @@ Route::get('search', [rekomendasiController::class, 'searchRekomendasi'])->name(
 Route::get('/print/{id}', [rekomendasiController::class, 'print'])->name('rekomendasi.print');
 
 
-Route::get('/detailRekomendasi/{id_rek}', [rekomendasiController::class, 'tampilDetail'])->name('rekomendasi.detail');
 Route::get('/rekomendasi/filter', [RekomendasiController::class, 'filterStatus'])->name('rekomendasi.filter');
 
 
