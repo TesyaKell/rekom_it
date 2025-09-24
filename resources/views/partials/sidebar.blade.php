@@ -60,6 +60,23 @@
         font-size: 18px;
         font-weight: bold;
     }
+
+    #mainContent {
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        margin-left: 0;
+    }
+
+    #mainContent.shifted {
+        transform: translateX(220px);
+    }
+
+    #sidebarMenu {
+        left: 0;
+    }
+
+    body.sidebar-open {
+        overflow-x: hidden;
+    }
 </style>
 
 <button id="hamburgerBtn" class="btn position-fixed top-0 start-0" type="button" aria-label="Open menu">
@@ -191,6 +208,12 @@
 
 </div>
 
+{{-- Tambahkan wrapper untuk seluruh konten utama --}}
+<div id="mainContent">
+    {{-- Konten utama halaman akan dimulai di sini --}}
+    {{-- Pastikan seluruh @yield('content') atau konten utama berada di dalam #mainContent --}}
+</div>
+
 <!-- Logout Confirmation Modal -->
 <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -221,6 +244,7 @@
         const rekomMenu = document.getElementById('rekomMenu');
         const masterDataMenuToggle = document.getElementById('masterDataMenuToggle');
         const masterDataMenu = document.getElementById('masterDataMenu');
+        const mainContent = document.getElementById('mainContent');
 
         if (rekomMenuToggle && rekomMenu) {
             rekomMenuToggle.addEventListener('click', function(e) {
@@ -248,12 +272,16 @@
         if (hamburgerBtn && sidebarMenu) {
             hamburgerBtn.addEventListener('click', () => {
                 sidebarMenu.style.transform = 'translateX(0)';
+                if (mainContent) mainContent.classList.add('shifted');
+                document.body.classList.add('sidebar-open');
             });
         }
 
         if (closeSidebar && sidebarMenu) {
             closeSidebar.addEventListener('click', () => {
                 sidebarMenu.style.transform = 'translateX(-100%)';
+                if (mainContent) mainContent.classList.remove('shifted');
+                document.body.classList.remove('sidebar-open');
             });
         }
 
@@ -262,6 +290,8 @@
                 !sidebarMenu.contains(event.target) &&
                 !hamburgerBtn.contains(event.target)) {
                 sidebarMenu.style.transform = 'translateX(-100%)';
+                if (mainContent) mainContent.classList.remove('shifted');
+                document.body.classList.remove('sidebar-open');
             }
         });
 

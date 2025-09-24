@@ -210,18 +210,19 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <div class="dropdown d-flex justify-content-center align-items-center">
+                                    <div class="dropdown d-flex justify-content-center align-items-center dropstart">
                                         <button class="btn btn-light border p-0" type="button"
                                             id="dropdownMenuButton{{ $item->id_rek }}" data-bs-toggle="dropdown"
                                             aria-expanded="false">
                                             <span class="fw-bold fs-4 d-flex justify-content-center align-items-center"
                                                 style="height: 100%;">⋮</span>
                                         </button>
-                                        <ul class="dropdown-menu"
+                                        <ul class="dropdown-menu shadow-lg rounded-3"
                                             aria-labelledby="dropdownMenuButton{{ $item->id_rek }}">
                                             <li>
-                                                <a class="dropdown-item"
-                                                    href="{{ url('/print/' . $item->id_rek) }}">Print</a>
+                                                <a class="dropdown-item" href="{{ url('/print/' . $item->id_rek) }}">
+                                                    Lihat Detail
+                                                </a>
                                             </li>
                                             <li>
                                                 <a class="dropdown-item"
@@ -232,15 +233,17 @@
                                             <li>
                                                 <form action="{{ url("rekomendasi/{$item->id_rek}") }}"
                                                     method="POST"
-                                                    onsubmit="return confirm('Are you sure you want to delete this item?')"
+                                                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus item ini?')"
                                                     style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit"
-                                                        class="dropdown-item text-danger">Hapus</button>
+                                                    <button type="submit" class="dropdown-item text-danger fw-bold">
+                                                        Hapus
+                                                    </button>
                                                 </form>
                                             </li>
                                         </ul>
+
                                     </div>
                                 </td>
                                 @if (session('loginRole') === 'Kabag')
@@ -320,8 +323,6 @@
                                                             @csrf
                                                             <input type="hidden" name="action" value="acc_it">
 
-                                                            {{-- msih salah --}}
-
                                                             @php
                                                                 $detailMasukan = \DB::table('detail_rekomendasi')
                                                                     ->where('id_rek', $item->id_rek)
@@ -332,8 +333,6 @@
                                                                     name="masukan_kabag[{{ $id_detail }}]"
                                                                     value="{{ $masukan }}">
                                                             @endforeach
-
-                                                            {{-- msih salah --}}
 
                                                             <button type="submit"
                                                                 class="btn btn-primary btn-lg active btn-sm fw-bold">
@@ -382,80 +381,6 @@
                     </tbody>
                 </table>
             </div>
-
-            @foreach ($data as $item)
-                <div class="modal fade" id="editModal{{ $item->id_rek }}" tabindex="-1"
-                    aria-labelledby="editModalLabel{{ $item->id_rek }}" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <form action="{{ route('rekomendasi.update', $item->id_rek) }}" method="POST">
-                            @csrf
-                            @method('PUT')
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title fw-bold " style="color: rgb(249, 137, 0);"
-                                        id="editModalLabel{{ $item->id_rek }}">Edit
-                                        Rekomendasi
-                                    </h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="mb-3">
-                                        <label for="nama_lengkap{{ $item->id_rek }}" class="form-label">Nama
-                                            Pengaju</label>
-                                        <input type="text" class="form-control"
-                                            id="nama_lengkap{{ $item->id_rek }}" name="nama_lengkap"
-                                            value="{{ $item->nama_lengkap }}" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="jenis_unit{{ $item->id_rek }}" class="form-label">Jenis
-                                            Unit</label>
-                                        <input type="text" class="form-control"
-                                            id="jenis_unit{{ $item->id_rek }}" name="jenis_unit"
-                                            value="{{ $item->jenis_unit }}" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="ket_unit{{ $item->id_rek }}" class="form-label">Keterangan
-                                            Unit</label>
-                                        <input type="text" class="form-control" id="ket_unit{{ $item->id_rek }}"
-                                            name="ket_unit" value="{{ $item->ket_unit }}" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="tgl_masuk{{ $item->id_rek }}" class="form-label">Tanggal
-                                            Pengajuan</label>
-                                        <input type="date" class="form-control" id="tgl_masuk{{ $item->id_rek }}"
-                                            name="tgl_masuk" value="{{ $item->tgl_masuk }}" readonly>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="nama_dep{{ $item->id_rek }}"
-                                            class="form-label">Department</label>
-                                        <select class="form-control" id="nama_dep{{ $item->id_rek }}"
-                                            name="nama_dep">
-                                            @foreach ($departments as $dep)
-                                                <option value="{{ $dep->nama_dep }}">{{ $dep->nama_dep }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="estimasi_harga{{ $item->id_rek }}" class="form-label">Estimasi
-                                            Harga</label>
-                                        <input type="number" class="form-control"
-                                            id="estimasi_harga{{ $item->id_rek }}" name="estimasi_harga"
-                                            value="{{ $item->estimasi_harga }}" required>
-                                    </div>
-
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Batal</button>
-                                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            @endforeach
-
         </div>
 
         <div class="modal fade" id="approveMasukanModal" tabindex="-1" aria-labelledby="approveMasukanModalLabel"
