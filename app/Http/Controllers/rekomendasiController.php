@@ -89,8 +89,9 @@ class rekomendasiController extends Controller
     }
 
 
-    public function updateStatus(Request $req, $id_rek)
+    public function updateStatus(Request $req, $id_rek = null)
     {
+<<<<<<< HEAD
         $rekomendasi = rekomendasi::findOrFail($id_rek);
         $user = \DB::table('users')->where('id_user', session('loginId'))->first();
 
@@ -103,6 +104,47 @@ class rekomendasiController extends Controller
         } elseif ($req->input('action') === 'acc_it') {
             $rekomendasi->tgl_verif_it = now();
             $rekomendasi->status = 'Diterima';
+=======
+        try {
+            $id_rek = $req->input('id_rek') ?? $id_rek;
+            if (!$id_rek) {
+                return redirect()->route('rekomendasi.daftar')->with('error', 'ID rekomendasi tidak ditemukan!');
+            }
+
+            $rekomendasi = rekomendasi::find($id_rek);
+            if (!$rekomendasi) {
+                return redirect()->route('rekomendasi.daftar')->with('error', 'Data rekomendasi tidak ditemukan!');
+            }
+
+            $user = \DB::table('users')->where('id_user', session('loginId'))->first();
+
+            // Status berubah ketika tombol Simpan pada modal diklik (udah bukan dari button Approve lagi)
+            if ($req->filled('masukan') && $req->input('action') === 'acc') {
+                $rekomendasi->nama_receiver = $user ? $user->nama_leng : 'Unknown';
+                $rekomendasi->tgl_verif_kabag = now();
+                $rekomendasi->status = 'menunggu verifikasi Tim IT';
+
+                \DB::table('detail_rekomendasi')
+                    ->where('id_rek', $id_rek)
+                    ->update(['masukan' => $req->input('masukan')]);
+            } elseif ($req->filled('masukan') && $req->input('action') === 'acc_it') {
+                $rekomendasi->tgl_verif_it = now();
+                $rekomendasi->status = 'Diterima';
+
+                \DB::table('detail_rekomendasi')
+                    ->where('id_rek', $id_rek)
+                    ->update(['masukan' => $req->input('masukan')]);
+            } elseif ($req->input('action') === 'tolak') {
+                $rekomendasi->status = 'Ditolak';
+            }
+
+            $rekomendasi->save();
+            \Log::info("Input status rekomendasi oleh user " . ($user ? $user->id_user : 'Unknown'));
+            return redirect()->route('rekomendasi.daftar')->with('success', 'Status berhasil diperbarui!');
+        } catch (\Exception $e) {
+            \Log::error("Gagal update status : {$e->getMessage()}");
+            return redirect()->route('rekomendasi.daftar')->with('error', 'Gagal update status!');
+>>>>>>> 744b2718a154b66aac82ba0ce8b9ae7f5e57b5e1
         }
     }
     public function destroy($id_rek)
@@ -173,8 +215,12 @@ class rekomendasiController extends Controller
 
     public function edit($id)
     {
-        $rekomendasi = rekomendasi::findOrFail($id);
-        return view('rekomendasi_edit', compact('rekomendasi'));
+        // Ambil data rekomendasi (bisa lebih dari satu, gunakan get() agar konsisten dengan view)
+        $data = rekomendasi::where('id_rek', $id)->get();
+        $departments = department::all();
+        $details = \DB::table('detail_rekomendasi')->where('id_rek', $id)->get();
+
+        return view('edit_rekomendasi', compact('data', 'departments', 'details'));
     }
 
 
@@ -204,6 +250,8 @@ class rekomendasiController extends Controller
 
             $results = $query->get();
             $departmentList = \DB::table('department')->pluck('nama_dep');
+            $details = \DB::table('detail_rekomendasi')->where('id_rek', $req)->get();
+
 
             \Log::info("Sukses menampilkan data laporan, total: " . $results->count());
         } catch (\Exception $e) {
@@ -211,7 +259,7 @@ class rekomendasiController extends Controller
             $results = collect();
             $departmentList = collect();
         }
-        return view('report', compact('results', 'departmentList'));
+        return view('report', compact('results', 'departmentList', 'details'));
     }
 
     public function print($id)
@@ -227,19 +275,21 @@ class rekomendasiController extends Controller
 
         // Ambil signature berdasarkan jabatan (untuk nama_approval)
         $signature_approval = DB::table('signature')
-                                ->where('jabatan', $nama_dep)
-                                ->first();
+            ->where('jabatan', $nama_dep)
+            ->first();
         $nama_approval = $signature_approval ? $signature_approval->nama_approval : 'Unknown';
         $sign_approval = $signature_approval ? $signature_approval->sign : null;
 
         // Ambil signature berdasarkan nama_leng (langsung bandingkan dengan nama_approval)
         $signature_user = DB::table('signature')
-                            ->where('nama_approval', $nama_leng)
-                            ->first();
+            ->where('nama_approval', $nama_leng)
+            ->first();
         $sign_user = $signature_user ? $signature_user->sign : null;
+        $details = \DB::table('detail_rekomendasi')->where('id_rek', $id)->get();
 
         return view('print', compact(
             'data',
+            'details',
             'nama_leng',
             'nama_dep',
             'nama_approval',

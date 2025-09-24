@@ -31,6 +31,8 @@ Route::get('/daftar_rekomendasi', [rekomendasiController::class, 'tampilData'])
     ->name('rekomendasi.daftar');
 Route::get('/report', [rekomendasiController::class, 'laporan'])->name('report');
 Route::delete('/rekomendasi/{id_rek}', [rekomendasiController::class, 'destroy'])->name('rekomendasi.destroy');
+
+
 Route::get('/rekomendasi/{id_rek}/edit', [rekomendasiController::class, 'edit'])->name('rekomendasi.edit');
 
 Route::put('/rekomendasi/{id_rek}', [rekomendasiController::class, 'update'])->name('rekomendasi.update');
@@ -43,6 +45,11 @@ Route::get('/print/{id}', [rekomendasiController::class, 'print'])->name('rekome
 Route::get('/detailRekomendasi/{id_rek}', [rekomendasiController::class, 'tampilDetail'])->name('rekomendasi.detail');
 Route::get('/rekomendasi/filter', [RekomendasiController::class, 'filterStatus'])->name('rekomendasi.filter');
 
+
+Route::post('/detail-rekomendasi/masukan/{id}', [App\Http\Controllers\DetailRekomendasiController::class, 'masukan'])->name('detailRekomendasi.masukan');
+
+// Update detail rekomendasi
+Route::put('/detail-rekomendasi/{id_detail_rekomendasi}', [App\Http\Controllers\detailRekomendasiController::class, 'update'])->name('detailRekomendasi.update');
 
 
 // // SIGNATURE

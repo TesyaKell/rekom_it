@@ -49,6 +49,13 @@
             color: #e8b200;
         }
 
+        .p-3 {
+            text-align: left;
+            font-size: 14px;
+            color: #e8b200;
+            font-weight: 600;
+        }
+
         .container-2 {
             background-color: #ffffff;
             border-radius: 5px;
@@ -74,6 +81,11 @@
         .form-label {
             font-weight: 600;
             color: #000000cb;
+        }
+
+        .container-5 {
+            background-color: #f8bf1444;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -132,7 +144,7 @@
                     @if (session('loginRole') === 'IT')
                         <a href="{{ url('add_rekomendasi') }}">
                             <button type="button" class="btn btn-success mt-2 mb-2 me-2 fw-bold fs-6">
-                                Tambah Data Rekomendasi
+                                Tambah Data Rekomendasi [+]
                             </button>
                         </a>
                     @endif
@@ -141,8 +153,12 @@
             </div>
         </div>
 
-
-
+        @if (session('loginRole') === 'IT')
+            <div class="container-5 w-90 h-50 ms-3 me-3 " style="max-width: 100%;">
+                <p class="p-3 mt-4" style="color: #e68e00">* Tim IT hanya dapat melakukan approval jika Kepala Bagian
+                    telah memberikan persetujuan</p>
+            </div>
+        @endif
         <div class="container-2 w-90 h-100 ms-3 me-3 mt-3 pt-2 pb-2 overflow-auto" style="max-width: 100%;">
             <div class="table-responsive ms-3 me-3 mt-2 mb-2">
                 <table class="table table-sm align-middle m-0">
@@ -211,13 +227,14 @@
                                                     href="{{ url('/print/' . $item->id_rek) }}">Print</a>
                                             </li>
                                             <li>
-                                                <button class="dropdown-item" data-bs-toggle="modal"
-                                                    data-bs-target="#editModal{{ $item->id_rek }}">
+                                                <a class="dropdown-item"
+                                                    href="{{ route('rekomendasi.edit', $item->id_rek) }}">
                                                     Edit
-                                                </button>
+                                                </a>
                                             </li>
                                             <li>
-                                                <form action="{{ url("rekomendasi/{$item->id_rek}") }}" method="POST"
+                                                <form action="{{ url("rekomendasi/{$item->id_rek}") }}"
+                                                    method="POST"
                                                     onsubmit="return confirm('Are you sure you want to delete this item?')"
                                                     style="display:inline;">
                                                     @csrf
@@ -232,14 +249,35 @@
                                 @if ($isKabag)
                                     @if ($item->status === 'menunggu verifikasi Kabag')
                                         <td class="ps-2">
-                                            <div class="d-flex gap-2 mt-3 justify-content-center">
-                                                <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
-                                                    method="POST" style="display:inline;">
-                                                    @csrf
-                                                    <input type="hidden" name="action" value="acc">
-                                                    <button type="submit"
-                                                        class="btn btn-primary btn-lg active btn-sm fw-bold">Approved</button>
-                                                </form>
+                                            <div class="d-flex gap-2 mt-2 mb-2 justify-content-center">
+                                                @php
+                                                    // Cek apakah semua detail sudah ada masukan
+                                                    $allMasukanFilled =
+                                                        \DB::table('detail_rekomendasi')
+                                                            ->where('id_rek', $item->id_rek)
+                                                            ->whereNull('masukan')
+                                                            ->count() === 0;
+                                                @endphp
+                                                @if ($allMasukanFilled)
+                                                    <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
+                                                        method="POST" style="display:inline;">
+                                                        @csrf
+                                                        <input type="hidden" name="action" value="acc">
+                                                        {{-- Tambahkan input hidden masukan agar controller updateStatus bisa masuk ke blok perubahan status --}}
+                                                        <input type="hidden" name="masukan"
+                                                            value="Sudah ada masukan">
+                                                        <button type="submit"
+                                                            class="btn btn-primary btn-lg active btn-sm fw-bold">
+                                                            Approve
+                                                        </button>
+                                                    </form>
+                                                @else
+                                                    <button type="button"
+                                                        class="btn btn-primary btn-lg active btn-sm fw-bold"
+                                                        id="approveBtnKabag{{ $item->id_rek }}">
+                                                        Approve
+                                                    </button>
+                                                @endif
                                                 <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
                                                     method="POST" style="display:inline;">
                                                     @csrf
@@ -255,36 +293,84 @@
                                             </div>
                                         </td>
                                     @else
-                                        <td class="ps-2 text-center"></td>
+                                        <td class="ps-2 text-center">
+                                            <span class="badge p-2"
+                                                style="font-size: small; background-color: rgba(0, 128, 0, 0.463); width: 130px;">Selesai</span>
+                                        </td>
                                     @endif
                                 @else
                                     @if (session('loginRole') === 'IT')
-                                        @if ($item->status === 'menunggu verifikasi Tim IT')
+                                        @if ($item->status === 'Diterima' || $item->status === 'acc_it' || $item->status === 'Ditolak')
+                                            <td class="ps-2 text-center">
+                                                <span class="badge p-2"
+                                                    style="font-size: small; background-color: rgba(0, 128, 0, 0.463); width: 130px;">Selesai</span>
+                                            </td>
+                                        @elseif ($item->status === 'menunggu verifikasi Tim IT')
                                             <td class="ps-2">
                                                 <div class="d-flex gap-2 mt-3 justify-content-center">
-                                                    <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
-                                                        method="POST" style="display:inline;">
-                                                        @csrf
-                                                        <input type="hidden" name="action" value="acc_it">
-                                                        <button type="submit"
-                                                            class="btn btn-primary btn-lg active btn-sm fw-bold">Approved</button>
-                                                    </form>
+                                                    @php
+                                                        $allMasukanFilled =
+                                                            \DB::table('detail_rekomendasi')
+                                                                ->where('id_rek', $item->id_rek)
+                                                                ->whereNull('masukan')
+                                                                ->count() === 0;
+                                                    @endphp
+                                                    @if ($allMasukanFilled)
+                                                        <form
+                                                            action="{{ route('rekomendasi.approve', $item->id_rek) }}"
+                                                            method="POST" style="display:inline;">
+                                                            @csrf
+                                                            <input type="hidden" name="action" value="acc_it">
+
+                                                            {{-- msih salah --}}
+
+                                                            @php
+                                                                $detailMasukan = \DB::table('detail_rekomendasi')
+                                                                    ->where('id_rek', $item->id_rek)
+                                                                    ->pluck('masukan', 'id_detail_rekomendasi');
+                                                            @endphp
+                                                            @foreach ($detailMasukan as $id_detail => $masukan)
+                                                                <input type="hidden" name="masukan"
+                                                                    value="{{ $masukan }}">
+                                                            @endforeach
+
+                                                            {{-- msih salah --}}
+
+                                                            <button type="submit"
+                                                                class="btn btn-primary btn-lg active btn-sm fw-bold">
+                                                                Approve
+                                                            </button>
+                                                        </form>
+                                                    @else
+                                                        <button type="button"
+                                                            class="btn btn-primary btn-lg active btn-sm fw-bold"
+                                                            id="approveBtnIT{{ $item->id_rek }}">
+                                                            Approve
+                                                        </button>
+                                                    @endif
                                                     <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
                                                         method="POST" style="display:inline;">
                                                         @csrf
                                                         <input type="hidden" name="action" value="tolak">
-                                                        <button type="submit"
-                                                            class="btn btn-danger btn-sm fw-bold">Tolak</button>
+                                                        <button type="submit" class="btn btn-danger btn-sm fw-bold">
+                                                            Tolak
+                                                        </button>
                                                     </form>
-                                                    @if ($item->status === 'acc_it')
-                                                        <span class="badge bg-success">Diterima</span>
-                                                    @elseif ($item->status === 'tolak')
-                                                        <span class="badge bg-danger">Ditolak</span>
-                                                    @endif
                                                 </div>
                                             </td>
                                         @else
-                                            <td class="ps-2 text-center"></td>
+                                            <td class="ps-2">
+                                                <div class="d-flex gap-2 mt-3 justify-content-center">
+                                                    <button type="button"
+                                                        class="btn btn-primary btn-lg active btn-sm fw-bold" disabled>
+                                                        Approve
+                                                    </button>
+                                                    <button type="button" class="btn btn-danger btn-sm fw-bold"
+                                                        disabled>
+                                                        Tolak
+                                                    </button>
+                                                </div>
+                                            </td>
                                         @endif
                                     @endif
                             </tr>
@@ -358,7 +444,7 @@
                                             id="estimasi_harga{{ $item->id_rek }}" name="estimasi_harga"
                                             value="{{ $item->estimasi_harga }}" required>
                                     </div>
-                                    <!-- Tambahkan field lain sesuai kebutuhan -->
+
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary"
@@ -373,9 +459,90 @@
 
         </div>
 
+        <div class="modal fade" id="approveMasukanModal" tabindex="-1" aria-labelledby="approveMasukanModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <form id="approveMasukanForm" method="POST">
+                    @csrf
+                    <input type="hidden" name="action" id="approveMasukanAction" value="acc">
+                    <input type="hidden" name="id_rek" id="approveMasukanIdRek">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="approveMasukanModalLabel">Berikan Masukan pada Rekomendasi
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Tidak ada masukan"
+                                    id="tidakAdaMasukanCheckbox" name="masukan">
+                                <label class="form-check-label" for="tidakAdaMasukanCheckbox">
+                                    Tidak ada masukan
+                                </label>
+                            </div>
+                            <div id="masukanError" class="text-danger mt-2" style="display:none;">Silakan centang
+                                jika tidak ada masukan.</div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kembali</button>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
         </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                @foreach ($data as $item)
+                    @php
+                        $allMasukanFilled = \DB::table('detail_rekomendasi')->where('id_rek', $item->id_rek)->whereNull('masukan')->count() === 0;
+                    @endphp
+                    @if ($isKabag && $item->status === 'menunggu verifikasi Kabag' && !$allMasukanFilled)
+                        var btnKabag = document.getElementById('approveBtnKabag{{ $item->id_rek }}');
+                        if (btnKabag) {
+                            btnKabag.addEventListener('click', function(e) {
+                                document.getElementById('approveMasukanIdRek').value = '{{ $item->id_rek }}';
+                                document.getElementById('approveMasukanForm').action =
+                                    "{{ route('rekomendasi.approve', $item->id_rek) }}";
+                                document.getElementById('approveMasukanAction').value = 'acc'; // Kabag
+                                document.getElementById('tidakAdaMasukanCheckbox').checked = false;
+                                document.getElementById('masukanError').style.display = 'none';
+                                var modal = new bootstrap.Modal(document.getElementById('approveMasukanModal'));
+                                modal.show();
+                            });
+                        }
+                    @endif
+                    @if (session('loginRole') === 'IT' && $item->status === 'menunggu verifikasi Tim IT' && !$allMasukanFilled)
+                        var btnIT = document.getElementById('approveBtnIT{{ $item->id_rek }}');
+                        if (btnIT) {
+                            btnIT.addEventListener('click', function(e) {
+                                document.getElementById('approveMasukanIdRek').value = '{{ $item->id_rek }}';
+                                document.getElementById('approveMasukanForm').action =
+                                    "{{ route('rekomendasi.approve', $item->id_rek) }}";
+                                document.getElementById('approveMasukanAction').value = 'acc_it'; // IT
+                                document.getElementById('tidakAdaMasukanCheckbox').checked = false;
+                                document.getElementById('masukanError').style.display = 'none';
+                                var modal = new bootstrap.Modal(document.getElementById('approveMasukanModal'));
+                                modal.show();
+                            });
+                        }
+                    @endif
+                @endforeach
+
+                document.getElementById('approveMasukanForm').addEventListener('submit', function(e) {
+                    if (!document.getElementById('tidakAdaMasukanCheckbox').checked) {
+                        e.preventDefault();
+                        document.getElementById('masukanError').style.display = 'block';
+                    }
+                });
+            });
+        </script>
+
     </body>
 
 </html>

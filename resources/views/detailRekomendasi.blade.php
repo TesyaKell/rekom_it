@@ -115,7 +115,6 @@
                 <div class="card-body-2">
                     <table class="table table-bordered table-sm align-middle bg-light" style="width: 450px;">
                         <tbody class="table-light">
-                            {{-- Tampilkan data rekomendasi utama --}}
                             @if ($data->count())
                                 @php $header = $data->first(); @endphp
                                 <tr>
@@ -161,6 +160,7 @@
                                 <th class="ps-3">Jenis Unit</th>
                                 <th class="ps-3">Keterangan</th>
                                 <th class="ps-3">Estimasi Harga</th>
+                                <th class="ps-3">Berikan Masukan</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -171,11 +171,26 @@
                                         <td class="ps-3">{{ $detail->ket_unit }}</td>
                                         <td class="ps-3">Rp. {{ number_format($detail->estimasi_harga, 0, ',', '.') }}
                                         </td>
+                                        <td class="ps-3">
+                                            @if ($detail->masukan)
+                                                <span class="text-success">{{ $detail->masukan }}</span>
+                                            @else
+                                                <form method="POST"
+                                                    action="{{ route('detailRekomendasi.masukan', $detail->id_detail_rekomendasi) }}"
+                                                    class="d-flex align-items-center masukan-form">
+                                                    @csrf
+                                                    <input class="form-control me-2 masukan-input" type="text"
+                                                        name="masukan" placeholder="Berikan masukan">
+                                                    <button type="submit"
+                                                        class="btn btn-sm btn-primary">Simpan</button>
+                                                </form>
+                                            @endif
+                                        </td>
                                     </tr>
                                 @endforeach
                             @else
                                 <tr>
-                                    <td colspan="3" class="text-center">Detail tidak ditemukan.</td>
+                                    <td colspan="4" class="text-center">Detail tidak ditemukan.</td>
                                 </tr>
                             @endif
                         </tbody>

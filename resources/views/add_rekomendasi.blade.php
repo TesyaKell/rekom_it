@@ -113,7 +113,7 @@
             </div>
             <div class="col-md-7">
                 <button id="addRekomendasiBtn" type="button" class="btn btn-primary mb-3 ms-4">
-                    Tambah Rekomendasi
+                    Tambah Rekomendasi [+]
                 </button>
                 <div id="rekomendasiCards"></div>
             </div>
