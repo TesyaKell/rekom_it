@@ -250,11 +250,34 @@
                                     @if ($item->status === 'menunggu verifikasi Kabag')
                                         <td class="ps-2">
                                             <div class="d-flex gap-2 mt-2 mb-2 justify-content-center">
-                                                <button type="button"
-                                                    class="btn btn-primary btn-lg active btn-sm fw-bold"
-                                                    id="approveBtnKabag{{ $item->id_rek }}">
-                                                    Approve
-                                                </button>
+                                                @php
+                                                    // Cek apakah semua detail sudah ada masukan
+                                                    $allMasukanFilled =
+                                                        \DB::table('detail_rekomendasi')
+                                                            ->where('id_rek', $item->id_rek)
+                                                            ->whereNull('masukan')
+                                                            ->count() === 0;
+                                                @endphp
+                                                @if ($allMasukanFilled)
+                                                    <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
+                                                        method="POST" style="display:inline;">
+                                                        @csrf
+                                                        <input type="hidden" name="action" value="acc">
+                                                        {{-- Tambahkan input hidden masukan agar controller updateStatus bisa masuk ke blok perubahan status --}}
+                                                        <input type="hidden" name="masukan"
+                                                            value="Sudah ada masukan">
+                                                        <button type="submit"
+                                                            class="btn btn-primary btn-lg active btn-sm fw-bold">
+                                                            Approve
+                                                        </button>
+                                                    </form>
+                                                @else
+                                                    <button type="button"
+                                                        class="btn btn-primary btn-lg active btn-sm fw-bold"
+                                                        id="approveBtnKabag{{ $item->id_rek }}">
+                                                        Approve
+                                                    </button>
+                                                @endif
                                                 <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
                                                     method="POST" style="display:inline;">
                                                     @csrf
@@ -285,11 +308,46 @@
                                         @elseif ($item->status === 'menunggu verifikasi Tim IT')
                                             <td class="ps-2">
                                                 <div class="d-flex gap-2 mt-3 justify-content-center">
-                                                    <button type="button"
-                                                        class="btn btn-primary btn-lg active btn-sm fw-bold"
-                                                        id="approveBtnIT{{ $item->id_rek }}">
-                                                        Approve
-                                                    </button>
+                                                    @php
+                                                        $allMasukanFilled =
+                                                            \DB::table('detail_rekomendasi')
+                                                                ->where('id_rek', $item->id_rek)
+                                                                ->whereNull('masukan')
+                                                                ->count() === 0;
+                                                    @endphp
+                                                    @if ($allMasukanFilled)
+                                                        <form
+                                                            action="{{ route('rekomendasi.approve', $item->id_rek) }}"
+                                                            method="POST" style="display:inline;">
+                                                            @csrf
+                                                            <input type="hidden" name="action" value="acc_it">
+
+                                                            {{-- msih salah --}}
+
+                                                            @php
+                                                                $detailMasukan = \DB::table('detail_rekomendasi')
+                                                                    ->where('id_rek', $item->id_rek)
+                                                                    ->pluck('masukan', 'id_detail_rekomendasi');
+                                                            @endphp
+                                                            @foreach ($detailMasukan as $id_detail => $masukan)
+                                                                <input type="hidden" name="masukan"
+                                                                    value="{{ $masukan }}">
+                                                            @endforeach
+
+                                                            {{-- msih salah --}}
+
+                                                            <button type="submit"
+                                                                class="btn btn-primary btn-lg active btn-sm fw-bold">
+                                                                Approve
+                                                            </button>
+                                                        </form>
+                                                    @else
+                                                        <button type="button"
+                                                            class="btn btn-primary btn-lg active btn-sm fw-bold"
+                                                            id="approveBtnIT{{ $item->id_rek }}">
+                                                            Approve
+                                                        </button>
+                                                    @endif
                                                     <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
                                                         method="POST" style="display:inline;">
                                                         @csrf
@@ -441,7 +499,10 @@
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 @foreach ($data as $item)
-                    @if ($isKabag && $item->status === 'menunggu verifikasi Kabag')
+                    @php
+                        $allMasukanFilled = \DB::table('detail_rekomendasi')->where('id_rek', $item->id_rek)->whereNull('masukan')->count() === 0;
+                    @endphp
+                    @if ($isKabag && $item->status === 'menunggu verifikasi Kabag' && !$allMasukanFilled)
                         var btnKabag = document.getElementById('approveBtnKabag{{ $item->id_rek }}');
                         if (btnKabag) {
                             btnKabag.addEventListener('click', function(e) {
@@ -456,7 +517,7 @@
                             });
                         }
                     @endif
-                    @if (session('loginRole') === 'IT' && $item->status === 'menunggu verifikasi Tim IT')
+                    @if (session('loginRole') === 'IT' && $item->status === 'menunggu verifikasi Tim IT' && !$allMasukanFilled)
                         var btnIT = document.getElementById('approveBtnIT{{ $item->id_rek }}');
                         if (btnIT) {
                             btnIT.addEventListener('click', function(e) {
