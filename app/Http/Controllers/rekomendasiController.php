@@ -111,24 +111,40 @@ class rekomendasiController extends Controller
                 $rekomendasi->tgl_verif_kabag = now();
                 $rekomendasi->status = 'menunggu verifikasi Tim IT';
 
-                // Jika centang "Tidak ada masukan", update semua detail_rekomendasi yang belum ada masukan_kabag
+                // Jika centang "Tidak ada masukan", update semua detail yang belum ada masukan_kabag
                 if ($req->has('masukan_kabag') && $req->input('masukan_kabag') === 'Tidak ada masukan') {
                     \DB::table('detail_rekomendasi')
                         ->where('id_rek', $id_rek)
                         ->whereNull('masukan_kabag')
                         ->update(['masukan_kabag' => 'Tidak ada masukan']);
+                } else {
+                    // Cek apakah masih ada barang yang belum diisi masukan_kabag
+                    $countNull = \DB::table('detail_rekomendasi')
+                        ->where('id_rek', $id_rek)
+                        ->whereNull('masukan_kabag')
+                        ->count();
+                    if ($countNull > 0) {
+                        return redirect()->route('rekomendasi.daftar')->with('error', 'Masukan Kabag harus diisi untuk semua barang atau centang Tidak ada masukan.');
+                    }
                 }
                 $rekomendasi->save();
             } elseif ($req->input('action') === 'acc_it') {
                 $rekomendasi->tgl_verif_it = now();
                 $rekomendasi->status = 'Diterima';
 
-                // Jika centang "Tidak ada masukan", update semua detail_rekomendasi yang belum ada masukan_it
                 if ($req->has('masukan_kabag') && $req->input('masukan_kabag') === 'Tidak ada masukan') {
                     \DB::table('detail_rekomendasi')
                         ->where('id_rek', $id_rek)
                         ->whereNull('masukan_it')
                         ->update(['masukan_it' => 'Tidak ada masukan']);
+                } else {
+                    $countNull = \DB::table('detail_rekomendasi')
+                        ->where('id_rek', $id_rek)
+                        ->whereNull('masukan_it')
+                        ->count();
+                    if ($countNull > 0) {
+                        return redirect()->route('rekomendasi.daftar')->with('error', 'Masukan IT harus diisi untuk semua barang atau centang Tidak ada masukan.');
+                    }
                 }
                 $rekomendasi->save();
             } elseif ($req->input('action') === 'tolak') {
