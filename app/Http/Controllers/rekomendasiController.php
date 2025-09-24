@@ -6,6 +6,7 @@ use App\Models\department;
 use Illuminate\Http\Request;
 use App\Models\rekomendasi;
 use Illuminate\Support\Facades\DB;
+use Log;
 
 class rekomendasiController extends Controller
 {
@@ -90,37 +91,37 @@ class rekomendasiController extends Controller
 
     public function updateStatus(Request $req, $id_rek)
     {
-        try {
-            $rekomendasi = rekomendasi::findOrFail($id_rek);
-            $user = \DB::table('users')->where('id_user', session('loginId'))->first();
+        $rekomendasi = rekomendasi::findOrFail($id_rek);
+        $user = \DB::table('users')->where('id_user', session('loginId'))->first();
 
-            if ($req->input('action') === 'acc') {
-                $rekomendasi->nama_receiver = $user ? $user->nama_leng : 'Unknown';
-                $rekomendasi->tgl_verif_kabag = now();
-                $rekomendasi->status = 'Menunggu verifikasi Tim IT';
-            } elseif ($req->input('action') === 'tolak') {
-                $rekomendasi->status = 'Ditolak';
-            } elseif ($req->input('action') === 'acc_it') {
-                $rekomendasi->tgl_verif_it = now();
-                $rekomendasi->status = 'Diterima';
-            }
-
-            $rekomendasi->save();
-            \Log::info("Input status rekomendasi oleh user {$user->id_user}");
-            return redirect()->route('rekomendasi.daftar')->with('success', 'Status berhasil diperbarui!');
-        } catch (\Exception $e) {
-            \Log::error("Gagal update status : {$e->getMessage()}");
-            return redirect()->route('rekomendasi.daftar')->with('error', 'Gagal update status!');
+        if ($req->input('action') === 'acc') {
+            $rekomendasi->nama_receiver = $user ? $user->nama_leng : 'Unknown';
+            $rekomendasi->tgl_verif_kabag = now();
+            $rekomendasi->status = 'menunggu verifikasi Tim IT';
+        } elseif ($req->input('action') === 'tolak') {
+            $rekomendasi->status = 'Ditolak';
+        } elseif ($req->input('action') === 'acc_it') {
+            $rekomendasi->tgl_verif_it = now();
+            $rekomendasi->status = 'Diterima';
         }
     }
     public function destroy($id_rek)
     {
+        $user = DB::table('users')->where('id_user', session('loginId'))->first();
+
         $rekomendasi = rekomendasi::where('id_rek', $id_rek)->first();
         if ($rekomendasi) {
             $data = $rekomendasi->toArray();
+            $deletedBy = $user ? $user->nama_leng : 'Unknown';
+            $data['deleted_by'] = $deletedBy; // pastikan field ini ikut diinsert
+
             DB::table('deleted')->insert($data);
+
+            $rekomendasi->deleted_by = $deletedBy;
+            $rekomendasi->save();
             $rekomendasi->delete();
         }
+        Log::info("Rekomendasi {$rekomendasi->deleted_by} (ID: {$rekomendasi->id_rek}) dihapus oleh user ID: " . session('loginId'));
         return redirect()->route('rekomendasi.daftar')->with('success', 'Data berhasil dihapus!');
     }
 
@@ -268,5 +269,17 @@ class rekomendasiController extends Controller
 
         $departments = department::all();
         return view('daftar_rekomendasi', compact('data', 'departments', 'query'));
+    }
+
+    public function restore($id_rek)
+    {
+        $deleted = DB::table('deleted')->where('id_rek', $id_rek)->first();
+        if ($deleted) {
+            $data = (array) $deleted;
+            unset($data['deleted_by']); // jika field ini tidak ada di tabel rekomendasi
+            DB::table('rekomendasi')->insert($data);
+            DB::table('deleted')->where('id_rek', $id_rek)->delete();
+        }
+        return redirect()->route('rekomendasi.deleted')->with('success', 'Data berhasil direstore!');
     }
 }

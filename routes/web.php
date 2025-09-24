@@ -26,7 +26,7 @@ Route::post('/add_rekomendasi', [rekomendasiController::class, 'create'])->name(
 Route::get('/add_rekomendasi', [rekomendasiController::class, 'index'])->name('rekomendasi.index');
 
 Route::get('/deleted_rekomendasi', [rekomendasiController::class, 'tampilDataTerhapus'])->name('rekomendasi.deleted');
-//Route::post('/rekomendasi/{id_rek}/restore', [rekomendasiController::class, 'restore'])->name('rekomendasi.restore');
+Route::post('/rekomendasi/{id_rek}/restore', [rekomendasiController::class, 'restore'])->name('rekomendasi.restore');
 Route::get('/daftar_rekomendasi', [rekomendasiController::class, 'tampilData'])
     ->name('rekomendasi.daftar');
 Route::get('/report', [rekomendasiController::class, 'laporan'])->name('report');

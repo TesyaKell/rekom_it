@@ -259,7 +259,7 @@
                                     @endif
                                 @else
                                     @if (session('loginRole') === 'IT')
-                                        @if ($item->status === 'Menunggu verifikasi Tim IT')
+                                        @if ($item->status === 'menunggu verifikasi Tim IT')
                                             <td class="ps-2">
                                                 <div class="d-flex gap-2 mt-3 justify-content-center">
                                                     <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
