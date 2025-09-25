@@ -105,7 +105,6 @@ class detailRekomendasiController extends Controller
            'estimasi_harga' => $req->estimasi_harga,
         ];
 
-        // Update hanya field yang dikirim
         if ($req->has('masukan_kabag')) {
             $updateData['masukan_kabag'] = $req->masukan_kabag;
         }

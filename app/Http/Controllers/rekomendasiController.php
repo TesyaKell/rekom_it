@@ -50,7 +50,7 @@ class rekomendasiController extends Controller
                 'created_by' => $user->nama_leng ?? '',
             ]);
 
-            // Simpan detail rekomendasi ke tabel detail_rekomendasi
+
             if ($req->has('detail_rekomendasi')) {
                 foreach ($req->detail_rekomendasi as $detail) {
                     \DB::table('detail_rekomendasi')->insert([
@@ -132,7 +132,7 @@ class rekomendasiController extends Controller
                 $rekomendasi->tgl_verif_it = now();
                 $rekomendasi->status = 'Diterima';
 
-                if ($req->has('masukan_kabag') && $req->input('masukan_kabag') === 'Tidak ada masukan') {
+                if ($req->has('masukan_it') && $req->input('masukan_it') === 'Tidak ada masukan') {
                     \DB::table('detail_rekomendasi')
                         ->where('id_rek', $id_rek)
                         ->whereNull('masukan_it')
@@ -209,7 +209,7 @@ class rekomendasiController extends Controller
         }
 
         $user = \DB::table('users')->where('id_user', session('loginId'))->first();
-        $data = rekomendasi::where('id_rek', $id_rek)->first(); // langsung first
+        $data = rekomendasi::where('id_rek', $id_rek)->first();
         $departments = department::all();
         $status = $data?->status;
         $namauser = $user?->nama_leng ?? '';
@@ -306,8 +306,6 @@ class rekomendasiController extends Controller
         ));
     }
 
-
-
     public function searchRekomendasi(Request $id_rek)
     {
         $query = $id_rek->input('query');
@@ -335,10 +333,9 @@ class rekomendasiController extends Controller
         if ($deleted) {
             $data = (array) $deleted;
 
-            // Data khusus untuk tabel rekomendasi
             $rekData = $data;
             unset(
-                $rekData['id_rek'],        // <-- buang supaya auto increment
+                $rekData['id_rek'],
                 $rekData['deleted_by'],
                 $rekData['jenis_unit'],
                 $rekData['ket_unit'],
@@ -349,10 +346,8 @@ class rekomendasiController extends Controller
                 $rekData['harga_akhir']
             );
 
-            // Insert ke rekomendasi dan ambil id_rek baru
-            $newIdRek = DB::table('rekomendasi')->insertGetId($rekData);
 
-            // Data untuk detail_rekomendasi
+            $newIdRek = DB::table('rekomendasi')->insertGetId($rekData);
             $detailData = [
                 'id_rek'         => $newIdRek,
                 'jenis_unit'     => $data['jenis_unit'] ?? '-',
@@ -364,14 +359,8 @@ class rekomendasiController extends Controller
             ];
 
             DB::table('detail_rekomendasi')->insert($detailData);
-
-            // Hapus dari deleted
             DB::table('deleted')->where('id_rek', $id_rek)->delete();
         }
-
         return redirect()->route('rekomendasi.deleted')->with('success', 'Data berhasil direstore!');
     }
-
-
-
 }

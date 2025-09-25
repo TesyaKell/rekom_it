@@ -224,7 +224,7 @@
                                                     href="{{ url('/print/' . $item->id_rek) }}">Print</a>
                                             </li>
                                             <li>
-                                                @if ($item->status !== 'Diterima')
+                                                @if ($item->status !== 'Diterima' && $item->status !== 'Ditolak')
                                                     <a class="dropdown-item"
                                                         href="{{ route('rekomendasi.edit', $item->id_rek) }}">
                                                         Edit </a>
@@ -308,34 +308,20 @@
                                             <td class="ps-2">
                                                 <div class="d-flex gap-2 mt-3 justify-content-center">
                                                     @php
-                                                        $allMasukanFilled =
+                                                        $allMasukanFilledIT =
                                                             \DB::table('detail_rekomendasi')
                                                                 ->where('id_rek', $item->id_rek)
                                                                 ->whereNull('masukan_it')
                                                                 ->count() === 0;
                                                     @endphp
-                                                    @if ($allMasukanFilled)
+                                                    @if ($allMasukanFilledIT)
                                                         <form
                                                             action="{{ route('rekomendasi.approve', $item->id_rek) }}"
                                                             method="POST" style="display:inline;">
                                                             @csrf
                                                             <input type="hidden" name="action" value="acc_it">
-
-                                                            {{-- msih salah --}}
-
-                                                            @php
-                                                                $detailMasukan = \DB::table('detail_rekomendasi')
-                                                                    ->where('id_rek', $item->id_rek)
-                                                                    ->pluck('masukan_kabag', 'id_detail_rekomendasi');
-                                                            @endphp
-                                                            @foreach ($detailMasukan as $id_detail => $masukan)
-                                                                <input type="hidden"
-                                                                    name="masukan_kabag[{{ $id_detail }}]"
-                                                                    value="{{ $masukan }}">
-                                                            @endforeach
-
-                                                            {{-- msih salah --}}
-
+                                                            <input type="hidden" name="masukan_it"
+                                                                value="Sudah ada masukan">
                                                             <button type="submit"
                                                                 class="btn btn-primary btn-lg active btn-sm fw-bold">
                                                                 Approve
@@ -474,15 +460,22 @@
                                 aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <div class="form-check">
+                            @if (session('loginRole') === 'IT')
+                                <input class="form-check-input" type="checkbox" value="Tidak ada masukan"
+                                    id="tidakAdaMasukanCheckbox" name="masukan_it">
+                                <label class="form-check-label" for="tidakAdaMasukanCheckbox">
+                                    Tidak ada masukan
+                                </label>
+                            @else
                                 <input class="form-check-input" type="checkbox" value="Tidak ada masukan"
                                     id="tidakAdaMasukanCheckbox" name="masukan_kabag">
                                 <label class="form-check-label" for="tidakAdaMasukanCheckbox">
                                     Tidak ada masukan
                                 </label>
+                            @endif
+                            <div id="masukanError" class="text-danger mt-2" style="display:none;">
+                                Silakan centang jika tidak ada masukan.
                             </div>
-                            <div id="masukanError" class="text-danger mt-2" style="display:none;">Silakan centang
-                                jika tidak ada masukan.</div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kembali</button>
@@ -517,7 +510,10 @@
                             });
                         }
                     @endif
-                    @if (session('loginRole') === 'IT' && $item->status === 'menunggu verifikasi Tim IT' && !$allMasukanFilled)
+                    @php
+                        $allMasukanFilledIT = \DB::table('detail_rekomendasi')->where('id_rek', $item->id_rek)->whereNull('masukan_it')->count() === 0;
+                    @endphp
+                    @if (session('loginRole') === 'IT' && $item->status === 'menunggu verifikasi Tim IT' && !$allMasukanFilledIT)
                         var btnIT = document.getElementById('approveBtnIT{{ $item->id_rek }}');
                         if (btnIT) {
                             btnIT.addEventListener('click', function(e) {
