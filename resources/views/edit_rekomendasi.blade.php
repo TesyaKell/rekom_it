@@ -202,15 +202,29 @@
                                                     class="form-control form-control-sm"
                                                     value="{{ $detail->estimasi_harga }}">
                                             </td>
-                                            <td class="ps-3">
-                                                <input type="text" name="masukan"
-                                                    class="form-control form-control-sm"
-                                                    value="{{ $detail->masukan }}">
-                                            </td>
-                                            <td class="ps-3">
-                                                <button type="submit"
-                                                    class="btn btn-sm btn-success me-2">Simpan</button>
-                                            </td>
+                                            @if (session('loginRole') === 'IT')
+                                                {
+                                                <td class="ps-3">
+                                                    <input type="text" name="masukan_it"
+                                                        class="form-control form-control-sm"
+                                                        value="{{ $detail->masukan_it }}">
+                                                </td>
+                                                <td class="ps-3">
+                                                    <button type="submit"
+                                                        class="btn btn-sm btn-success me-2">Simpan</button>
+                                                </td>
+                                                }
+                                            @elseif (session('loginRole') === 'Kabag')
+                                                <td class="ps-3">
+                                                    <input type="text" name="masukan_kabag"
+                                                        class="form-control form-control-sm"
+                                                        value="{{ $detail->masukan_kabag }}">
+                                                </td>
+                                                <td class="ps-3">
+                                                    <button type="submit"
+                                                        class="btn btn-sm btn-success me-2">Simpan</button>
+                                                </td>
+                                            @endif
                                         </form>
                                     </tr>
                                 @endforeach

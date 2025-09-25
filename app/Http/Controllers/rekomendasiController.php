@@ -47,7 +47,7 @@ class rekomendasiController extends Controller
                 'alasan_rek' => $req->alasan_rek,
                 'nama_dep' => $nama_dep,
                 'status' => 'menunggu verifikasi Kabag',
-                'created_by' => $user->nama_leng ?? 'Unknown',
+                'created_by' => $user->nama_leng ?? '',
             ]);
 
             // Simpan detail rekomendasi ke tabel detail_rekomendasi
@@ -107,7 +107,7 @@ class rekomendasiController extends Controller
             $user = \DB::table('users')->where('id_user', session('loginId'))->first();
 
             if ($req->input('action') === 'acc') {
-                $rekomendasi->nama_receiver = $user ? $user->nama_leng : 'Unknown';
+                $rekomendasi->nama_receiver = $user ? $user->nama_leng : '';
                 $rekomendasi->tgl_verif_kabag = now();
                 $rekomendasi->status = 'menunggu verifikasi Tim IT';
 
@@ -152,7 +152,7 @@ class rekomendasiController extends Controller
                 $rekomendasi->save();
             }
 
-            \Log::info("Input status rekomendasi oleh user " . ($user ? $user->id_user : 'Unknown'));
+            \Log::info("Input status rekomendasi oleh user " . ($user ? $user->id_user : ''));
             return redirect()->route('rekomendasi.daftar')->with('success', 'Status berhasil diperbarui!');
         } catch (\Exception $e) {
             \Log::error("Gagal update status : {$e->getMessage()}");
@@ -278,14 +278,14 @@ class rekomendasiController extends Controller
         $user = DB::table('users')->where('id_user', session('loginId'))->first();
         $data = rekomendasi::findOrFail($id);
 
-        $nama_leng = $user ? $user->nama_leng : 'Unknown';
-        $nama_dep = $data->nama_dep ?? 'Unknown';
+        $nama_leng = $user ? $user->nama_leng : '';
+        $nama_dep = $data->nama_dep ?? '';
 
         // Ambil signature berdasarkan jabatan (untuk nama_approval)
         $signature_approval = DB::table('signature')
             ->where('jabatan', $nama_dep)
             ->first();
-        $nama_approval = $signature_approval ? $signature_approval->nama_approval : 'Unknown';
+        $nama_approval = $signature_approval ? $signature_approval->nama_approval : '';
         $sign_approval = $signature_approval ? $signature_approval->sign : null;
 
         // Ambil signature berdasarkan nama_leng (langsung bandingkan dengan nama_approval)

@@ -60,7 +60,7 @@ class detailRekomendasiController extends Controller
         $user = \DB::table('users')->where('id_user', session('loginId'))->first();
 
         try {
-            // Validasi sesuai role
+
             if (session('loginRole') === 'IT') {
                 $req->validate([
                     'masukan_it' => 'required|string|max:255',
@@ -95,22 +95,29 @@ class detailRekomendasiController extends Controller
             'jenis_unit' => 'required|string|max:255',
             'ket_unit' => 'required|string|max:255',
             'estimasi_harga' => 'required|numeric',
-            'masukan' => 'nullable|string|max:255',
+            'masukan_kabag' => 'nullable|string|max:255',
+            'masukan_it' => 'nullable|string|max:255',
         ]);
+
+        $updateData = [
+           'jenis_unit' => $req->jenis_unit,
+           'ket_unit' => $req->ket_unit,
+           'estimasi_harga' => $req->estimasi_harga,
+        ];
+
+        // Update hanya field yang dikirim
+        if ($req->has('masukan_kabag')) {
+            $updateData['masukan_kabag'] = $req->masukan_kabag;
+        }
+        if ($req->has('masukan_it')) {
+            $updateData['masukan_it'] = $req->masukan_it;
+        }
+
 
         \DB::table('detail_rekomendasi')
             ->where('id_detail_rekomendasi', $id_detail_rekomendasi)
-            ->update([
-                'jenis_unit' => $req->jenis_unit,
-                'ket_unit' => $req->ket_unit,
-                'estimasi_harga' => $req->estimasi_harga,
-                'masukan' => $req->masukan,
-            ]);
+            ->update($updateData);
 
         return back()->with('success', 'Detail rekomendasi berhasil diperbarui!');
     }
-
-    //     Error
-    // Call to undefined method App\Http\Controllers\detailRekomendasiController::masukan()
-
 }

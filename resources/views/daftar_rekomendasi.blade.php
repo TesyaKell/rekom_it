@@ -224,10 +224,11 @@
                                                     href="{{ url('/print/' . $item->id_rek) }}">Print</a>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item"
-                                                    href="{{ route('rekomendasi.edit', $item->id_rek) }}">
-                                                    Edit
-                                                </a>
+                                                @if ($item->status !== 'Diterima')
+                                                    <a class="dropdown-item"
+                                                        href="{{ route('rekomendasi.edit', $item->id_rek) }}">
+                                                        Edit </a>
+                                                @endif
                                             </li>
                                             <li>
                                                 <form action="{{ url("rekomendasi/{$item->id_rek}") }}"
