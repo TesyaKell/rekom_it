@@ -278,27 +278,24 @@ class rekomendasiController extends Controller
         $user = DB::table('users')->where('id_user', session('loginId'))->first();
         $data = rekomendasi::findOrFail($id);
 
-        $nama_leng = $user ? $user->nama_leng : '';
         $nama_dep = $data->nama_dep ?? '';
+        $details = \DB::table('detail_rekomendasi')->where('id_rek', $id)->get();
 
-        // Ambil signature berdasarkan jabatan (untuk nama_approval)
         $signature_approval = DB::table('signature')
             ->where('jabatan', $nama_dep)
             ->first();
         $nama_approval = $signature_approval ? $signature_approval->nama_approval : '';
         $sign_approval = $signature_approval ? $signature_approval->sign : null;
 
-        // Ambil signature berdasarkan nama_leng (langsung bandingkan dengan nama_approval)
         $signature_user = DB::table('signature')
-            ->where('nama_approval', $nama_leng)
+            ->where('nama_approval', $data->nama_it)
             ->first();
         $sign_user = $signature_user ? $signature_user->sign : null;
-        $details = \DB::table('detail_rekomendasi')->where('id_rek', $id)->get();
+
 
         return view('print', compact(
             'data',
             'details',
-            'nama_leng',
             'nama_dep',
             'nama_approval',
             'sign_approval',

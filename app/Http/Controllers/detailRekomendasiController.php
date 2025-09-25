@@ -90,28 +90,16 @@ class detailRekomendasiController extends Controller
         if (!session()->has('loginId')) {
             return redirect('/login');
         }
-
         $req->validate([
-            'jenis_unit' => 'required|string|max:255',
-            'ket_unit' => 'required|string|max:255',
-            'estimasi_harga' => 'required|numeric',
+            'jenis_unit' => 'nullable|string|max:255',
+            'ket_unit' => 'nullable|string|max:255',
+            'estimasi_harga' => 'nullable|numeric',
             'masukan_kabag' => 'nullable|string|max:255',
             'masukan_it' => 'nullable|string|max:255',
         ]);
 
-        $updateData = [
-           'jenis_unit' => $req->jenis_unit,
-           'ket_unit' => $req->ket_unit,
-           'estimasi_harga' => $req->estimasi_harga,
-        ];
-
-        if ($req->has('masukan_kabag')) {
-            $updateData['masukan_kabag'] = $req->masukan_kabag;
-        }
-        if ($req->has('masukan_it')) {
-            $updateData['masukan_it'] = $req->masukan_it;
-        }
-
+        $fields = ['jenis_unit', 'ket_unit', 'estimasi_harga', 'masukan_kabag', 'masukan_it'];
+        $updateData = array_filter($req->only($fields), function ($v) { return $v !== null && $v !== ''; });
 
         \DB::table('detail_rekomendasi')
             ->where('id_detail_rekomendasi', $id_detail_rekomendasi)

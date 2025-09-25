@@ -224,7 +224,7 @@
                                                     href="{{ url('/print/' . $item->id_rek) }}">Print</a>
                                             </li>
                                             <li>
-                                                @if ($item->status !== 'Diterima' && $item->status !== 'Ditolak')
+                                                @if ($item->status == 'menunggu verifikasi Kabag')
                                                     <a class="dropdown-item"
                                                         href="{{ route('rekomendasi.edit', $item->id_rek) }}">
                                                         Edit </a>

@@ -19,6 +19,7 @@ class rekomendasi extends Model
             'alasan_rek',
             'tgl_masuk',
             'nama_receiver',
+            'nama_it'  ,
             'tgl_verif',
             'masukan',
             'nama_dep',

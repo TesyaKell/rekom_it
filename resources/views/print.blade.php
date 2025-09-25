@@ -176,15 +176,15 @@
                     </tr>
                     <tr>
                         <td style="padding-top:10px;">
-                            <u>{{ $nama_approval ?? '' }}</u><br>
-                            <span style="font-size:13px;">Kabag {{ $data->nama_dep ?? 'Accounting' }}</span>
+                            <u>{{ $data->nama_receiver ?? '' }}</u><br>
+                            <span style="font-size:13px;">Kepala Bagian {{ $data->nama_dep ?? 'Accounting' }}</span>
                         </td>
                         <td style="padding-top:10px;">
-                            <u>{{ $nama_leng ?? 'Andi Prasetyo' }}</u><br>
-                            <span style="font-size:13px;">Dept IT</span>
+                            <u>{{ $data->nama_it ?? '' }}</u><br>
+                            <span style="font-size:13px;">Departement IT</span>
                         </td>
                         <td style="padding-top:10px;">
-                            <u>{{ $data->nama_rek ?? 'Dani' }}</u><br>
+                            <u>{{ $data->nama_lengkap ?? '' }}</u><br>
                             <span style="font-size:13px;">Pemohon</span>
                         </td>
                     </tr>
