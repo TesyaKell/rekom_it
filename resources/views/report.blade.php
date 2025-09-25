@@ -159,9 +159,11 @@
 
             </form>
         </div>
-
         <div class="container-5 me-5 ms-5">
-            <p class="p-3 mt-4" style="color: #e68e00">* Hasil Pencarian : {{ $results->count() }} data</p>
+            <p class="p-3 mt-4" style="color: #e68e00">
+                * Hasil Pencarian :
+                {{ $results->sum(fn($item) => $item->detail_rekomendasi->count()) }} data
+            </p>
         </div>
 
         <div class="container-3 mt-3 mb-5 me-5 ms-5 p-2">
@@ -210,7 +212,13 @@
                                         <span class="badge bg-secondary">{{ $item->status }}</span>
                                     @endif
                                 </td>
-                                <td class="ps-2">{{ $detail->tanggal_realisasi }}</td>
+                                <td class="ps-3">
+                                    @if ($detail->tanggal_realisasi)
+                                        {{ $detail->tanggal_realisasi }}
+                                    @else
+                                        <span class="text-muted">-</span>
+                                    @endif
+                                </td>
                             </tr>
                         @endforeach
                     @endforeach

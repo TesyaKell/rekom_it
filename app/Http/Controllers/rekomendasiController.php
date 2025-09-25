@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\department;
 use Illuminate\Http\Request;
 use App\Models\rekomendasi;
+use App\Models\DetailRekomendasi;
 use Illuminate\Support\Facades\DB;
 use App\Exports\ReportExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -251,6 +252,7 @@ class rekomendasiController extends Controller
             }
 
             \Log::info("Sukses menampilkan data laporan, total: " . $results->count());
+
         } catch (\Exception $e) {
             \Log::error("Gagal menampilkan data laporan : {$e->getMessage()}");
             $results = collect();
