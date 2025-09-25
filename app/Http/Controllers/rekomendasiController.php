@@ -6,6 +6,8 @@ use App\Models\department;
 use Illuminate\Http\Request;
 use App\Models\rekomendasi;
 use Illuminate\Support\Facades\DB;
+use App\Exports\ReportExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class rekomendasiController extends Controller
 {
@@ -242,8 +244,11 @@ class rekomendasiController extends Controller
 
             $results = $query->get();
             $departmentList = \DB::table('department')->pluck('nama_dep');
-            $details = \DB::table('detail_rekomendasi')->where('id_rek', $req)->get();
 
+            // Ambil detail_rekomendasi untuk setiap rekomendasi
+            foreach ($results as $item) {
+                $item->detail_rekomendasi = \DB::table('detail_rekomendasi')->where('id_rek', $item->id_rek)->get();
+            }
 
             \Log::info("Sukses menampilkan data laporan, total: " . $results->count());
         } catch (\Exception $e) {
@@ -251,7 +256,7 @@ class rekomendasiController extends Controller
             $results = collect();
             $departmentList = collect();
         }
-        return view('report', compact('results', 'departmentList', 'details'));
+        return view('report', compact('results', 'departmentList'));
     }
 
     public function print($id)
@@ -338,13 +343,13 @@ class rekomendasiController extends Controller
 
             // Data untuk detail_rekomendasi
             $detailData = [
-                'id_rek'         => $newIdRek,
-                'jenis_unit'     => $data['jenis_unit'] ?? '-',
-                'ket_unit'       => $data['ket_unit'] ?? null,
-                'masukan_kabag'  => $data['masukan_kabag'] ?? null,
-                'masukan_it'     => $data['masukan_it'] ?? null,
+                'id_rek' => $newIdRek,
+                'jenis_unit' => $data['jenis_unit'] ?? '-',
+                'ket_unit' => $data['ket_unit'] ?? null,
+                'masukan_kabag' => $data['masukan_kabag'] ?? null,
+                'masukan_it' => $data['masukan_it'] ?? null,
                 'estimasi_harga' => $data['estimasi_harga'] ?? null,
-                'harga_akhir'    => $data['harga_akhir'] ?? null,
+                'harga_akhir' => $data['harga_akhir'] ?? null,
             ];
 
             DB::table('detail_rekomendasi')->insert($detailData);
@@ -354,6 +359,58 @@ class rekomendasiController extends Controller
         }
 
         return redirect()->route('rekomendasi.deleted')->with('success', 'Data berhasil direstore!');
+    }
+
+
+    public function export()
+    {
+        $query = DB::table('detail_rekomendasi')
+            ->join('rekomendasi', 'detail_rekomendasi.id_rek', '=', 'rekomendasi.id_rek')
+            ->select(
+                'rekomendasi.*',
+                'detail_rekomendasi.jenis_unit',
+                'detail_rekomendasi.ket_unit',
+                'detail_rekomendasi.estimasi_harga',
+                'detail_rekomendasi.masukan_kabag',
+                'detail_rekomendasi.masukan_it',
+                'detail_rekomendasi.harga_akhir',
+                'detail_rekomendasi.tanggal_realisasi'
+            );
+
+        if (request('noRek')) {
+            $query->where('rekomendasi.id_rek', '>=', request('noRek'));
+        }
+        if (request('nospb')) {
+            $query->where('rekomendasi.no_spb', '<=', request('nospb'));
+        }
+        if (request('nama_lengkap')) {
+            $query->where('rekomendasi.nama_lengkap', 'LIKE', '%' . request('nama_lengkap') . '%');
+        }
+        if (request('nama_dep')) {
+            $query->where('rekomendasi.nama_dep', 'LIKE', '%' . request('nama_dep') . '%');
+        }
+        if (request('jenis_unit')) {
+            $query->where('detail_rekomendasi.jenis_unit', 'LIKE', '%' . request('jenis_unit') . '%');
+        }
+        if (request('ket_unit')) {
+            $query->where('detail_rekomendasi.ket_unit', 'LIKE', '%' . request('ket_unit') . '%');
+        }
+        if (request('alasan_rek')) {
+            $query->where('rekomendasi.alasan_rek', 'LIKE', '%' . request('alasan_rek') . '%');
+        }
+        if (request('estimasi_harga')) {
+            $query->where('detail_rekomendasi.estimasi_harga', '<=', request('estimasi_harga'));
+        }
+        if (request('tgl_awal')) {
+            $query->where('rekomendasi.tgl_masuk', '>=', request('tgl_awal'));
+        }
+        if (request('tanggal_realisasi')) {
+            $query->where('detail_rekomendasi.tanggal_realisasi', '<=', request('tanggal_realisasi'));
+        }
+
+        $results = $query->get();
+
+        return Excel::download(new ReportExport($results), 'report.xlsx');
     }
 
 

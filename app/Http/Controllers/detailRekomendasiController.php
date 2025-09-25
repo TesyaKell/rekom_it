@@ -26,6 +26,7 @@ class detailRekomendasiController extends Controller
                 'masukan_it' => 'nullable|string|max:255',
                 'estimasi_harga' => 'required|numeric',
                 'harga_akhir' => 'nullable|numeric',
+                'tanggal_realisasi' => 'nullable|date',
             ]);
 
             $selectedDep = $departments->where('kode_dep', $req->kode_dep)->first();
@@ -39,6 +40,7 @@ class detailRekomendasiController extends Controller
                 'masukan_kabag' => $req->masukan_kabag,
                 'masukan_it' => $req->masukan_it,
                 'harga_akhir' => $req->harga_akhir,
+                'tanggal_realisasi' => $req->tanggal_realisasi,
             ]);
 
             \Log::info("Sukses tambah rekomendasi oleh user {$user->id_user}");
@@ -96,6 +98,7 @@ class detailRekomendasiController extends Controller
             'ket_unit' => 'required|string|max:255',
             'estimasi_harga' => 'required|numeric',
             'masukan' => 'nullable|string|max:255',
+            'tanggal_realisasi' => 'nullable|date',
         ]);
 
         \DB::table('detail_rekomendasi')
@@ -105,6 +108,7 @@ class detailRekomendasiController extends Controller
                 'ket_unit' => $req->ket_unit,
                 'estimasi_harga' => $req->estimasi_harga,
                 'masukan' => $req->masukan,
+                'tanggal_realisasi' => $req->tanggal_realisasi,
             ]);
 
         return back()->with('success', 'Detail rekomendasi berhasil diperbarui!');

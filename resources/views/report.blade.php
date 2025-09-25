@@ -149,9 +149,10 @@
                         @endif
                     </div>
 
-                    {{-- Tombol --}}
                     <div class="col-md-12 d-flex align-items-end">
                         <button type="submit" class="btn btn-success w-50">Tampilkan</button>
+                        <a href="{{ route('report.export', request()->query()) }}"
+                            class="btn btn-warning ms-2 w-50">Export Excel</a>
                     </div>
 
                 </div>
@@ -182,45 +183,37 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($results as $item)
-                        <tr>
-                            <td class="ps-2">{{ $item->id_rek }}</td>
-                            <td class="ps-2">{{ $item->no_spb }}</td>
-                            <td class="ps-2">{{ $item->jenis_unit }}</td>
-                            <td class="ps-2">{{ $item->ket_unit }}</td>
-                            <td class="ps-2">{{ $item->alasan_rek }}</td>
-                            <td class="ps-2">{{ $item->estimasi_harga }}</td>
-                            <td class="ps-2">{{ $item->nama_rek }}</td>
-                            <td class="ps-2">{{ $item->nama_dep }}</td>
-                            <td class="ps-2">{{ $item->tgl_masuk }}</td>
-                            <td class="ps-2">
-                                @if ($item->status == 'menunggu verifikasi Kabag')
-                                    <span class="badge text-light p-1"
-                                        style="background-color: rgb(249, 137, 0);">Menunggu
-                                        Kabag</span>
-                                @elseif($item->status == 'menunggu verifikasi Tim IT')
-                                    <span
-                                        class="badge
-                                        bg-orange text-light p-1"
-                                        style="background-color: rgb(41, 63, 230);">Menunggu
-                                        Tim IT</span>
-                                @elseif($item->status == 'Ditolak')
-                                    <span class="badge bg-danger p-1">Ditolak</span>
-                                @elseif($item->status == 'Diterima')
-                                    <span class="badge bg-success p-1">Diterima</span>
-                                @else
-                                    <span class="badge bg-secondary">{{ $item->status }}</span>
-                                @endif
-                            </td>
-
-                            <td class="ps-2">{{ $item->tgl_verif }}</td>
-
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="8" class="text-center">Data tidak ditemukan.</td>
-                        </tr>
-                    @endforelse
+                    @foreach ($results as $item)
+                        @foreach ($item->detail_rekomendasi as $detail)
+                            <tr>
+                                <td class="ps-2">{{ $item->id_rek }}</td>
+                                <td class="ps-2">{{ $item->no_spb }}</td>
+                                <td class="ps-2">{{ $detail->jenis_unit }}</td>
+                                <td class="ps-2">{{ $detail->ket_unit }} </td>
+                                <td class="ps-2">{{ $item->alasan_rek }}</td>
+                                <td class="ps-2">Rp. {{ $detail->estimasi_harga }}</td>
+                                <td class="ps-2">{{ $item->nama_lengkap }}</td>
+                                <td class="ps-2">{{ $item->nama_dep }}</td>
+                                <td class="ps-2">{{ $item->tgl_masuk }}</td>
+                                <td class="ps-2">
+                                    @if ($item->status == 'menunggu verifikasi Kabag')
+                                        <span class="badge text-light p-1"
+                                            style="background-color: rgb(249, 137, 0);">Menunggu Kabag</span>
+                                    @elseif($item->status == 'menunggu verifikasi Tim IT')
+                                        <span class="badge bg-orange text-light p-1"
+                                            style="background-color: rgb(41, 63, 230);">Menunggu Tim IT</span>
+                                    @elseif($item->status == 'Ditolak')
+                                        <span class="badge bg-danger p-1">Ditolak</span>
+                                    @elseif($item->status == 'Diterima')
+                                        <span class="badge bg-success p-1">Diterima</span>
+                                    @else
+                                        <span class="badge bg-secondary">{{ $item->status }}</span>
+                                    @endif
+                                </td>
+                                <td class="ps-2">{{ $detail->tanggal_realisasi }}</td>
+                            </tr>
+                        @endforeach
+                    @endforeach
                 </tbody>
             </table>
 

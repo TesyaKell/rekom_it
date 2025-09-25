@@ -79,3 +79,7 @@ Route::delete('/jabatan/{id}', [JabatanController::class, 'destroy'])->name('jab
 Route::get('/jabatan/{id}/edit', [JabatanController::class, 'edit'])->name('jabatan.edit');
 Route::put('/jabatan/{id}', [JabatanController::class, 'update'])->name('jabatan.update');
 Route::put('/jabatan/{id}', [JabatanController::class, 'update'])->name('jabatan.update');
+
+
+//Report
+Route::get('/report/export', [rekomendasiController::class, 'export'])->name('report.export');

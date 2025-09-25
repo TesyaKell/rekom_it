@@ -163,6 +163,7 @@
                                 @else
                                     <th class="ps-3">Masukan dari Tim IT</th>
                                 @endif
+                                <th class="ps-3">Tanggal Realisasi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -225,7 +226,13 @@
                                                 @endif
                                             </td>
                                         @endif
-
+                                        <td class="ps-3">
+                                            @if ($detail->tanggal_realisasi)
+                                                {{ $detail->tanggal_realisasi }}
+                                            @else
+                                                <span class="text-muted">Belum Terealisasi</span>
+                                            @endif
+                                        </td>
                                     </tr>
                                 @endforeach
                             @else

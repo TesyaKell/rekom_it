@@ -19,6 +19,7 @@ class DetailRekomendasi extends Model
             'masukan_it',
             'estimasi_harga',
             'harga_akhir',
+            'tanggal_realisasi',
         ];
 
     public function rekomendasi()

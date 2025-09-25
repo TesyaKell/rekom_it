@@ -51,6 +51,11 @@
 
     <div class="card">
         <div class="card-body">
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
             <h2 class="card-title text-center mb-3 mt-3">Silahkan Login</h2>
             <form method="POST" action="/login">
                 @csrf

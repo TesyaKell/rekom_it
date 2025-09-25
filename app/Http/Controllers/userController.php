@@ -16,12 +16,12 @@ class userController extends Controller
         $user = User::where('username', $credentials['username'])->first();
 
         if (!$user || $credentials['password'] !== $user->password) {
-            return back()->withErrors(['provider' => 'Username atau password salah'])->withInput();
+            return redirect()->back()->with('error', 'Username atau password salah!');
         }
 
         $user->load('jabatan', 'department');
         if (!$user->jabatan || !$user->department) {
-            return back()->withErrors(['provider' => 'Data user tidak lengkap'])->withInput();
+            return redirect()->back()->with('error', 'Data user tidak lengkap');
         }
 
         $role = 'USER';
@@ -35,7 +35,7 @@ class userController extends Controller
 
 
         session([
-            'loginId'   => $user->id_user,
+            'loginId' => $user->id_user,
             'loginRole' => $role,
             'login_type' => 'users'
         ]);

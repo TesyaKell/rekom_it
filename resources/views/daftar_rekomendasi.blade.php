@@ -221,7 +221,7 @@
                                             aria-labelledby="dropdownMenuButton{{ $item->id_rek }}">
                                             <li>
                                                 <a class="dropdown-item" href="{{ url('/print/' . $item->id_rek) }}">
-                                                    Lihat Detail
+                                                    Print
                                                 </a>
                                             </li>
                                             <li>

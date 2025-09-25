@@ -176,6 +176,7 @@
                                 <th class="ps-3">Keterangan</th>
                                 <th class="ps-3">Estimasi Harga</th>
                                 <th class="ps-3">Masukan</th>
+                                <th class="ps-3">Tanggal Realisasi</th>
                                 <th class="ps-3">Aksi</th>
                             </tr>
                         </thead>
@@ -205,7 +206,12 @@
                                             <td class="ps-3">
                                                 <input type="text" name="masukan"
                                                     class="form-control form-control-sm"
-                                                    value="{{ $detail->masukan }}">
+                                                    value="{{ $detail->masukan_it }}">
+                                            </td>
+                                            <td class="ps-3">
+                                                <input type="date" name="tanggal_realisasi"
+                                                    class="form-control form-control-sm"
+                                                    value="{{ $detail->tanggal_realisasi }}">
                                             </td>
                                             <td class="ps-3">
                                                 <button type="submit"
