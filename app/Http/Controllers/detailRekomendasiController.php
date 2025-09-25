@@ -112,7 +112,8 @@ class detailRekomendasiController extends Controller
                 'jenis_unit' => $req->jenis_unit,
                 'ket_unit' => $req->ket_unit,
                 'estimasi_harga' => $req->estimasi_harga,
-                'masukan' => $req->masukan,
+                'masukan_it' => $req->masukan_it,
+                'masukan_kabag' => $req->masukan_kabag,
                 'tanggal_realisasi' => $req->tanggal_realisasi,
             ]);
 

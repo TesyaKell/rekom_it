@@ -215,20 +215,21 @@
                                                         value="{{ $detail->masukan_it }}">
                                                 </td>
                                                 <td class="ps-3">
+                                                    <input type="date" name="tanggal_realisasi"
+                                                        class="form-control form-control-sm"
+                                                        value="{{ $detail->tanggal_realisasi }}">
+                                                </td>
+                                                <td class="ps-3">
                                                     <button type="submit"
                                                         class="btn btn-sm btn-success me-2">Simpan</button>
                                                 </td>
+
                                                 }
                                             @elseif (session('loginRole') === 'Kabag')
                                                 <td class="ps-3">
                                                     <input type="text" name="masukan_kabag"
                                                         class="form-control form-control-sm"
-                                                        value="{{ $detail->masukan_kabag_it }}">
-                                                </td>
-                                                <td class="ps-3">
-                                                    <input type="date" name="tanggal_realisasi"
-                                                        class="form-control form-control-sm"
-                                                        value="{{ $detail->tanggal_realisasi }}">
+                                                        value="{{ $detail->masukan_kabag }}">
                                                 </td>
                                                 <td class="ps-3">
                                                     <button type="submit"
@@ -253,8 +254,5 @@
             integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
         </script>
     </body>
-
-</html>
-</body>
 
 </html>
