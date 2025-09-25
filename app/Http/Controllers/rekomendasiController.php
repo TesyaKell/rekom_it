@@ -360,4 +360,23 @@ class rekomendasiController extends Controller
         }
         return redirect()->route('rekomendasi.deleted')->with('success', 'Data berhasil direstore!');
     }
+
+    public function filterStatus(Request $request)
+    {
+        $status = $request->status;
+        $departments = \DB::table('department')->get();
+        $query = Rekomendasi::query();
+
+        if ($status === "Belum Realisasi") {
+
+            $query->where("status", "!=", "Diterima");
+        } elseif ($status === "Diterima") {
+
+            $query->where("status", "Diterima");
+        }
+
+        $data = $query->get();
+
+        return view('daftar_rekomendasi', compact('data', 'departments', 'status'));
+    }
 }
