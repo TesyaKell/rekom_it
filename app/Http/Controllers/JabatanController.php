@@ -36,7 +36,7 @@ class JabatanController extends Controller
 
             Jabatan::create([
                 'nama_jab' => $request->nama_jab,
-                'created_by' => $user ? $user->nama_leng : 'Unknown',
+                'created_by' => $user ? $user->nama_leng : '',
             ]);
 
             Log::info("Data jabatan: ", $request->all());
@@ -64,7 +64,7 @@ class JabatanController extends Controller
 
         $jabatan->update([
             'nama_jab'   => $request->nama_jab,
-            'updated_by' => $user ? $user->nama_leng : 'Unknown',
+            'updated_by' => $user ? $user->nama_leng : '',
         ]);
         \Log::info("Jabatan ID: {$jabatan->id_jab} diperbarui oleh user ID: " . session('loginId'));
         return redirect()->route('jabatan.index')->with('success', 'Data berhasil diperbarui!');
@@ -75,7 +75,7 @@ class JabatanController extends Controller
         $jabatan = Jabatan::findOrFail($id);
 
         $user = DB::table('users')->where('id_user', session('loginId'))->first();
-        $deletedBy = $user ? $user->nama_leng : 'Unknown';
+        $deletedBy = $user ? $user->nama_leng : '';
 
         $jabatan->deleted_by = $deletedBy;
         $jabatan->save();

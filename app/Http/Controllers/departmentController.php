@@ -50,7 +50,7 @@ class departmentController extends Controller
             department::create([
                 'kode_dep' => $this->generateDepartmentId(),
                 'nama_dep' => $req->nama_dep,
-                'created_by' => $user ? $user->nama_leng : 'Unknown',
+                'created_by' => $user ? $user->nama_leng : '',
             ]);
 
             \Log::info("Data department: ", $req->all());
@@ -81,7 +81,7 @@ class departmentController extends Controller
         );
         $edit->update([
             'nama_dep' => $req->nama_dep,
-            'updated_by' => $user ? $user->nama_leng : 'Unknown',
+            'updated_by' => $user ? $user->nama_leng : '',
         ]);
 
         return redirect()->route('department.index');
@@ -92,7 +92,7 @@ class departmentController extends Controller
         $departments = department::find($id);
 
         $user = DB::table('users')->where('id_user', session('loginId'))->first();
-        $deletedBy = $user ? $user->nama_leng : 'Unknown';
+        $deletedBy = $user ? $user->nama_leng : '';
 
         $departments->deleted_by = $deletedBy;
         $departments->save();

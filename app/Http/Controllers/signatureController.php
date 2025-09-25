@@ -52,7 +52,7 @@ class signatureController extends Controller
             Signature::create([
                 'nama_approval' => $request->nama_approval,
                 'jabatan' => $request->jabatan,
-                'created_by' => $user ? $user->nama_leng : 'Unknown',
+                'created_by' => $user ? $user->nama_leng : '',
                 'sign' => $signPath,
             ]);
 
@@ -83,7 +83,7 @@ class signatureController extends Controller
         $signature = Signature::findOrFail($id);
         $user = DB::table('users')->where('id_user', session('loginId'))->first();
 
-        $signature->update(['nama_approval' => $request->nama_approval, 'jabatan' => $request->jabatan,  'updated_by' => $user ? $user->nama_leng : 'Unknown',]);
+        $signature->update(['nama_approval' => $request->nama_approval, 'jabatan' => $request->jabatan,  'updated_by' => $user ? $user->nama_leng : '',]);
 
         return redirect()->route('signature.index')->with('success', 'Data berhasil diperbarui!');
     }
@@ -93,7 +93,7 @@ class signatureController extends Controller
         $signature = signature::findOrFail($id);
 
         $user = DB::table('users')->where('id_user', session('loginId'))->first();
-        $deletedBy = $user ? $user->nama_leng : 'Unknown';
+        $deletedBy = $user ? $user->nama_leng : '';
 
         $signature->deleted_by = $deletedBy;
         $signature->save();

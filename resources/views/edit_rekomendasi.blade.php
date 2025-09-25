@@ -125,25 +125,29 @@
                         <form method="POST" action="{{ route('rekomendasi.update', $header->id_rek) }}" class="mb-4">
                             @csrf
                             @method('PUT')
+
                             <div class="row mb-2">
+                                @php
+                                    $disabled = session('loginRole') !== 'IT' ? 'disabled' : '';
+                                @endphp
                                 <div class="col-md-4">
                                     <label class="form-label">No. PR</label>
                                     <input type="text" name="no_spb" class="form-control"
-                                        value="{{ $header->no_spb }}">
+                                        value="{{ $header->no_spb }}" {{ $disabled }}>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Nama Pengaju</label>
                                     <input type="text" name="nama_lengkap" class="form-control"
-                                        value="{{ $header->nama_lengkap }}">
+                                        value="{{ $header->nama_lengkap }}" {{ $disabled }}>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Department</label>
-                                    <select name="nama_dep" class="form-control">
+                                    <select name="nama_dep" class="form-control" {{ $disabled }}>
                                         @foreach ($departments as $dep)
                                             <option value="{{ $dep->nama_dep }}"
                                                 {{ $header->nama_dep == $dep->nama_dep ? 'selected' : '' }}>
                                                 {{ $dep->nama_dep }}
-                                            </option>
+                                                {{ $disabled }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -152,12 +156,12 @@
                                 <div class="col-md-4">
                                     <label class="form-label">Tanggal Pengajuan</label>
                                     <input type="date" name="tgl_masuk" class="form-control"
-                                        value="{{ $header->tgl_masuk }}">
+                                        value="{{ $header->tgl_masuk }}" {{ $disabled }}>
                                 </div>
                                 <div class="col-md-8">
                                     <label class="form-label">Alasan</label>
                                     <input type="text" name="alasan_rek" class="form-control"
-                                        value="{{ $header->alasan_rek }}">
+                                        value="{{ $header->alasan_rek }}" {{ $disabled }}>
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-primary mt-3">Simpan Perubahan Rekomendasi</button>
@@ -191,32 +195,46 @@
                                             <td class="ps-3">
                                                 <input type="text" name="jenis_unit"
                                                     class="form-control form-control-sm"
-                                                    value="{{ $detail->jenis_unit }}">
+                                                    value="{{ $detail->jenis_unit }}" {{ $disabled }}>
                                             </td>
                                             <td class="ps-3">
                                                 <input type="text" name="ket_unit"
                                                     class="form-control form-control-sm"
-                                                    value="{{ $detail->ket_unit }}">
+                                                    value="{{ $detail->ket_unit }}" {{ $disabled }}>
                                             </td>
                                             <td class="ps-3">
                                                 <input type="number" name="estimasi_harga"
                                                     class="form-control form-control-sm"
-                                                    value="{{ $detail->estimasi_harga }}">
+                                                    value="{{ $detail->estimasi_harga }}" {{ $disabled }}>
                                             </td>
-                                            <td class="ps-3">
-                                                <input type="text" name="masukan"
-                                                    class="form-control form-control-sm"
-                                                    value="{{ $detail->masukan_it }}">
-                                            </td>
-                                            <td class="ps-3">
-                                                <input type="date" name="tanggal_realisasi"
-                                                    class="form-control form-control-sm"
-                                                    value="{{ $detail->tanggal_realisasi }}">
-                                            </td>
-                                            <td class="ps-3">
-                                                <button type="submit"
-                                                    class="btn btn-sm btn-success me-2">Simpan</button>
-                                            </td>
+                                            @if (session('loginRole') === 'IT')
+                                                {
+                                                <td class="ps-3">
+                                                    <input type="text" name="masukan_it"
+                                                        class="form-control form-control-sm"
+                                                        value="{{ $detail->masukan_it }}">
+                                                </td>
+                                                <td class="ps-3">
+                                                    <button type="submit"
+                                                        class="btn btn-sm btn-success me-2">Simpan</button>
+                                                </td>
+                                                }
+                                            @elseif (session('loginRole') === 'Kabag')
+                                                <td class="ps-3">
+                                                    <input type="text" name="masukan_kabag"
+                                                        class="form-control form-control-sm"
+                                                        value="{{ $detail->masukan_kabag_it }}">
+                                                </td>
+                                                <td class="ps-3">
+                                                    <input type="date" name="tanggal_realisasi"
+                                                        class="form-control form-control-sm"
+                                                        value="{{ $detail->tanggal_realisasi }}">
+                                                </td>
+                                                <td class="ps-3">
+                                                    <button type="submit"
+                                                        class="btn btn-sm btn-success me-2">Simpan</button>
+                                                </td>
+                                            @endif
                                         </form>
                                     </tr>
                                 @endforeach
