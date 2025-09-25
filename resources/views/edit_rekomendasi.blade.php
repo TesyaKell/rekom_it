@@ -180,7 +180,9 @@
                                 <th class="ps-3">Keterangan</th>
                                 <th class="ps-3">Estimasi Harga</th>
                                 <th class="ps-3">Masukan</th>
-                                <th class="ps-3">Tanggal Realisasi</th>
+                                @if (session('loginRole') === 'IT')
+                                    <th class="ps-3">Tanggal Realisasi</th>
+                                @endif
                                 <th class="ps-3">Aksi</th>
                             </tr>
                         </thead>

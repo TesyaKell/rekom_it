@@ -132,6 +132,7 @@ class rekomendasiController extends Controller
                 }
                 $rekomendasi->save();
             } elseif ($req->input('action') === 'acc_it') {
+                $rekomendasi->nama_it = $user ? $user->nama_leng : '';
                 $rekomendasi->tgl_verif_it = now();
                 $rekomendasi->status = 'Diterima';
 
@@ -297,6 +298,7 @@ class rekomendasiController extends Controller
         $signature_user = DB::table('signature')
             ->where('nama_approval', $data->nama_it)
             ->first();
+
         $sign_user = $signature_user ? $signature_user->sign : null;
 
 
