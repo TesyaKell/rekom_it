@@ -118,9 +118,18 @@
                 <div class="col-4 d-flex justify-content-start">
                     <form action="{{ route('rekomendasi.filter') }}" method="GET">
                         <div class="dropdown mt-2">
+                            @php
+                                $selected = request('status');
+                                $label = match ($selected) {
+                                    'Belum Realisasi' => 'Belum Realisasi',
+                                    'Diterima' => 'Sudah Realisasi',
+                                    default => 'Semua Rekomendasi',
+                                };
+                            @endphp
+
                             <button class="btn dropdown-toggle fw-bold" type="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
-                                Semua Rekomendasi
+                                {{ $label }}
                             </button>
                             <ul class="dropdown-menu">
                                 <li>
@@ -139,6 +148,7 @@
                         </div>
                     </form>
                 </div>
+
 
                 <div class="col-4 d-flex justify-content-end">
                     @if (session('loginRole') === 'IT')
