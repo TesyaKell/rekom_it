@@ -220,8 +220,9 @@
                                         <ul class="dropdown-menu shadow-lg rounded-3"
                                             aria-labelledby="dropdownMenuButton{{ $item->id_rek }}">
                                             <li>
-                                                <a class="dropdown-item" href="{{ url('/print/' . $item->id_rek) }}">
-                                                    Print
+                                                <a class="dropdown-item"
+                                                    href="{{ route('rekomendasi.print', $item->id_rek) }}">
+                                                    Print PDF
                                                 </a>
                                             </li>
                                             <li>

@@ -1,208 +1,498 @@
-@extends('layouts.app')
-
-@section('title', 'Cetak Rekomendasi')
-
 @php
     $pageTitle = 'Cetak Rekomendasi';
+    $isPdf = isset($isPdf) ? $isPdf : request()->routeIs('rekomendasi.pdf');
 @endphp
 
+@if (!$isPdf)
+    {{-- Hanya extend layout dan section jika bukan PDF --}}
+    @extends('layouts.app')
+    @section('title', 'Cetak Rekomendasi')
+@endif
 
-<!DOCTYPE html>
-<html lang="en">
+@if ($isPdf)
+    {{-- Untuk PDF, jangan extend layout dan jangan tampilkan section --}}
+    <!DOCTYPE html>
+    <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Cetak Rekomendasi</title>
+    <head>
+        <meta charset="UTF-8">
+        <title>Cetak Rekomendasi</title>
+        <style>
+            body {
+                font-family: 'Times New Roman', Times, serif;
+                background: #fff;
+                margin: 0;
+                padding: 0;
+            }
 
-    <style>
-        td,
-        tr {
-            background-color: #ffffff;
-            padding-left: 8px;
-            font-size: 14px;
-            font-family: 'Times New Roman', Times, serif;
-            font-style: normal;
-        }
+            .card-3 {
+                background-color: #fff;
+                width: 90%;
+                margin: 20px auto;
+                padding: 10px 20px;
+                border-radius: 8px;
+                border: 1px solid #ddd;
+            }
 
+            .logo-img {
+                max-width: 60px;
+                height: auto;
+                margin-top: 10px;
+                margin-bottom: 20px;
+                display: block;
+            }
 
-        .ps-3 {
-            background-color: #ffffff;
-        }
+            .title {
+                text-align: center;
+                font-weight: bold;
+                margin-top: -40px;
+                margin-bottom: 40px;
+                font-size: 18px;
+            }
 
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 18px;
+            }
 
-        img {
-            max-width: 60px;
-            height: auto;
-            display: left;
-            margin-left: auto;
-            margin-top: 10px;
-            margin-bottom: 20px;
-        }
+            th,
+            td {
+                border: 1px solid #bbb;
+                padding: 7px 10px;
+                font-size: 14px;
+                background-color: #fff;
+            }
 
-        .card-3,
-        .card-body-3 {
-            background-color: #fff;
-            width: 90%;
-            margin-left: auto;
-            margin-right: auto;
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
+            th {
+                background-color: #f3f3f3;
+                font-weight: bold;
+            }
 
-        span {
-            font-family: 'Times New Roman', Times, serif;
-        }
-    </style>
-</head>
+            .no-border {
+                border: none !important;
+                background: none !important;
+            }
 
-<body>
-    <div class="card-3">
-        <img src="{{ asset('images/logo-ggp.png') }}" class="object-contain rounded-t-xl ms-3" alt="No image">
-        <span class="d-flex justify-content-center mt-3 mb-2 fw-bold"
-            style="position: absolute; top: 40px; left: 0; right: 0;">
-            LEMBAR REKOMENDASI & SERVIS UNIT KOMPUTER
-        </span>
+            .ttd-table {
+                width: 100%;
+                margin-top: 60px;
+                text-align: center;
+            }
 
+            .ttd-table td {
+                border: none;
+                background: none;
+                height: 80px;
+                vertical-align: bottom;
+            }
 
-        <div class="container mt-3 mb-5 me-5 ms-5 p-2">
+            .ttd-label {
+                font-size: 14px;
+                font-weight: bold;
+            }
+
+            .ttd-name {
+                padding-top: 10px;
+                font-size: 14px;
+            }
+
+            .ttd-role {
+                font-size: 13px;
+            }
+
+            .date-table {
+                width: 100%;
+                margin-top: 40px;
+                text-align: right;
+            }
+
+            .date-table td {
+                border: none;
+                background: none;
+                font-size: 14px;
+            }
+
+            .text-center {
+                text-align: center;
+            }
+
+            .text-end {
+                text-align: right;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="card-3">
+            <img src="{{ public_path('images/logo-ggp.png') }}" class="logo-img" alt="Logo">
+            <div class="title">
+                LEMBAR REKOMENDASI & SERVIS UNIT KOMPUTER
+            </div>
 
             {{-- Tabel Data Rekomendasi --}}
-            <table class="table table-bordered table-sm align-middle me-5 mt-3 bg-light">
-                <tbody class="table-light">
+            <table>
+                <tbody>
                     @if ($data)
                         <tr>
-                            <td class="ps-3" style="width: 170px;">No. Rek</td>
-                            <td class="ps-3">{{ $data->id_rek }}</td>
+                            <td style="width: 170px;">No. Rek</td>
+                            <td>{{ $data->id_rek }}</td>
                         </tr>
                         <tr>
-                            <td class="ps-3" style="width: 170px;">No. PR</td>
-                            <td class="ps-3">{{ $data->no_spb }}</td>
+                            <td>No. PR</td>
+                            <td>{{ $data->no_spb }}</td>
                         </tr>
                         <tr>
-                            <td class="ps-3" style="width: 170px;">Nama Pengaju</td>
-                            <td class="ps-3">{{ $data->nama_lengkap }}</td>
+                            <td>Nama Pengaju</td>
+                            <td>{{ $data->nama_lengkap }}</td>
                         </tr>
                         <tr>
-                            <td class="ps-3" style="width: 170px;">Department</td>
-                            <td class="ps-3">{{ $data->nama_dep }}</td>
+                            <td>Department</td>
+                            <td>{{ $data->nama_dep }}</td>
                         </tr>
                         <tr>
-                            <td class="ps-3" style="width: 170px;">Tanggal Pengajuan</td>
-                            <td class="ps-3">{{ $data->tgl_masuk }}</td>
+                            <td>Tanggal Pengajuan</td>
+                            <td>{{ $data->tgl_masuk }}</td>
                         </tr>
                         <tr>
-                            <td class="ps-3" style="width: 170px;">Alasan</td>
-                            <td class="ps-3">{{ $data->alasan_rek }}</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-3" style="width: 170px;">Harga Estimasi</td>
-                            <td class="ps-3">Rp. {{ $data->estimasi_harga }}</td>
+                            <td>Alasan</td>
+                            <td>{{ $data->alasan_rek }}</td>
                         </tr>
                     @else
                         <tr>
-                            <td colspan="8" class="text-center">Data tidak ditemukan.</td>
+                            <td colspan="2" class="text-center">Data tidak ditemukan.</td>
                         </tr>
                     @endif
                 </tbody>
             </table>
 
-            {{-- Tabel Data Detail Rekomendasi --}}
-            <table class="table table-bordered table-sm align-middle me-5 mt-3 bg-light">
+            <table>
                 <thead>
                     <tr>
-                        <th class="ps-3">No</th>
-                        <th class="ps-3">Jenis Unit</th>
-                        <th class="ps-3">Keterangan Unit</th>
-                        <th class="ps-3">Estimasi Harga</th>
-                        <th class="ps-3">Masukan Kabag</th>
-                        <th class ="ps-3">Masukan IT</th>
+                        <th>No</th>
+                        <th>Jenis Unit</th>
+                        <th>Keterangan Unit</th>
+                        <th>Estimasi Harga</th>
+                        <th>Masukan Kabag</th>
+                        <th>Masukan IT</th>
                     </tr>
                 </thead>
                 <tbody>
                     @if ($details && count($details))
                         @foreach ($details as $idx => $detail)
                             <tr>
-                                <td class="ps-3">{{ $idx + 1 }}</td>
-                                <td class="ps-3">{{ $detail->jenis_unit }}</td>
-                                <td class="ps-3">{{ $detail->ket_unit }}</td>
-                                <td class="ps-3">Rp. {{ $detail->estimasi_harga }}</td>
-                                <td class="ps-3">{{ $detail->masukan_kabag }}</td>
-                                <td class="ps-3">{{ $detail->masukan_it }}</td>
+                                <td>{{ $idx + 1 }}</td>
+                                <td>{{ $detail->jenis_unit }}</td>
+                                <td>{{ $detail->ket_unit }}</td>
+                                <td>Rp. {{ number_format($detail->estimasi_harga, 0, ',', '.') }}</td>
+                                <td>{{ $detail->masukan_kabag }}</td>
+                                <td>{{ $detail->masukan_it }}</td>
                             </tr>
                         @endforeach
                     @else
                         <tr>
-                            <td colspan="5" class="text-center">Detail rekomendasi tidak ditemukan.</td>
+                            <td colspan="6" class="text-center">Detail rekomendasi tidak ditemukan.</td>
                         </tr>
                     @endif
                 </tbody>
             </table>
 
-            <table style="width:100%; text-align:end; margin-top: 50px;">
-                @if ($data)
-                    <tr class="mt-5">
-                        <td class="ps-3 d-flex justify-content-end me-4">Labuhan Ratu,
-                            {{ \Carbon\Carbon::now()->format('d F Y') }}</td>
-                    </tr>
-                @else
-                    <tr>
-                        <td colspan="8" class="text-center">Data tidak ditemukan.</td>
-                    </tr>
-                @endif
-
+            <table class="date-table">
+                <tr>
+                    <td>
+                        Labuhan Ratu, {{ \Carbon\Carbon::now()->format('d F Y') }}
+                    </td>
+                </tr>
             </table>
 
-            <div style="margin-top:10px; margin-bottom:20px;">
-                <table style="width:100%; text-align:center;">
-                    <tr>
-                        <td style="width:33%;">Disetujui,</td>
-                        <td style="width:33%;">Diketahui Oleh,</td>
-                        <td style="width:33%;">Diminta Oleh,</td>
-                    </tr>
-                    <tr>
-                        <td style="height:80px;">
-                            @if ($data && $data->status === 'Diterima' && !empty($sign_approval))
-                                <img src="{{ asset($sign_approval) }}" alt="Tanda Tangan" style="height:60px;">
-                            @endif
-                        </td>
-                        <td style="height:80px;">
-                            @if ($data && $data->status === 'Diterima' && !empty($sign_user))
-                                <img src="{{ asset($sign_user) }}" alt="Tanda Tangan" style="height:60px;">
-                            @endif
-                        </td>
-                        <td style="height:80px;"></td>
-                    </tr>
-                    <tr>
-                        <td style="padding-top:10px;">
-                            <u>{{ $data->nama_receiver ?? '' }}</u><br>
-                            <span style="font-size:13px;">Kepala Bagian {{ $data->nama_dep ?? 'Accounting' }}</span>
-                        </td>
-                        <td style="padding-top:10px;">
-                            <u>{{ $data->nama_it ?? '' }}</u><br>
-                            <span style="font-size:13px;">Departement IT</span>
-                        </td>
-                        <td style="padding-top:10px;">
-                            <u>{{ $data->nama_lengkap ?? '' }}</u><br>
-                            <span style="font-size:13px;">Pemohon</span>
-                        </td>
-                    </tr>
-                </table>
-                @if (!$data)
-                    <div class="text-center mt-3">Data tidak ditemukan.</div>
-                @endif
+            <table class="ttd-table">
+                <tr>
+                    <td class="ttd-label">Disetujui,</td>
+                    <td class="ttd-label">Diketahui Oleh,</td>
+                    <td class="ttd-label">Diminta Oleh,</td>
+                </tr>
+                <tr>
+                    <td>
+                        @if ($data && $data->status === 'Diterima' && !empty($sign_approval))
+                            <img src="{{ $isPdf ? public_path($sign_approval) : asset($sign_approval) }}"
+                                style="height:60px;">
+                        @endif
+                    </td>
+                    <td>
+                        @if ($data && $data->status === 'Diterima' && !empty($sign_user))
+                            <img src="{{ $isPdf ? public_path($sign_user) : asset($sign_user) }}" style="height:60px;">
+                        @endif
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="ttd-name">
+                        <u>{{ $data->nama_receiver ?? '' }}</u><br>
+                        <span class="ttd-role">Kepala Bagian {{ $data->nama_dep ?? 'Accounting' }}</span>
+                    </td>
+                    <td class="ttd-name">
+                        <u>{{ $data->nama_it ?? '' }}</u><br>
+                        <span class="ttd-role">Departement IT</span>
+                    </td>
+                    <td class="ttd-name">
+                        <u>{{ $data->nama_lengkap ?? '' }}</u><br>
+                        <span class="ttd-role">Pemohon</span>
+                    </td>
+                </tr>
+            </table>
+            @if (!$data)
+                <div class="text-center mt-3">Data tidak ditemukan.</div>
+            @endif
+        </div>
+    </body>
+
+    </html>
+@else
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Cetak Rekomendasi</title>
+        <style>
+            body {
+                font-family: 'Times New Roman', Times, serif;
+                background: #fff;
+                margin: 0;
+                padding: 0;
+            }
+
+            .card-3 {
+                background-color: #fff;
+                width: 90%;
+                margin: 20px auto;
+                padding: 10px 20px;
+                border-radius: 8px;
+                border: 1px solid #ddd;
+            }
+
+            .logo-img {
+                max-width: 60px;
+                height: auto;
+                margin-top: 10px;
+                margin-bottom: 20px;
+                display: block;
+            }
+
+            .title {
+                text-align: center;
+                font-weight: bold;
+                margin-top: -40px;
+                margin-bottom: 40px;
+                font-size: 18px;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 18px;
+            }
+
+            th,
+            td {
+                border: 1px solid #bbb;
+                padding: 7px 10px;
+                font-size: 14px;
+                background-color: #fff;
+            }
+
+            th {
+                background-color: #f3f3f3;
+                font-weight: bold;
+            }
+
+            .no-border {
+                border: none !important;
+                background: none !important;
+            }
+
+            .ttd-table {
+                width: 100%;
+                margin-top: 60px;
+                text-align: center;
+            }
+
+            .ttd-table td {
+                border: none;
+                background: none;
+                height: 80px;
+                vertical-align: bottom;
+            }
+
+            .ttd-label {
+                font-size: 14px;
+                font-weight: bold;
+            }
+
+            .ttd-name {
+                padding-top: 10px;
+                font-size: 14px;
+            }
+
+            .ttd-role {
+                font-size: 13px;
+            }
+
+            .date-table {
+                width: 100%;
+                margin-top: 40px;
+                text-align: right;
+            }
+
+            .date-table td {
+                border: none;
+                background: none;
+                font-size: 14px;
+            }
+
+            .text-center {
+                text-align: center;
+            }
+
+            .text-end {
+                text-align: right;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div
+            style="display: flex; justify-content: flex-end; margin-top: 20px; margin-right: 5%; margin-bottom: -10px;">
+            <a href="{{ route('rekomendasi.pdf', $data->id_rek) }}" target="_blank">
+                <button type="button" class="btn btn-danger mb-3 fw-bold">
+                    Cetak PDF
+                </button>
+            </a>
+        </div>
+
+        <div class="card-3">
+            <img src="{{ asset('images/logo-ggp.png') }}" class="logo-img" alt="Logo">
+            <div class="title">
+                LEMBAR REKOMENDASI & SERVIS UNIT KOMPUTER
             </div>
 
+            {{-- Tabel Data Rekomendasi --}}
+            <table>
+                <tbody>
+                    @if ($data)
+                        <tr>
+                            <td style="width: 170px;">No. Rek</td>
+                            <td>{{ $data->id_rek }}</td>
+                        </tr>
+                        <tr>
+                            <td>No. PR</td>
+                            <td>{{ $data->no_spb }}</td>
+                        </tr>
+                        <tr>
+                            <td>Nama Pengaju</td>
+                            <td>{{ $data->nama_lengkap }}</td>
+                        </tr>
+                        <tr>
+                            <td>Department</td>
+                            <td>{{ $data->nama_dep }}</td>
+                        </tr>
+                        <tr>
+                            <td>Tanggal Pengajuan</td>
+                            <td>{{ $data->tgl_masuk }}</td>
+                        </tr>
+                        <tr>
+                            <td>Alasan</td>
+                            <td>{{ $data->alasan_rek }}</td>
+                        </tr>
+                    @else
+                        <tr>
+                            <td colspan="2" class="text-center">Data tidak ditemukan.</td>
+                        </tr>
+                    @endif
+                </tbody>
+            </table>
 
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Jenis Unit</th>
+                        <th>Keterangan Unit</th>
+                        <th>Estimasi Harga</th>
+                        <th>Masukan Kabag</th>
+                        <th>Masukan IT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if ($details && count($details))
+                        @foreach ($details as $idx => $detail)
+                            <tr>
+                                <td>{{ $idx + 1 }}</td>
+                                <td>{{ $detail->jenis_unit }}</td>
+                                <td>{{ $detail->ket_unit }}</td>
+                                <td>Rp. {{ number_format($detail->estimasi_harga, 0, ',', '.') }}</td>
+                                <td>{{ $detail->masukan_kabag }}</td>
+                                <td>{{ $detail->masukan_it }}</td>
+                            </tr>
+                        @endforeach
+                    @else
+                        <tr>
+                            <td colspan="6" class="text-center">Detail rekomendasi tidak ditemukan.</td>
+                        </tr>
+                    @endif
+                </tbody>
+            </table>
 
+            <table class="date-table">
+                <tr>
+                    <td>
+                        Labuhan Ratu, {{ \Carbon\Carbon::now()->format('d F Y') }}
+                    </td>
+                </tr>
+            </table>
+
+            <table class="ttd-table">
+                <tr>
+                    <td class="ttd-label">Disetujui,</td>
+                    <td class="ttd-label">Diketahui Oleh,</td>
+                    <td class="ttd-label">Diminta Oleh,</td>
+                </tr>
+                <tr>
+                    <td>
+                        @if ($data && $data->status === 'Diterima' && !empty($sign_approval))
+                            <img src="{{ $isPdf ? public_path($sign_approval) : asset($sign_approval) }}"
+                                style="height:60px;">
+                        @endif
+                    </td>
+                    <td>
+                        @if ($data && $data->status === 'Diterima' && !empty($sign_user))
+                            <img src="{{ $isPdf ? public_path($sign_user) : asset($sign_user) }}" style="height:60px;">
+                        @endif
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="ttd-name">
+                        <u>{{ $data->nama_receiver ?? '' }}</u><br>
+                        <span class="ttd-role">Kepala Bagian {{ $data->nama_dep ?? 'Accounting' }}</span>
+                    </td>
+                    <td class="ttd-name">
+                        <u>{{ $data->nama_it ?? '' }}</u><br>
+                        <span class="ttd-role">Departement IT</span>
+                    </td>
+                    <td class="ttd-name">
+                        <u>{{ $data->nama_lengkap ?? '' }}</u><br>
+                        <span class="ttd-role">Pemohon</span>
+                    </td>
+                </tr>
+            </table>
+            @if (!$data)
+                <div class="text-center mt-3">Data tidak ditemukan.</div>
+            @endif
         </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
-    </script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
 
-</body>
-
-</html>
+    </html>
+@endif

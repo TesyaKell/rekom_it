@@ -83,3 +83,6 @@ Route::put('/jabatan/{id}', [JabatanController::class, 'update'])->name('jabatan
 
 //Report
 Route::get('/report/export', [rekomendasiController::class, 'export'])->name('report.export');
+
+//print pdf
+Route::get('/rekomendasi/{id}/pdf', [rekomendasiController::class, 'printPdf'])->name('rekomendasi.pdf');
