@@ -208,10 +208,8 @@
 
 </div>
 
-{{-- Tambahkan wrapper untuk seluruh konten utama --}}
 <div id="mainContent">
-    {{-- Konten utama halaman akan dimulai di sini --}}
-    {{-- Pastikan seluruh @yield('content') atau konten utama berada di dalam #mainContent --}}
+
 </div>
 
 <!-- Logout Confirmation Modal -->
