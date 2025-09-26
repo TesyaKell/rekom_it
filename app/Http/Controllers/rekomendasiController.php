@@ -80,6 +80,8 @@ class rekomendasiController extends Controller
 
     public function update(Request $req, $id_rek)
     {
+        $user = \DB::table('users')->where('id_user', session('loginId'))->first();
+
         $req->validate([
             'alasan_rek' => 'nullable|string|max:255',
             'no_spb' => 'nullable|numeric',
@@ -90,6 +92,8 @@ class rekomendasiController extends Controller
 
         $rekomendasi = rekomendasi::findOrFail($id_rek);
         $rekomendasi->update($req->all());
+        $rekomendasi->updated_by = $user->nama_leng ?? '';
+        $rekomendasi->save();
 
         return redirect()->route('rekomendasi.daftar')->with('success', 'Data berhasil diperbarui!');
     }

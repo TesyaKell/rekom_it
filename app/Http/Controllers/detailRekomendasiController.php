@@ -92,31 +92,41 @@ class detailRekomendasiController extends Controller
         if (!session()->has('loginId')) {
             return redirect('/login');
         }
-        $req->validate([
-            'jenis_unit' => 'nullable|string|max:255',
-            'ket_unit' => 'nullable|string|max:255',
-            'estimasi_harga' => 'nullable|numeric',
-            'masukan_kabag' => 'nullable|string|max:255',
-            'masukan_it' => 'nullable|string|max:255',
-            'tanggal_realisasi' => 'nullable|date',
-        ]);
-
-        $fields = ['jenis_unit', 'ket_unit', 'estimasi_harga', 'masukan_kabag', 'masukan_it'];
-        $updateData = array_filter($req->only($fields), function ($v) {
-            return $v !== null && $v !== '';
-        });
-
-        \DB::table('detail_rekomendasi')
-            ->where('id_detail_rekomendasi', $id_detail_rekomendasi)
-            ->update([
-                'jenis_unit' => $req->jenis_unit,
-                'ket_unit' => $req->ket_unit,
-                'estimasi_harga' => $req->estimasi_harga,
-                'masukan_it' => $req->masukan_it,
-                'masukan_kabag' => $req->masukan_kabag,
-                'tanggal_realisasi' => $req->tanggal_realisasi,
+        try {
+            $req->validate([
+                'jenis_unit' => 'nullable|string|max:255',
+                'ket_unit' => 'nullable|string|max:255',
+                'estimasi_harga' => 'nullable|numeric',
+                'masukan_kabag' => 'nullable|string|max:255',
+                'masukan_it' => 'nullable|string|max:255',
             ]);
+            $updateData = [];
 
-        return back()->with('success', 'Detail rekomendasi berhasil diperbarui!');
+            if ($req->filled('jenis_unit')) {
+                $updateData['jenis_unit'] = $req->jenis_unit;
+            }
+            if ($req->filled('ket_unit')) {
+                $updateData['ket_unit'] = $req->ket_unit;
+            }
+            if ($req->filled('estimasi_harga')) {
+                $updateData['estimasi_harga'] = $req->estimasi_harga;
+            }
+            if ($req->has('masukan_kabag')) {
+                $updateData['masukan_kabag'] = $req->masukan_kabag;
+            }
+            if ($req->has('masukan_it')) {
+                $updateData['masukan_it'] = $req->masukan_it;
+            }
+
+            \DB::table('detail_rekomendasi')
+                ->where('id_detail_rekomendasi', $id_detail_rekomendasi)
+                ->update($updateData);
+            \Log::info("tampil semua detail rekomendasi {$id_detail_rekomendasi}{}", $updateData);
+            return back()->with('success', 'Detail rekomendasi berhasil diperbarui!');
+        } catch (\Exception $e) {
+            \Log::error("Gagal update data detail rekomendasi: {$e->getMessage()}");
+            return back()->with('error', 'Gagal memperbarui detail rekomendasi!');
+        }
     }
+
 }
