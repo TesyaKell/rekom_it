@@ -210,7 +210,6 @@
                                                     value="{{ $detail->estimasi_harga }}" {{ $disabled }}>
                                             </td>
                                             @if (session('loginRole') === 'IT')
-                                                {
                                                 <td class="ps-3">
                                                     <input type="text" name="masukan_it"
                                                         class="form-control form-control-sm"
@@ -225,8 +224,6 @@
                                                     <button type="submit"
                                                         class="btn btn-sm btn-success me-2">Simpan</button>
                                                 </td>
-
-                                                }
                                             @elseif (session('loginRole') === 'Kabag')
                                                 <td class="ps-3">
                                                     <input type="text" name="masukan_kabag"
