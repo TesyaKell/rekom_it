@@ -10,7 +10,6 @@
 @endif
 
 @if ($isPdf)
-    {{-- Untuk PDF, jangan extend layout dan jangan tampilkan section --}}
     <!DOCTYPE html>
     <html lang="en">
 
@@ -18,6 +17,7 @@
         <meta charset="UTF-8">
         <title>Cetak Rekomendasi</title>
         <style>
+            html,
             body {
                 font-family: 'Times New Roman', Times, serif;
                 background: #fff;
@@ -45,7 +45,7 @@
             .title {
                 text-align: center;
                 font-weight: bold;
-                margin-top: -40px;
+                margin-top: -60px;
                 margin-bottom: 40px;
                 font-size: 18px;
             }
@@ -93,7 +93,6 @@
             }
 
             .ttd-name {
-                padding-top: 10px;
                 font-size: 14px;
             }
 
@@ -130,7 +129,6 @@
                 LEMBAR REKOMENDASI & SERVIS UNIT KOMPUTER
             </div>
 
-            {{-- Tabel Data Rekomendasi --}}
             <table>
                 <tbody>
                     @if ($data)
@@ -197,7 +195,7 @@
                 </tbody>
             </table>
 
-            <table class="date-table">
+            <table class="date-table" style="margin-bottom: -180px;">
                 <tr>
                     <td>
                         Labuhan Ratu, {{ \Carbon\Carbon::now()->format('d F Y') }}
@@ -205,7 +203,7 @@
                 </tr>
             </table>
 
-            <table class="ttd-table">
+            <table class="ttd-table" style="margin-top: -80px; margin-left: -10px;">
                 <tr>
                     <td class="ttd-label">Disetujui,</td>
                     <td class="ttd-label">Diketahui Oleh,</td>
@@ -282,12 +280,13 @@
             .title {
                 text-align: center;
                 font-weight: bold;
-                margin-top: -40px;
+                margin-top: -60px;
                 margin-bottom: 40px;
                 font-size: 18px;
             }
 
             table {
+                margin-top: 40px;
                 width: 100%;
                 border-collapse: collapse;
                 margin-bottom: 18px;
@@ -295,10 +294,10 @@
 
             th,
             td {
-                border: 1px solid #bbb;
+                border: 1px solid #000000;
                 padding: 7px 10px;
                 font-size: 14px;
-                background-color: #fff;
+                background-color: #ffffff;
             }
 
             th {
@@ -313,8 +312,8 @@
 
             .ttd-table {
                 width: 100%;
-                margin-top: 60px;
                 text-align: center;
+                margin-left: -38px;
             }
 
             .ttd-table td {
@@ -322,11 +321,11 @@
                 background: none;
                 height: 80px;
                 vertical-align: bottom;
+
             }
 
             .ttd-label {
                 font-size: 14px;
-                font-weight: bold;
             }
 
             .ttd-name {
@@ -340,7 +339,7 @@
 
             .date-table {
                 width: 100%;
-                margin-top: 40px;
+                margin-top: 50px;
                 text-align: right;
             }
 
@@ -376,12 +375,11 @@
                 LEMBAR REKOMENDASI & SERVIS UNIT KOMPUTER
             </div>
 
-            {{-- Tabel Data Rekomendasi --}}
-            <table>
+            <table style="width: 350px;">
                 <tbody>
                     @if ($data)
                         <tr>
-                            <td style="width: 170px;">No. Rek</td>
+                            <td>No. Rek</td>
                             <td>{{ $data->id_rek }}</td>
                         </tr>
                         <tr>
@@ -443,7 +441,7 @@
                 </tbody>
             </table>
 
-            <table class="date-table">
+            <table class="date-table" style="margin-bottom: -80px;">
                 <tr>
                     <td>
                         Labuhan Ratu, {{ \Carbon\Carbon::now()->format('d F Y') }}
