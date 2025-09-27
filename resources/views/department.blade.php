@@ -34,15 +34,8 @@
             padding: 10px;
         }
 
-        .container-1 {
+        .container-header {
             margin-top: -20px;
-        }
-
-        .row-2 .col-12 {
-            border-bottom: 2px solid #d8d8d8;
-            background-color: #ffffff;
-            text-align: left;
-            margin-top: 15px;
         }
 
         p {
@@ -52,13 +45,11 @@
             color: #e8b200;
         }
 
-        .container-2 {
+        .row-header .col-header {
+            border-bottom: 2px solid #d8d8d8;
             background-color: #ffffff;
-        }
-
-        .row {
-            margin-bottom: 0;
-            margin-top: 0;
+            text-align: left;
+            margin-top: 15px;
         }
 
         .tight-rows .row+.row {
@@ -88,53 +79,53 @@
 
 <body>
 
-    <div class="container-1">
-        <div class="row-2">
-            <div class="row-2">
-                <div class="col-12">
-                    <p class="pt-3 ms-5 ps-5">DAFTAR DEPARTMENT</p>
+    <div class="container-header">
+        <div class="row-header">
+            <div class="col-header">
+                <p class="pt-3 ms-5 ps-5">DAFTAR DEPARTMENT</p>
+            </div>
+        </div>
+    </div>
+
+    <form method="POST" action="/department">
+        @csrf
+        <div class="container tight-rows table-grid mt-3 ms-3">
+            <div class="row g-0 w-50">
+
+                <div class="col-4 d-flex justify-content-start p-3 fw-bold">
+                    Nomor Department
+                </div>
+                <div class="col-8">
+                    @php
+                        $lastDep = $departments->last();
+                        if ($lastDep) {
+                            $lastNum = (int) substr($lastDep->kode_dep, 3);
+                            $newId = 'DEP' . str_pad($lastNum + 1, 3, '0', STR_PAD_LEFT);
+                        }
+                    @endphp
+                    {{ $newId }}
+                </div>
+            </div>
+
+            <div class="row g-0 w-50">
+                <div class="col-4 d-flex justify-content-start p-3 fw-bold">Nama Department</div>
+
+                <div class="col-8 p-2"><input class="form-control" type="text" placeholder="Masukkan nama Department"
+                        name="nama_dep">
+
+                </div>
+            </div>
+            <div class="row g-0 w-50">
+                <div class="col">
+                    <div class="d-flex gap-2 mt-2 justify-content-start">
+                        <button type="submit" class="btn btn-success fw-bold fs-6">Tambah</button>
+                        <button type="button" class="btn btn-danger fw-bold fs-6">Batal</button>
+                    </div>
                 </div>
             </div>
         </div>
+    </form>
 
-        <form method="POST" action="/department">
-            @csrf
-            <div class="container tight-rows table-grid mt-3 ms-3">
-                <div class="row g-0 w-50">
-
-                    <div class="col-4 d-flex justify-content-start p-3 fw-bold">
-                        Nomor Department
-                    </div>
-                    <div class="col-8">
-                        @php
-                            $lastDep = $departments->last();
-                            if ($lastDep) {
-                                $lastNum = (int) substr($lastDep->kode_dep, 3);
-                                $newId = 'DEP' . str_pad($lastNum + 1, 3, '0', STR_PAD_LEFT);
-                            }
-                        @endphp
-                        {{ $newId }}
-                    </div>
-                </div>
-
-                <div class="row g-0 w-50">
-                    <div class="col-4 d-flex justify-content-start p-3 fw-bold">Nama Department</div>
-
-                    <div class="col-8 p-2"><input class="form-control" type="text"
-                            placeholder="Masukkan nama Department" name="nama_dep">
-
-                    </div>
-                </div>
-                <div class="row g-0 w-50">
-                    <div class="col">
-                        <div class="d-flex gap-2 mt-2 justify-content-start">
-                            <button type="submit" class="btn btn-success fw-bold fs-6">Tambah</button>
-                            <button type="button" class="btn btn-danger fw-bold fs-6">Batal</button>
-        </form>
-    </div>
-    </div>
-    </div>
-    </div>
 
     <div class="container mt-4 tight-rows table-grid ms-3">
         <div class="row g-0 row-cols-3 w-50" style="margin:0;">

@@ -12,10 +12,6 @@
 
 
     <style>
-        body {
-            background-color: #efefef;
-        }
-
         .row .col {
             border: 1px solid #000;
             background-color: #fff;
@@ -34,11 +30,11 @@
             padding: 10px;
         }
 
-        .container-1 {
+        .container-header {
             margin-top: -20px;
         }
 
-        .row-2 .col-12 {
+        .row-header .col-header {
             border-bottom: 2px solid #d8d8d8;
             background-color: #ffffff;
             text-align: left;
@@ -50,15 +46,6 @@
             font-size: 14px;
             font-weight: bold;
             color: #e8b200;
-        }
-
-        .container-2 {
-            background-color: #ffffff;
-        }
-
-        .row {
-            margin-bottom: 0;
-            margin-top: 0;
         }
 
         .tight-rows .row+.row {
@@ -78,23 +65,18 @@
             border-radius: 0;
             border: #fff;
         }
-
-        .modal-backdrop.show {
-            opacity: 0.2 !important;
-        }
     </style>
 </head>
 
 <body>
 
-    <div class="container-1">
-        <div class="row-2">
-            <div class="row-2">
-                <div class="col-12">
-                    <p class="pt-3 ms-5 ps-5">DAFTAR SIGNATURE</p>
-                </div>
+    <div class="container-header">
+        <div class="row-header">
+            <div class="col-header">
+                <p class="pt-3 ms-5 ps-5">DAFTAR SIGNATURE</p>
             </div>
         </div>
+
 
         <form method="POST" action="/signature" enctype="multipart/form-data">
             <div class="container tight-rows table-grid mt-3 ms-3">

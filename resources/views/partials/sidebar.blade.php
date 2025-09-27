@@ -1,9 +1,9 @@
 <style>
-    .card {
+    .card-burger {
         background-color: rgb(70, 140, 9);
     }
 
-    .card-body {
+    .card-body-burger {
         padding: 5px;
         padding-top: 3px;
         padding-bottom: 0px;
@@ -80,8 +80,8 @@
 </style>
 
 <button id="hamburgerBtn" class="btn position-fixed top-0 start-0" type="button" aria-label="Open menu">
-    <div class="card">
-        <div class="card-body">
+    <div class="card-burger">
+        <div class="card-body-burger">
             <div class="hamburger-icon">
                 <div class="hamburger-line"></div>
                 <div class="hamburger-line"></div>
@@ -97,8 +97,8 @@
     <div class="row">
         <div class="col-3">
             <button id="hamburgerBtnn" class="btn position-fixed top-0 start-0" type="button" aria-label="Open menu">
-                <div class="card">
-                    <div class="card-body">
+                <div class="card-burger">
+                    <div class="card-body-burger">
                         <div class="hamburger-icon">
                             <div class="hamburger-line"></div>
                             <div class="hamburger-line"></div>
@@ -119,7 +119,7 @@
         <div class="y-sidebarItem r-hide-accordion">
             <a class="nav-link d-flex align-items-center" href="{{ url('home') }}">
                 <img class="me-2" src="{{ asset('images/home.png') }}" alt="Logo" width="20" height="20">
-                <span>Home</span>
+                <span class="text-sidebar">Home</span>
             </a>
         </div>
 
@@ -128,7 +128,7 @@
                 <a class="nav-link d-flex align-items-center" href="{{ url('daftar_rekomendasi') }}">
                     <img class="me-2" src="{{ asset('images/rekomendasi.png') }}" alt="Logo" width="20"
                         height="20">
-                    <span>Daftar Rekomendasi</span>
+                    <span class="text-sidebar">Daftar Rekomendasi</span>
                 </a>
             </div>
         @endif
@@ -141,7 +141,7 @@
                 <a class="nav-link d-flex align-items-center dropdown-toggle" href="#" id="rekomMenuToggle">
                     <img class="me-2" src="{{ asset('images/rekomendasi.png') }}" alt="Logo" width="20"
                         height="20">
-                    <span>Rekomendasi</span>
+                    <span class="text-sidebar">Rekomendasi</span>
                 </a>
                 <div class="submenu ps-4" id="rekomMenu" style="display: none;">
                     <ul class="list-unstyled mb-0">
@@ -191,7 +191,7 @@
             <a class="nav-link d-flex align-items-center" href="{{ url('report') }}">
                 <img class="me-2" src="{{ asset('images/report.png') }}" alt="Logo" width="20"
                     height="20">
-                <span>Report</span>
+                <span class="text-sidebar">Report</span>
             </a>
         </div>
 
@@ -201,7 +201,7 @@
                 data-bs-target="#logoutModal">
                 <img class="me-2" src="{{ asset('images/logout.png') }}" alt="Logo" width="20"
                     height="20">
-                <span>Logout</span>
+                <span class="text-sidebar">Logout</span>
             </a>
         </div>
     </div>

@@ -32,11 +32,11 @@
             text-align: center;
         }
 
-        .container-1 {
+        .container-header {
             margin-top: -20px;
         }
 
-        .row-2 .col-12 {
+        .row-header .col-header {
             border-bottom: 2px solid #d8d8d8;
             background-color: #ffffff;
             text-align: left;
@@ -56,7 +56,7 @@
             font-weight: 600;
         }
 
-        .container-2 {
+        .container-navigasi {
             background-color: #ffffff;
             border-radius: 5px;
         }
@@ -83,29 +83,25 @@
             color: #000000cb;
         }
 
-        .container-5 {
+        .container-notes {
             background-color: #f8bf1444;
             border-radius: 5px;
         }
     </style>
 </head>
 
-<div class= "container-1">
-    <div class="row-2">
-        <div class="col-12">
+<div class= "container-header">
 
-        </div>
-        <div class="row-2">
-            <div class="col-12">
-                <p class="pt-3 mt-3 ms-5 ps-5">DAFTAR REKOMENDASI & SERVIS KOMPUTER</p>
-            </div>
+
+    <div class="row-header">
+        <div class="col-header">
+            <p class="pt-3 mt-3 ms-5 ps-5">DAFTAR REKOMENDASI & SERVIS KOMPUTER</p>
         </div>
     </div>
 
 
     <body>
-
-        <div class="container-2 w-auto h-100 ms-3 me-3 mt-3 pt-2 pb-2">
+        <div class="container-navigasi w-auto h-100 ms-3 me-3 mt-3 pt-2 pb-2">
             <div class="row">
                 <div class="col-4">
                     <form class="d-flex justify-content-start" action="{{ route('searchRekomendasi') }}" method="GET">
@@ -164,12 +160,12 @@
         </div>
 
         @if (session('loginRole') === 'IT')
-            <div class="container-5 w-90 h-50 ms-3 me-3 " style="max-width: 100%;">
+            <div class="container-notes w-90 h-50 ms-3 me-3 " style="max-width: 100%;">
                 <p class="p-3 mt-4" style="color: #e68e00">* Tim IT hanya dapat melakukan approval jika Kepala Bagian
                     telah memberikan persetujuan</p>
             </div>
         @endif
-        <div class="container-2 w-90 h-100 ms-3 me-3 mt-3 pt-2 pb-2 overflow-auto" style="max-width: 100%;">
+        <div class="container-navigasi w-90 h-100 ms-3 me-3 mt-3 pt-2 pb-2 overflow-auto" style="max-width: 100%;">
             <div class="table-responsive ms-3 me-3 mt-2 mb-2">
                 <table class="table table-sm align-middle m-0">
                     <thead class="table-light">
@@ -243,8 +239,7 @@
                                                 @endif
                                             </li>
                                             <li>
-                                                <form action="{{ url("rekomendasi/{$item->id_rek}") }}"
-                                                    method="POST"
+                                                <form action="{{ url("rekomendasi/{$item->id_rek}") }}" method="POST"
                                                     onsubmit="return confirm('Apakah Anda yakin ingin menghapus item ini?')"
                                                     style="display:inline;">
                                                     @csrf

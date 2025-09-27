@@ -22,6 +22,13 @@
             background-color: #efefef;
         }
 
+        p {
+            text-align: left;
+            font-size: 14px;
+            font-weight: bold;
+            color: #e8b200;
+        }
+
         .row .col {
             border: 1px solid #000;
             background-color: #fff;
@@ -30,26 +37,14 @@
             text-align: center;
         }
 
-        .container-1 {
+        .container-header {
             margin-top: -20px;
         }
 
-        .row-2 .col-12 {
+        .row-header .col-header {
             border-bottom: 2px solid #d8d8d8;
             background-color: #ffffff;
             text-align: left;
-        }
-
-        p {
-            text-align: left;
-            font-size: 14px;
-            font-weight: bold;
-            color: #e8b200;
-        }
-
-        .container-2 {
-            background-color: #ffffff;
-            border-radius: 5px;
         }
 
         title {
@@ -65,16 +60,7 @@
             font-size: 13px;
         }
 
-        .modal-backdrop.show {
-            opacity: 0.2 !important;
-        }
-
-        .form-label {
-            font-weight: 600;
-            color: #000000cb;
-        }
-
-        .card-2 .card-body-2 {
+        .card-rekomendasi .card-body-rekomendasi {
             background-color: #ffffff;
             height: 250px;
             width: 480px;
@@ -82,7 +68,7 @@
             border-radius: 5px;
         }
 
-        .card-3 .card-body-3 {
+        .card-detail .card-body-detail {
             background-color: #ffffff;
             height: auto;
             width: 880px;
@@ -92,23 +78,19 @@
     </style>
 </head>
 
-<div class= "container-1">
-    <div class="row-2">
-        <div class="col-12">
-
-        </div>
-        <div class="row-2">
-            <div class="col-12">
-                <p class="pt-3 mt-3 ms-5 ps-5">DETAIL REKOMENDASI</p>
-            </div>
+<div class= "container-header">
+    <div class="row-header">
+        <div class="col-header">
+            <p class="pt-3 mt-3 ms-5 ps-5">DETAIL REKOMENDASI</p>
         </div>
     </div>
+
 
     <body>
         <div class="container mt-1 mb-5 me-5 ms-5 p-2">
             <h6 class="mt-3 mb-2 fw-bold">Rekomendasi</h6>
-            <div class="card-2">
-                <div class="card-body-2">
+            <div class="card-rekomendasi">
+                <div class="card-body-rekomendasi">
                     <table class="table table-bordered table-sm align-middle bg-light" style="width: 450px;">
                         <tbody class="table-light">
                             @if ($data->count())
@@ -148,8 +130,8 @@
             </div>
 
             <h6 class="mt-4 mb-2 fw-bold">Detail Rekomendasi</h6>
-            <div class="card-3">
-                <div class="card-body-3">
+            <div class="card-detail">
+                <div class="card-body-detail">
                     <table class="table table-bordered table-sm align-middle bg-light">
                         <thead>
                             <tr>

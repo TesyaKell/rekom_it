@@ -24,11 +24,11 @@
             text-align: center;
         }
 
-        .container-1 {
+        .container-header {
             margin-top: -20px;
         }
 
-        .row-2 .col-12 {
+        .row-header .col-header {
             border-bottom: 2px solid #d8d8d8;
             background-color: #ffffff;
             text-align: left;
@@ -41,21 +41,21 @@
             font-weight: 600;
         }
 
-        .container-2 {
+        .container-form {
             background-color: #ffffff;
             border-radius: 5px;
             width: 440px;
             height: 350px;
         }
 
-        .container-5 {
-            background-color: #ffa74844;
+        .container-notes {
+            background-color: #f8bf1444;
             border-radius: 5px;
             width: 1150px;
             height: 50px;
         }
 
-        .container-3 {
+        .container-table {
             background-color: #ffffff;
             border-radius: 5px;
             width: 1150px;
@@ -86,21 +86,17 @@
     </style>
 </head>
 
-<div class= "container-1">
-    <div class="row-2">
-        <div class="col-12">
-
-        </div>
-        <div class="row-2">
-            <div class="col-12">
-                <p class="pt-3 mt-3 ms-5 ps-5 fw-bold">LAPORAN REKOMENDASI & SERVIS UNIT KOMPUTER</p>
-            </div>
+<div class="container-header">
+    <div class="row-header">
+        <div class="col-header">
+            <p class="pt-3 mt-3 ms-5 ps-5 fw-bold">LAPORAN REKOMENDASI & SERVIS UNIT KOMPUTER</p>
         </div>
     </div>
 
 
+
     <body>
-        <div class="container-2 mt-4 mb-5 me-5 ms-5 p-4">
+        <div class="container-form mt-4 mb-5 me-5 ms-5 p-4">
             <form method="GET" action="{{ route('report') }}" class="mb-4">
                 <div class="row g-3">
 
@@ -159,14 +155,14 @@
 
             </form>
         </div>
-        <div class="container-5 me-5 ms-5">
+        <div class="container-notes me-5 ms-5">
             <p class="p-3 mt-4" style="color: #e68e00">
                 * Hasil Pencarian :
                 {{ $results->sum(fn($item) => $item->detail_rekomendasi->count()) }} data
             </p>
         </div>
 
-        <div class="container-3 mt-3 mb-5 me-5 ms-5 p-2">
+        <div class="container-table mt-3 mb-5 me-5 ms-5 p-2">
 
             <table class="table table-bordered table-sm align-middle me-5 mt-3">
                 <thead class="table-light">

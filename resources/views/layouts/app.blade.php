@@ -14,7 +14,7 @@
             background-color: #ebefe6;
         }
 
-        .container {
+        .container-content {
             margin-left: -10px;
             width: auto;
         }
@@ -28,7 +28,7 @@
     @include('partials.sidebar')
 
     <!-- Main content -->
-    <div class="container mt-4">
+    <div class="container-content mt-4">
         @yield('content')
     </div>
 

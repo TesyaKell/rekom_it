@@ -27,11 +27,11 @@
             padding: 10px;
         }
 
-        .container-1 {
+        .container-header {
             margin-top: -20px;
         }
 
-        .row-2 .col-12 {
+        .row-header .col-header {
             border-bottom: 2px solid #d8d8d8;
             background-color: #ffffff;
             text-align: left;
@@ -43,10 +43,6 @@
             font-size: 14px;
             font-weight: bold;
             color: #e8b200;
-        }
-
-        .container-2 {
-            background-color: #ffffff;
         }
 
         .row {
@@ -80,14 +76,13 @@
 
 <body>
 
-    <div class="container-1">
-        <div class="row-2">
-            <div class="row-2">
-                <div class="col-12">
-                    <p class="pt-3 ms-5 ps-5">DAFTAR JABATAN</p>
-                </div>
+    <div class="container-header">
+        <div class="row-header">
+            <div class="col-header">
+                <p class="pt-3 ms-5 ps-5">DAFTAR JABATAN</p>
             </div>
         </div>
+
 
         <form method="POST" action="/jabatan">
             <div class="container tight-rows table-grid mt-3 ms-3">

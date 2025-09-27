@@ -20,23 +20,11 @@
 
 
     <style>
-        body {
-            background-color: #efefef;
-        }
-
-        .row .col {
-            border: 1px solid #000;
-            background-color: #fff;
-            padding: 20px;
-            margin: 10px 0;
-            text-align: center;
-        }
-
-        .container-1 {
+        .container-header {
             margin-top: -20px;
         }
 
-        .row-2 .col-12 {
+        .row-header .col-header {
             border-bottom: 2px solid #d8d8d8;
             background-color: #ffffff;
             text-align: left;
@@ -49,7 +37,7 @@
             color: #e8b200;
         }
 
-        .container-2 {
+        .container-deleted {
             background-color: #ffffff;
             border-radius: 5px;
         }
@@ -78,50 +66,16 @@
     </style>
 </head>
 
-<div class= "container-1">
-    <div class="row-2">
-        <div class="col-12">
-
-        </div>
-        <div class="row-2">
-            <div class="col-12">
-                <p class="pt-3 mt-3 ms-5 ps-5">DAFTAR DELETED REKOMENDASI</p>
-            </div>
+<div class= "container-header">
+    <div class="row-header">
+        <div class="col-header">
+            <p class="pt-3 mt-3 ms-5 ps-5">DAFTAR DELETED REKOMENDASI</p>
         </div>
     </div>
 
 
     <body>
-
-        {{-- <div class="container-2 w-auto h-100 ms-3 me-3 mt-3 pt-2 pb-2">
-            <div class="row">
-                <div class="col-4">
-                    <form class="d-flex justify-content-start" action="{{ route('searchRekomendasi') }}" method="GET">
-                        <input class="form-control w-50 me-2 ms-2 mt-2 mb-2" type="search" placeholder="Search"
-                            name="query" aria-label="Search ">
-                        <button class="btn btn-outline-success w-15 h-25 mt-2" type="submit">Search</button>
-                    </form>
-                </div>
-
-                <div class="col-4 d-flex justify-content-start">
-                    <div class="dropdown mt-2">
-                        <button type="button" class="btn dropdown-toggle fw-bold" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            Semua Rekomendasi
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Semua Rekomendasi</a></li>
-                            <li><a class="dropdown-item" href="#">Belum Realisasi</a></li>
-                            <li><a class="dropdown-item" href="#">Sudah Realisasi</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
-
-
-
-        <div class="container-2 w-90 h-100 ms-3 me-3 mt-3 pt-2 pb-2 overflow-auto" style="max-width: 100%;">
+        <div class="container-deleted w-90 h-100 ms-3 me-3 mt-3 pt-2 pb-2 overflow-auto" style="max-width: 100%;">
             <div class="table-responsive ms-3 me-3 mt-2 mb-2">
                 <table class="table table-sm align-middle m-3">
                     <thead class="table-light">
@@ -175,10 +129,13 @@
                                         <ul class="dropdown-menu"
                                             aria-labelledby="dropdownMenuButton{{ $item->id_rek }}">
                                             <li>
-                                                <form action="{{ route('rekomendasi.restore', $item->id_rek) }}" method="POST"
-                                                    onsubmit="return confirm('Yakin ingin mengembalikan data ini?')" style="display:inline;">
+                                                <form action="{{ route('rekomendasi.restore', $item->id_rek) }}"
+                                                    method="POST"
+                                                    onsubmit="return confirm('Yakin ingin mengembalikan data ini?')"
+                                                    style="display:inline;">
                                                     @csrf
-                                                    <button type="submit" class="dropdown-item text-success">Restore</button>
+                                                    <button type="submit"
+                                                        class="dropdown-item text-success">Restore</button>
                                                 </form>
                                             </li>
                                         </ul>
