@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\detailRekomendasiController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\signatureController;
 use Illuminate\Support\Facades\Route;
@@ -10,6 +9,15 @@ use App\Http\Controllers\rekomendasiController;
 Route::get('/login', function () {
     return view('login');
 });
+
+Route::get('/', function () {
+    if (session('loginId')) {
+        return redirect('/home');
+    }
+
+    return redirect('/login');
+});
+
 Route::post('/login', [App\Http\Controllers\userController::class, 'login']);
 Route::get('/home', function () {
     return view('home');

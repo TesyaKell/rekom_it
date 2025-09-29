@@ -126,8 +126,7 @@
         @if (session('loginRole') !== 'IT')
             <div class="y-sidebarItem r-hide-accordion">
                 <a class="nav-link d-flex align-items-center" href="{{ url('daftar_rekomendasi') }}">
-                    <img class="me-2" src="{{ asset('images/rekomendasi.png') }}" alt="Logo" width="20"
-                        height="20">
+                    <img class="me-2" src="{{ asset('images/rekomendasi.png') }}" alt="Logo" width="20" height="20">
                     <span class="text-sidebar">Daftar Rekomendasi</span>
                 </a>
             </div>
@@ -139,8 +138,7 @@
         @if (session('loginRole') === 'IT')
             <div class="y-sidebarItem r-hide-accordion">
                 <a class="nav-link d-flex align-items-center dropdown-toggle" href="#" id="rekomMenuToggle">
-                    <img class="me-2" src="{{ asset('images/rekomendasi.png') }}" alt="Logo" width="20"
-                        height="20">
+                    <img class="me-2" src="{{ asset('images/rekomendasi.png') }}" alt="Logo" width="20" height="20">
                     <span class="text-sidebar">Rekomendasi</span>
                 </a>
                 <div class="submenu ps-4" id="rekomMenu" style="display: none;">
@@ -164,8 +162,7 @@
 
             <div class="y-sidebarItem r-hide-accordion">
                 <a class="nav-link d-flex align-items-center dropdown-toggle" href="#" id="masterDataMenuToggle">
-                    <img class="me-2" src="{{ asset('images/department.png') }}" alt="Logo" width="20"
-                        height="20">
+                    <img class="me-2" src="{{ asset('images/department.png') }}" alt="Logo" width="20" height="20">
                     <span>Master Data</span>
                 </a>
                 <div class="submenu ps-4" id="masterDataMenu" style="display: none;">
@@ -189,8 +186,7 @@
         {{-- Semua role punya Report --}}
         <div class="y-sidebarItem r-hide-accordion">
             <a class="nav-link d-flex align-items-center" href="{{ url('report') }}">
-                <img class="me-2" src="{{ asset('images/report.png') }}" alt="Logo" width="20"
-                    height="20">
+                <img class="me-2" src="{{ asset('images/report.png') }}" alt="Logo" width="20" height="20">
                 <span class="text-sidebar">Report</span>
             </a>
         </div>
@@ -199,8 +195,7 @@
         <div class="y-sidebarItem r-hide-accordion" style="position: absolute; bottom: 20px; width: 215px;">
             <a class="nav-link d-flex align-items-center" href="#" id="logoutBtn" data-bs-toggle="modal"
                 data-bs-target="#logoutModal">
-                <img class="me-2" src="{{ asset('images/logout.png') }}" alt="Logo" width="20"
-                    height="20">
+                <img class="me-2" src="{{ asset('images/logout.png') }}" alt="Logo" width="20" height="20">
                 <span class="text-sidebar">Logout</span>
             </a>
         </div>
@@ -234,7 +229,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const hamburgerBtn = document.getElementById('hamburgerBtn');
         const sidebarMenu = document.getElementById('sidebarMenu');
         const closeSidebar = document.getElementById('hamburgerBtnn');
@@ -243,9 +238,11 @@
         const masterDataMenuToggle = document.getElementById('masterDataMenuToggle');
         const masterDataMenu = document.getElementById('masterDataMenu');
         const mainContent = document.getElementById('mainContent');
+        const containerHeader = document.getElementsByClassName('container-header');
+        const homeScreen = document.getElementById('home-screen');
 
         if (rekomMenuToggle && rekomMenu) {
-            rekomMenuToggle.addEventListener('click', function(e) {
+            rekomMenuToggle.addEventListener('click', function (e) {
                 e.preventDefault();
                 if (rekomMenu.style.display === 'none') {
                     rekomMenu.style.display = 'block';
@@ -257,7 +254,7 @@
 
         // Tambahkan event listener untuk Master Data dropdown
         if (masterDataMenuToggle && masterDataMenu) {
-            masterDataMenuToggle.addEventListener('click', function(e) {
+            masterDataMenuToggle.addEventListener('click', function (e) {
                 e.preventDefault();
                 if (masterDataMenu.style.display === 'none') {
                     masterDataMenu.style.display = 'block';
@@ -272,6 +269,15 @@
                 sidebarMenu.style.transform = 'translateX(0)';
                 if (mainContent) mainContent.classList.add('shifted');
                 document.body.classList.add('sidebar-open');
+                let container = containerHeader?.item(0);
+                if (container) {
+                    container.style.marginLeft = '220px';
+                    container.style.transition = 'margin-left 0.3s';
+                }
+                if (homeScreen) {
+                    homeScreen.style.marginLeft = '220px';
+                    homeScreen.style.transition = 'margin-left 0.3s';
+                }
             });
         }
 
@@ -280,22 +286,40 @@
                 sidebarMenu.style.transform = 'translateX(-100%)';
                 if (mainContent) mainContent.classList.remove('shifted');
                 document.body.classList.remove('sidebar-open');
+                let container = containerHeader?.item(0);
+                if (container) {
+                    container.style.marginLeft = '0';
+                    container.style.transition = 'margin-left 0.3s';
+                }
+                if (homeScreen) {
+                    homeScreen.style.marginLeft = '0';
+                    homeScreen.style.transition = 'margin-left 0.3s';
+                }
             });
         }
 
-        document.addEventListener('click', function(event) {
+        document.addEventListener('click', function (event) {
             if (sidebarMenu && hamburgerBtn &&
                 !sidebarMenu.contains(event.target) &&
                 !hamburgerBtn.contains(event.target)) {
                 sidebarMenu.style.transform = 'translateX(-100%)';
                 if (mainContent) mainContent.classList.remove('shifted');
                 document.body.classList.remove('sidebar-open');
+                let container = containerHeader?.item(0);
+                if (container) {
+                    container.style.marginLeft = '0';
+                    container.style.transition = 'margin-left 0.3s';
+                }
+                if (homeScreen) {
+                    homeScreen.style.marginLeft = '0';
+                    homeScreen.style.transition = 'margin-left 0.3s';
+                }
             }
         });
 
         // Logout confirmation
         const confirmLogout = document.getElementById('confirmLogout');
-        confirmLogout.addEventListener('click', function() {
+        confirmLogout.addEventListener('click', function () {
             // Create a form to submit logout request
             const form = document.createElement('form');
             form.method = 'POST';

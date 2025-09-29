@@ -13,14 +13,13 @@
 
 </head>
 
-<img src="{{ asset('images/header.png') }}" class="h-20 object-contain rounded-t-xl" alt="No image">
+<img src="{{ asset('images/header.png') }}" class="h-20 object-contain rounded-t-xl" id="home-screen" alt="No image">
 
 
 <body>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
-    </script>
+        </script>
 </body>
 
 </html>
