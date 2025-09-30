@@ -107,8 +107,9 @@
 
                             <div class="row mb-2">
                                 @php
-                                    $disabled = session('loginRole') !== 'IT' ? 'disabled' : '';
+                                    $disabled = !in_array(session('loginRole'), ['IT', 'USER']) ? 'disabled' : '';
                                 @endphp
+
                                 <div class="col-md-4">
                                     <label class="form-label">No. PR</label>
                                     <input type="text" name="no_spb" class="form-control"
