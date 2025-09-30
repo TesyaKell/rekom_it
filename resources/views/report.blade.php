@@ -146,9 +146,9 @@
                     </div>
 
                     <div class="col-md-12 d-flex align-items-end">
-                        <button type="submit" class="btn btn-success w-50">Tampilkan</button>
+                        <button type="submit" class="btn btn-success w-50 fw-bold">Tampilkan</button>
                         <a href="{{ route('report.export', request()->query()) }}"
-                            class="btn btn-warning ms-2 w-50">Export Excel</a>
+                            class="btn btn-warning ms-2 w-50 fw-bold" style="color: #343a40;">Export Excel</a>
                     </div>
 
                 </div>

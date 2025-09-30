@@ -26,6 +26,7 @@
             margin-bottom: 5px;
             font-weight: bold;
             margin-left: 70px;
+            font-size: 14px;
         }
 
         /* Jangan ubah container-header, col-header, row-header */
@@ -160,7 +161,7 @@
 <div class= "container-header">
     <div class="row-header">
         <div class="col-header">
-            <p class="pt-3 mt-3 ms-5 ps-5">DAFTAR REKOMENDASI & SERVIS KOMPUTER</p>
+            <p class="pt-3 mt-3 ms-5 ps-5">TAMBAH REKOMENDASI</p>
         </div>
     </div>
 
@@ -182,7 +183,7 @@
                                         <label for="exampleFormControlInput1" class="mb-1">No. Rekomendasi</label>
                                         <input type="text" readonly
                                             class="form-control-plaintext border px-2 text-center" id="norekom"
-                                            name="norekom" value="{{ $lastId + 1 }}">
+                                            name="norekom" value="{{ $lastId + 1 }}" style="font-weight: bold;">
                                     </div>
                                     <div class="form-group mt-2">
                                         <label for="exampleFormControlInput1" class="mb-1 mt-2">No. PR</label>
