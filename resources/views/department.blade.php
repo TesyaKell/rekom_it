@@ -85,94 +85,95 @@
                 <p class="pt-3 ms-5 ps-5">DAFTAR DEPARTMENT</p>
             </div>
         </div>
-    </div>
 
-    <form method="POST" action="/department">
-        @csrf
-        <div class="container tight-rows table-grid mt-3 ms-3">
-            <div class="row g-0 w-50">
 
-                <div class="col-4 d-flex justify-content-start p-3 fw-bold">
-                    Nomor Department
-                </div>
-                <div class="col-8">
-                    @php
-                        $lastDep = $departments->last();
-                        if ($lastDep) {
-                            $lastNum = (int) substr($lastDep->kode_dep, 3);
-                            $newId = 'DEP' . str_pad($lastNum + 1, 3, '0', STR_PAD_LEFT);
-                        }
-                    @endphp
-                    {{ $newId }}
-                </div>
-            </div>
+        <form method="POST" action="/department">
+            @csrf
+            <div class="container tight-rows table-grid mt-3 ms-3">
+                <div class="row g-0 w-50">
 
-            <div class="row g-0 w-50">
-                <div class="col-4 d-flex justify-content-start p-3 fw-bold">Nama Department</div>
-
-                <div class="col-8 p-2"><input class="form-control" type="text" placeholder="Masukkan nama Department"
-                        name="nama_dep">
-
-                </div>
-            </div>
-            <div class="row g-0 w-50">
-                <div class="col">
-                    <div class="d-flex gap-2 mt-2 justify-content-start">
-                        <button type="submit" class="btn btn-success fw-bold fs-6">Tambah</button>
-                        <button type="button" class="btn btn-danger fw-bold fs-6">Batal</button>
+                    <div class="col-4 d-flex justify-content-start p-3 fw-bold">
+                        Nomor Department
+                    </div>
+                    <div class="col-8">
+                        @php
+                            $lastDep = $departments->last();
+                            if ($lastDep) {
+                                $lastNum = (int) substr($lastDep->kode_dep, 3);
+                                $newId = 'DEP' . str_pad($lastNum + 1, 3, '0', STR_PAD_LEFT);
+                            }
+                        @endphp
+                        {{ $newId }}
                     </div>
                 </div>
-            </div>
-        </div>
-    </form>
 
+                <div class="row g-0 w-50">
+                    <div class="col-4 d-flex justify-content-start p-3 fw-bold">Nama Department</div>
 
-    <div class="container mt-4 tight-rows table-grid ms-3">
-        <div class="row g-0 row-cols-3 w-50" style="margin:0;">
-            <div class="col-3 fw-bold p-2 border" style="min-width:70px;">No. Dept</div>
-            <div class="col-7 fw-bold p-2 border">Nama Department</div>
-            <div class="col-2 fw-bold p-2 border" style="min-width:70px;">Action</div>
-        </div>
+                    <div class="col-8 p-2"><input class="form-control" type="text"
+                            placeholder="Masukkan nama Department" name="nama_dep">
 
-        @if (isset($departments) && count($departments) > 0)
-            @foreach ($departments as $department)
-                <div class="row g-0 row-cols-3 w-50" style="margin:0;">
-                    <div class="col-3 border d-flex justify-content-start ps-3" style="min-width:70px;">
-                        {{ $department->kode_dep }}</div>
-                    <div class="col-7 border d-flex justify-content-start ps-3">{{ $department->nama_dep }}
                     </div>
-                    <div class="col-2 fw-bold p-2 border" style="min-width:70px;">
-                        <div class="dropdown m-0">
-                            <button class="btn btn-light border p-0" type="button"
-                                id="dropdownMenuButton{{ $department->kode_dep }}" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                <span class="fw-bold fs-4">⋮</span>
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $department->kode_dep }}">
-                                <li>
-                                    <a class="dropdown-item"
-                                        href="{{ url("department/{$department->kode_dep}/edit") }}">Edit</a>
-                                </li>
-                                <li>
-                                    <form action="{{ url("department/{$department->kode_dep}") }}" method="POST"
-                                        onsubmit="return confirm('Are you sure you want to delete this department?')"
-                                        style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="dropdown-item text-danger">Hapus</button>
-                                    </form>
-                                </li>
-                            </ul>
+                </div>
+                <div class="row g-0 w-50">
+                    <div class="col">
+                        <div class="d-flex gap-2 mt-2 justify-content-start">
+                            <button type="submit" class="btn btn-success fw-bold fs-6">Tambah</button>
+                            <button type="button" class="btn btn-danger fw-bold fs-6">Batal</button>
                         </div>
                     </div>
                 </div>
-            @endforeach
-        @else
-            <div class="row g-0 w-75" style="margin:0;">
-                <div class="col-12 text-center py-3 border">Tidak ada data department</div>
             </div>
-        @endif
-    </div>
+        </form>
+
+
+        <div class="container mt-4 tight-rows table-grid ms-3">
+            <div class="row g-0 row-cols-3 w-50" style="margin:0;">
+                <div class="col-3 fw-bold p-2 border" style="min-width:70px;">No. Dept</div>
+                <div class="col-7 fw-bold p-2 border">Nama Department</div>
+                <div class="col-2 fw-bold p-2 border" style="min-width:70px;">Action</div>
+            </div>
+
+            @if (isset($departments) && count($departments) > 0)
+                @foreach ($departments as $department)
+                    <div class="row g-0 row-cols-3 w-50" style="margin:0;">
+                        <div class="col-3 border d-flex justify-content-start ps-3" style="min-width:70px;">
+                            {{ $department->kode_dep }}</div>
+                        <div class="col-7 border d-flex justify-content-start ps-3">{{ $department->nama_dep }}
+                        </div>
+                        <div class="col-2 fw-bold p-2 border" style="min-width:70px;">
+                            <div class="dropdown m-0">
+                                <button class="btn btn-light border p-0" type="button"
+                                    id="dropdownMenuButton{{ $department->kode_dep }}" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    <span class="fw-bold fs-4">⋮</span>
+                                </button>
+                                <ul class="dropdown-menu"
+                                    aria-labelledby="dropdownMenuButton{{ $department->kode_dep }}">
+                                    <li>
+                                        <a class="dropdown-item"
+                                            href="{{ url("department/{$department->kode_dep}/edit") }}">Edit</a>
+                                    </li>
+                                    <li>
+                                        <form action="{{ url("department/{$department->kode_dep}") }}" method="POST"
+                                            onsubmit="return confirm('Are you sure you want to delete this department?')"
+                                            style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="dropdown-item text-danger">Hapus</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            @else
+                <div class="row g-0 w-75" style="margin:0;">
+                    <div class="col-12 text-center py-3 border">Tidak ada data department</div>
+                </div>
+            @endif
+        </div>
     </div>
 
     <!-- Modal Edit Department -->

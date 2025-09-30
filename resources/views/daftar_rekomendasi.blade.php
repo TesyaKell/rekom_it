@@ -91,8 +91,6 @@
 </head>
 
 <div class= "container-header">
-
-
     <div class="row-header">
         <div class="col-header">
             <p class="pt-3 mt-3 ms-5 ps-5">DAFTAR REKOMENDASI & SERVIS KOMPUTER</p>
