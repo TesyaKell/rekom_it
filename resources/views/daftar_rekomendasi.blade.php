@@ -230,7 +230,7 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                @if ($item->status == 'menunggu verifikasi Kabag' || session('loginRole') === 'IT')
+                                                @if ($item->status == 'menunggu verifikasi Kabag' || session('loginRole') === 'IT' || session('loginRole') === 'Kabag')
                                                     <a class="dropdown-item"
                                                         href="{{ route('rekomendasi.edit', $item->id_rek) }}">
                                                         Edit </a>

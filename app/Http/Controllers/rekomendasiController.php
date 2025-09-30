@@ -396,6 +396,12 @@ class rekomendasiController extends Controller
 
     public function export()
     {
+        $user = DB::table('users')->where('id_user', session('loginId'))
+             ->first();
+
+        $dep = DB::table('department')->where('kode_dep', $user->kode_dep)
+            ->first();
+
         $query = DB::table('detail_rekomendasi')
             ->join('rekomendasi', 'detail_rekomendasi.id_rek', '=', 'rekomendasi.id_rek')
             ->select(
@@ -409,6 +415,12 @@ class rekomendasiController extends Controller
                 'detail_rekomendasi.tanggal_realisasi'
             );
 
+
+        if ($dep) {
+            $query->where('rekomendasi.nama_dep', $dep->nama_dep);
+        }
+
+        // filter tambahan dari request
         if (request('noRek')) {
             $query->where('rekomendasi.id_rek', '>=', request('noRek'));
         }
@@ -444,5 +456,6 @@ class rekomendasiController extends Controller
 
         return Excel::download(new ReportExport($results), 'report.xlsx');
     }
+
 
 }
