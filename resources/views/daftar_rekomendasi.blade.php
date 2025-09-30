@@ -203,7 +203,7 @@
                                         <span
                                             class="badge
                                             bg-orange text-light p-1"
-                                            style="background-color: rgb(245, 139, 9);">Menunggu
+                                            style="background-color: rgb(41, 63, 230);">Menunggu
                                             Tim IT</span>
                                     @elseif($item->status == 'Ditolak')
                                         <span class="badge bg-danger p-1">Ditolak</span>
