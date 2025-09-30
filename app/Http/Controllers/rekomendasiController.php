@@ -9,7 +9,6 @@ use App\Models\DetailRekomendasi;
 use Illuminate\Support\Facades\DB;
 use App\Exports\ReportExport;
 use Maatwebsite\Excel\Facades\Excel;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class rekomendasiController extends Controller
 {
@@ -444,43 +443,6 @@ class rekomendasiController extends Controller
         $results = $query->get();
 
         return Excel::download(new ReportExport($results), 'report.xlsx');
-    }
-
-
-    public function printPdf($id)
-    {
-        if (!session()->has('loginId')) {
-            return redirect('/login');
-        }
-        $user = DB::table('users')->where('id_user', session('loginId'))->first();
-        $data = rekomendasi::findOrFail($id);
-
-        $nama_dep = $data->nama_dep ?? '';
-        $details = \DB::table('detail_rekomendasi')->where('id_rek', $id)->get();
-
-        $signature_approval = DB::table('signature')
-            ->where('jabatan', $nama_dep)
-            ->first();
-        $nama_approval = $signature_approval ? $signature_approval->nama_approval : '';
-        $sign_approval = $signature_approval ? $signature_approval->sign : null;
-
-        $signature_user = DB::table('signature')
-            ->where('nama_approval', $data->nama_it)
-            ->first();
-
-        $sign_user = $signature_user ? $signature_user->sign : null;
-
-        $pdf = Pdf::loadView('print', [
-            'data' => $data,
-            'details' => $details,
-            'nama_dep' => $nama_dep,
-            'nama_approval' => $nama_approval,
-            'sign_approval' => $sign_approval,
-            'sign_user' => $sign_user,
-            'isPdf' => true
-        ]);
-
-        return $pdf->setPaper('a4', 'portrait')->download('rekomendasi_' . $id . '.pdf');
     }
 
 }
