@@ -29,7 +29,6 @@
             font-size: 14px;
         }
 
-        /* Jangan ubah container-header, col-header, row-header */
         .container-header {
             margin-top: -20px;
         }
@@ -72,7 +71,6 @@
             box-shadow: 0 8px 24px rgba(232, 178, 0, 0.13);
         }
 
-        /* Tombol utama */
         .btn-success,
         .btn-primary,
         .btn-danger {
@@ -110,7 +108,6 @@
             background-color: #b71c1c;
         }
 
-        /* Input dan label */
         .form-control,
         .form-control-plaintext {
             border-radius: 8px;
@@ -175,7 +172,7 @@
             <div id="mainContent">
                 <div class="row mt-2 ms-4 me-4">
                     <div class="col-md-5">
-                        <div class="card-4">
+                        <div class="card-4 mb-5">
                             <div class="card-body-4">
                                 <form id="mainForm" class="ms-2" method="POST" action="/add_rekomendasi">
                                     @csrf
@@ -217,7 +214,7 @@
                                     <div class="card-6 mt-1 mb-5 d-flex justify-content-end">
                                         <div class="card-body-6">
                                             <div class="d-flex gap-2 mt-3 justify-content-end"
-                                                style="margin-bottom: -20px;">
+                                                style="margin-bottom: -30px;">
                                                 <button type="submit" class="btn btn-success fw-bold fs-6">Simpan</button>
                                                 <button type="button" class="btn btn-danger fw-bold fs-6">Batal</button>
                                             </div>
@@ -248,6 +245,8 @@
                 const btn = document.getElementById('addRekomendasiBtn');
                 const container = document.getElementById('rekomendasiCards');
                 const detailInputs = document.getElementById('detailInputs');
+                const mainForm = document.getElementById('mainForm');
+                const batalBtn = mainForm.querySelector('.btn-danger');
 
                 btn.addEventListener('click', function() {
                     const idx = detailList.length;
@@ -267,7 +266,7 @@
                             <label for="estimasiharga_${idx}" class="mb-1 mt-1">Estimasi Harga (Rp)</label>
                             <input class="form-control" id="estimasiharga_${idx}" placeholder="Rp.">
                         </div>
-                        <button type="button" class="btn btn-success mt-2 shadow-sm" onclick="addDetail(${idx})">
+                        <button type="button" class="btn btn-success mt-3 shadow-sm" onclick="addDetail(${idx})">
                             <i class="bi bi-check2-circle me-1"></i>Simpan Detail
                         </button>
                     </div>
@@ -327,6 +326,20 @@
                         alert('Semua field detail harus diisi!');
                     }
                 }
+
+                batalBtn.addEventListener('click', function() {
+                    // Kosongkan semua input di form utama
+                    mainForm.reset();
+                    // Kosongkan semua card input detail yang belum disimpan
+                    Array.from(container.querySelectorAll('.card-3')).forEach(function(card) {
+                        // Hanya hapus card yang masih ada input (editable)
+                        if (card.querySelector('input[id^="jenisunit_"]')) {
+                            card.remove();
+                        }
+                    });
+                    // Kosongkan input hidden detail
+                    detailInputs.innerHTML = '';
+                });
             });
         </script>
 
