@@ -1,6 +1,6 @@
 <style>
     .card-burger {
-        background-color: rgb(70, 140, 9);
+        background-color: #0d606e;
     }
 
     .card-body-burger {
@@ -25,7 +25,7 @@
 
     .position-fixed {
         /* background-color: rgb(253, 253, 253); */
-        background-color: rgb(70, 140, 9);
+        background-color: #0d606e;
     }
 
     .nav {
@@ -48,7 +48,7 @@
     }
 
     .nav-link:hover {
-        background-color: rgb(54, 109, 6);
+        background-color: #0d606e;
         color: white;
         transform: scale(1.02);
     }
@@ -126,7 +126,8 @@
         @if (session('loginRole') !== 'IT')
             <div class="y-sidebarItem r-hide-accordion">
                 <a class="nav-link d-flex align-items-center" href="{{ url('daftar_rekomendasi') }}">
-                    <img class="me-2" src="{{ asset('images/rekomendasi.png') }}" alt="Logo" width="20" height="20">
+                    <img class="me-2" src="{{ asset('images/rekomendasi.png') }}" alt="Logo" width="20"
+                        height="20">
                     <span class="text-sidebar">Daftar Rekomendasi</span>
                 </a>
             </div>
@@ -138,7 +139,8 @@
         @if (session('loginRole') === 'IT')
             <div class="y-sidebarItem r-hide-accordion">
                 <a class="nav-link d-flex align-items-center dropdown-toggle" href="#" id="rekomMenuToggle">
-                    <img class="me-2" src="{{ asset('images/rekomendasi.png') }}" alt="Logo" width="20" height="20">
+                    <img class="me-2" src="{{ asset('images/rekomendasi.png') }}" alt="Logo" width="20"
+                        height="20">
                     <span class="text-sidebar">Rekomendasi</span>
                 </a>
                 <div class="submenu ps-4" id="rekomMenu" style="display: none;">
@@ -162,7 +164,8 @@
 
             <div class="y-sidebarItem r-hide-accordion">
                 <a class="nav-link d-flex align-items-center dropdown-toggle" href="#" id="masterDataMenuToggle">
-                    <img class="me-2" src="{{ asset('images/department.png') }}" alt="Logo" width="20" height="20">
+                    <img class="me-2" src="{{ asset('images/department.png') }}" alt="Logo" width="20"
+                        height="20">
                     <span>Master Data</span>
                 </a>
                 <div class="submenu ps-4" id="masterDataMenu" style="display: none;">
@@ -186,7 +189,8 @@
         {{-- Semua role punya Report --}}
         <div class="y-sidebarItem r-hide-accordion">
             <a class="nav-link d-flex align-items-center" href="{{ url('report') }}">
-                <img class="me-2" src="{{ asset('images/report.png') }}" alt="Logo" width="20" height="20">
+                <img class="me-2" src="{{ asset('images/report.png') }}" alt="Logo" width="20"
+                    height="20">
                 <span class="text-sidebar">Report</span>
             </a>
         </div>
@@ -195,7 +199,8 @@
         <div class="y-sidebarItem r-hide-accordion" style="position: absolute; bottom: 20px; width: 215px;">
             <a class="nav-link d-flex align-items-center" href="#" id="logoutBtn" data-bs-toggle="modal"
                 data-bs-target="#logoutModal">
-                <img class="me-2" src="{{ asset('images/logout.png') }}" alt="Logo" width="20" height="20">
+                <img class="me-2" src="{{ asset('images/logout.png') }}" alt="Logo" width="20"
+                    height="20">
                 <span class="text-sidebar">Logout</span>
             </a>
         </div>
@@ -229,7 +234,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const hamburgerBtn = document.getElementById('hamburgerBtn');
         const sidebarMenu = document.getElementById('sidebarMenu');
         const closeSidebar = document.getElementById('hamburgerBtnn');
@@ -242,7 +247,7 @@
         const homeScreen = document.getElementById('home-screen');
 
         if (rekomMenuToggle && rekomMenu) {
-            rekomMenuToggle.addEventListener('click', function (e) {
+            rekomMenuToggle.addEventListener('click', function(e) {
                 e.preventDefault();
                 if (rekomMenu.style.display === 'none') {
                     rekomMenu.style.display = 'block';
@@ -254,7 +259,7 @@
 
         // Tambahkan event listener untuk Master Data dropdown
         if (masterDataMenuToggle && masterDataMenu) {
-            masterDataMenuToggle.addEventListener('click', function (e) {
+            masterDataMenuToggle.addEventListener('click', function(e) {
                 e.preventDefault();
                 if (masterDataMenu.style.display === 'none') {
                     masterDataMenu.style.display = 'block';
@@ -298,7 +303,7 @@
             });
         }
 
-        document.addEventListener('click', function (event) {
+        document.addEventListener('click', function(event) {
             if (sidebarMenu && hamburgerBtn &&
                 !sidebarMenu.contains(event.target) &&
                 !hamburgerBtn.contains(event.target)) {
@@ -319,7 +324,7 @@
 
         // Logout confirmation
         const confirmLogout = document.getElementById('confirmLogout');
-        confirmLogout.addEventListener('click', function () {
+        confirmLogout.addEventListener('click', function() {
             // Create a form to submit logout request
             const form = document.createElement('form');
             form.method = 'POST';
