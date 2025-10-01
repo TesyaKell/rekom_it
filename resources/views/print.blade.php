@@ -189,7 +189,7 @@
         <table class="date-table">
             <tr>
                 <td>
-                    Labuhan Ratu, {{ \Carbon\Carbon::now()->format('d F Y') }}
+                    {{ $alamat ? $alamat : 'Lampung' }}, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}
                 </td>
             </tr>
         </table>
