@@ -48,7 +48,7 @@
     }
 
     .nav-link:hover {
-        background-color: #0d606e;
+        background-color: #088fa7;
         color: white;
         transform: scale(1.02);
     }
