@@ -71,6 +71,22 @@
         .modal-backdrop.show {
             opacity: 0.2 !important;
         }
+
+        .container-post {
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: #0d606e 2px 2px 8px;
+            padding: 10px;
+            width: 500px;
+        }
+
+        .container-data {
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: #0d606e 2px 2px 8px;
+            padding: 15px;
+            width: 800px;
+        }
     </style>
 </head>
 
@@ -85,8 +101,8 @@
 
 
         <form method="POST" action="/jabatan">
-            <div class="container tight-rows table-grid mt-3 ms-3">
-                <div class="row g-0 w-50">
+            <div class="container-post tight-rows table-grid mt-3 ms-3">
+                <div class="row g-0 w-100">
                     <div class="col-4 d-flex align-items-center p-3 fw-bold">
                         Nomor Jabatan
                     </div>
@@ -96,14 +112,14 @@
                 </div>
 
                 @csrf
-                <div class="row g-0 w-50">
+                <div class="row g-0 w-100">
                     <div class="col-4 d-flex justify-content-start p-3 fw-bold">Nama Jabatan</div>
                     <div class="col-8 p-2">
                         <input class="form-control" type="text" placeholder="Masukkan nama jabatan" name="nama_jab">
                     </div>
                 </div>
-                <div class="row g-0 w-50">
-                    <div class="col">
+                <div class="row g-0 w-100">
+                    <div class="col" style="border-left: none; border-right: none; border-bottom: none;">
                         <div class="d-flex gap-2 mt-2 justify-content-start">
                             <button type="submit" class="btn btn-success fw-bold fs-6">Tambah</button>
                         </div>
@@ -112,8 +128,8 @@
         </form>
     </div>
 
-    <div class="container mt-4 tight-rows table-grid ms-3">
-        <div class="row g-0 row-cols-3 w-50" style="margin:0;">
+    <div class="container-data mt-4 tight-rows table-grid ms-3">
+        <div class="row g-0 row-cols-3 w-100" style="margin:0;">
             <div class="col-2 fw-bold p-2 border" style="min-width:70px;">No. Jab</div>
             <div class="col-7 fw-bold p-2 border">Nama Jabatan</div>
             <div class="col-2 fw-bold p-2 border" style="min-width:70px;">Action</div>
@@ -121,7 +137,7 @@
 
         @if (isset($jabatans) && count($jabatans) > 0)
             @foreach ($jabatans as $jabatan)
-                <div class="row g-0 row-cols-3 w-50" style="margin:0;">
+                <div class="row g-0 row-cols-3 w-100" style="margin:0;">
                     <div class="col-2 border d-flex justify-content-start ps-3" style="min-width:70px;">
                         {{ $jabatan->id_jab }}
                     </div>

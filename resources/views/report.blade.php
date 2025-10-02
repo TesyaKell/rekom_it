@@ -46,6 +46,7 @@
             border-radius: 5px;
             width: 440px;
             height: 350px;
+            box-shadow: #0d606e 2px 2px 8px;
         }
 
         .container-notes {
@@ -100,7 +101,6 @@
             <form method="GET" action="{{ route('report') }}" class="mb-4">
                 <div class="row g-3">
 
-                    {{-- No. Rekomendasi --}}
                     <div class="col-md-12">
                         <label for="noRek" class="form-label">No. Rekomendasi</label>
                         <div class="input-group">
@@ -155,6 +155,7 @@
 
             </form>
         </div>
+
         <div class="container-notes me-5 ms-5">
             <p class="p-3 mt-4" style="color: #e68e00">
                 * Hasil Pencarian :
@@ -162,18 +163,18 @@
             </p>
         </div>
 
-        <div class="container-table mt-3 mb-5 me-5 ms-5 p-2">
+        <div class="container-table mb-5 me-5 ms-5 p-2">
 
             <table class="table table-bordered table-sm align-middle me-5 mt-3">
                 <thead class="table-light">
                     <tr>
                         <th class="ps-2">No. Rek</th>
                         <th class="ps-2">No. PR</th>
-                        <th class="ps-2">Jenis Unit</th>
+                        <th class="ps-2">Nama Unit</th>
                         <th class="ps-2">Keterangan</th>
                         <th class="ps-2">Alasan</th>
                         <th class="ps-2">Estimasi Harga</th>
-                        <th class="ps-2">Nama Pengaju</th>
+                        <th class="ps-2">Dibuat Oleh</th>
                         <th class="ps-2">Department</th>
                         <th class="ps-2">Tanggal Pengajuan</th>
                         <th class="ps-2">Status</th>

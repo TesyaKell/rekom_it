@@ -74,6 +74,22 @@
             font-weight: 600;
             color: #000000cb;
         }
+
+        .container-post {
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: #0d606e 2px 2px 8px;
+            padding: 15px;
+            width: 50%;
+        }
+
+        .container-data {
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: #0d606e 2px 2px 8px;
+            padding: 15px;
+            width: 75%;
+        }
     </style>
 </head>
 
@@ -89,9 +105,8 @@
 
         <form method="POST" action="/department">
             @csrf
-            <div class="container tight-rows table-grid mt-3 ms-3">
-                <div class="row g-0 w-50">
-
+            <div class="container-post tight-rows table-grid mt-3 ms-3">
+                <div class="row g-0 w-100">
                     <div class="col-4 d-flex justify-content-start p-3 fw-bold">
                         Nomor Department
                     </div>
@@ -107,7 +122,7 @@
                     </div>
                 </div>
 
-                <div class="row g-0 w-50">
+                <div class="row g-0 w-100">
                     <div class="col-4 d-flex justify-content-start p-3 fw-bold">Nama Department</div>
 
                     <div class="col-8 p-2"><input class="form-control" type="text"
@@ -115,8 +130,8 @@
 
                     </div>
                 </div>
-                <div class="row g-0 w-50">
-                    <div class="col">
+                <div class="row g-0 w-100">
+                    <div class="col" style="border-bottom: none; border-left: none; border-right: none;">
                         <div class="d-flex gap-2 mt-2 justify-content-start">
                             <button type="submit" class="btn btn-success fw-bold fs-6">Tambah</button>
                             <button type="button" class="btn btn-danger fw-bold fs-6">Batal</button>
@@ -127,52 +142,80 @@
         </form>
 
 
-        <div class="container mt-4 tight-rows table-grid ms-3">
-            <div class="row g-0 row-cols-3 w-50" style="margin:0;">
-                <div class="col-3 fw-bold p-2 border" style="min-width:70px;">No. Dept</div>
-                <div class="col-7 fw-bold p-2 border">Nama Department</div>
-                <div class="col-2 fw-bold p-2 border" style="min-width:70px;">Action</div>
+        <div class="container-data mt-4 tight-rows table-grid ms-3">
+            <!-- Dropdown untuk memilih jumlah data yang ditampilkan -->
+            <div class="row g-0 mb-2 d-flex justify-content-end" style="width: 195px;">
+                <div class="col text-end" style="border: 1px solid #000; background-color: #fff;">
+                    <label for="showCount" class="me-2 fw-bold">Tampilkan</label>
+                    <select id="showCount" class="form-select d-inline-block w-auto" style="width:80px;">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
             </div>
-
-            @if (isset($departments) && count($departments) > 0)
-                @foreach ($departments as $department)
-                    <div class="row g-0 row-cols-3 w-50" style="margin:0;">
-                        <div class="col-3 border d-flex justify-content-start ps-3" style="min-width:70px;">
-                            {{ $department->kode_dep }}</div>
-                        <div class="col-7 border d-flex justify-content-start ps-3">{{ $department->nama_dep }}
-                        </div>
-                        <div class="col-2 fw-bold p-2 border" style="min-width:70px;">
-                            <div class="dropdown m-0">
-                                <button class="btn btn-light border p-0" type="button"
-                                    id="dropdownMenuButton{{ $department->kode_dep }}" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    <span class="fw-bold fs-4">⋮</span>
-                                </button>
-                                <ul class="dropdown-menu"
-                                    aria-labelledby="dropdownMenuButton{{ $department->kode_dep }}">
-                                    <li>
-                                        <a class="dropdown-item"
-                                            href="{{ url("department/{$department->kode_dep}/edit") }}">Edit</a>
-                                    </li>
-                                    <li>
-                                        <form action="{{ url("department/{$department->kode_dep}") }}" method="POST"
-                                            onsubmit="return confirm('Are you sure you want to delete this department?')"
-                                            style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="dropdown-item text-danger">Hapus</button>
-                                        </form>
-                                    </li>
-                                </ul>
+            <div class="row g-0 row-cols-4 w-100 department-row" style="margin:0;">
+                <div class="col-2 border d-flex justify-content-start ps-3 fw-bold" style="min-width:70px;">
+                    No.
+                </div>
+                <div class="col-3 border d-flex justify-content-start ps-3 fw-bold" style="min-width:70px;">
+                    No. Department
+                </div>
+                <div class="col-5 border d-flex justify-content-start ps-3 pt-2 fw-bold" style="min-width:70px;">
+                    Nama Department
+                </div>
+                <div class="col-2 fw-bold p-2 border fw-bold" style="min-width:70px;">
+                    Aksi
+                </div>
+            </div>
+            <div id="departmentRows">
+                @if (isset($departments) && count($departments) > 0)
+                    @foreach ($departments as $department)
+                        <div class="row g-0 row-cols-4 w-100 department-row" style="margin:0;">
+                            <div class="col-2 border d-flex justify-content-start ps-3" style="min-width:70px;">
+                                {{ $loop->iteration }}
+                            </div>
+                            <div class="col-3 border d-flex justify-content-start ps-3" style="min-width:70px;">
+                                {{ $department->kode_dep }}</div>
+                            <div class="col-5 border d-flex justify-content-start ps-3 pt-2">{{ $department->nama_dep }}
+                            </div>
+                            <div class="col-2 fw-bold p-2 border" style="min-width:70px;">
+                                <div class="dropdown m-0">
+                                    <button class="btn btn-light border p-0" type="button"
+                                        id="dropdownMenuButton{{ $department->kode_dep }}" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                        <span class="fw-bold fs-4">⋮</span>
+                                    </button>
+                                    <ul class="dropdown-menu"
+                                        aria-labelledby="dropdownMenuButton{{ $department->kode_dep }}">
+                                        <li>
+                                            <a class="dropdown-item"
+                                                href="{{ url("department/{$department->kode_dep}/edit") }}">Edit</a>
+                                        </li>
+                                        <li>
+                                            <form action="{{ url("department/{$department->kode_dep}") }}"
+                                                method="POST"
+                                                onsubmit="return confirm('Are you sure you want to delete this department?')"
+                                                style="display:inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="dropdown-item text-danger">Hapus</button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
+                    @endforeach
+                @else
+                    <div class="row g-0 w-75" style="margin:0;">
+                        <div class="col-12 text-center py-3 border">Tidak ada data department</div>
                     </div>
-                @endforeach
-            @else
-                <div class="row g-0 w-75" style="margin:0;">
-                    <div class="col-12 text-center py-3 border">Tidak ada data department</div>
-                </div>
-            @endif
+                @endif
+            </div>
         </div>
     </div>
 
@@ -185,10 +228,12 @@
                 @method('PUT')
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title fw-bold" id="editDepartmentModalLabel" style="color: rgb(249, 137, 0);">
+                        <h5 class="modal-title fw-bold" id="editDepartmentModalLabel"
+                            style="color: rgb(249, 137, 0);">
                             Edit Nama
                             Department</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <input type="hidden" id="editDepartmentId" name="id">
@@ -234,6 +279,21 @@
                 var modal = new bootstrap.Modal(document.getElementById('editDepartmentModal'));
                 modal.show();
             });
+        });
+
+        // Filter jumlah data yang ditampilkan
+        document.addEventListener('DOMContentLoaded', function() {
+            const showCount = document.getElementById('showCount');
+            const rows = document.querySelectorAll('.department-row');
+
+            function updateRows() {
+                const count = parseInt(showCount.value);
+                rows.forEach((row, idx) => {
+                    row.style.display = idx < count ? '' : 'none';
+                });
+            }
+            showCount.addEventListener('change', updateRows);
+            updateRows();
         });
     </script>
     <!-- Bootstrap JS for dropdown functionality -->
