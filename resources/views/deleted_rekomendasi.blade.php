@@ -40,6 +40,7 @@
         .container-deleted {
             background-color: #ffffff;
             border-radius: 5px;
+            box-shadow: #0d606e 2px 2px 8px;
         }
 
         title {
