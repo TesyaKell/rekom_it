@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\department;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\rekomendasi;
 use App\Models\DetailRekomendasi;
@@ -289,6 +290,7 @@ class rekomendasiController extends Controller
         }
         $user = DB::table('users')->where('id_user', session('loginId'))->first();
         $data = rekomendasi::findOrFail($id);
+        $alamat = User::where('id_user', $data->id_user)->first()->alamat ?? '';
 
         $nama_dep = $data->nama_dep ?? '';
         $details = \DB::table('detail_rekomendasi')->where('id_rek', $id)->get();
@@ -309,6 +311,7 @@ class rekomendasiController extends Controller
         return view('print', compact(
             'data',
             'details',
+            'alamat',
             'nama_dep',
             'nama_approval',
             'sign_approval',
@@ -456,6 +459,29 @@ class rekomendasiController extends Controller
 
         return Excel::download(new ReportExport($results), 'report.xlsx');
     }
+    public function grafik()
+    {
+        $monthlyData = Rekomendasi::select(
+            DB::raw('MONTH(tgl_masuk) as bulan'),
+            DB::raw('COUNT(*) as total')
+        )
+        ->whereYear('tgl_masuk', date('Y'))
+        ->groupBy('bulan')
+        ->orderBy('bulan')
+        ->get()
+        ->map(function ($item) {
+            $bulanNama = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            return [
+                'bulan' => $bulanNama[$item->bulan - 1],
+                'total' => $item->total
+            ];
+        });
 
-
+        // Data per departemen
+        $departmentData = Rekomendasi::select('nama_dep', DB::raw('COUNT(*) as total'))
+            ->groupBy('nama_dep')
+            ->orderBy('total', 'desc')
+            ->get();
+        return view('home', compact('monthlyData', 'departmentData'));
+    }
 }

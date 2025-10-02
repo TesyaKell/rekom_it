@@ -25,33 +25,22 @@ Route::get('/home', function () {
 
 
 //REKOMENDASI
+Route::get('/home', [rekomendasiController::class, 'grafik'])->name('home');
 Route::get('/detailRekomendasi/{id_rek}', [rekomendasiController::class, 'tampilDetail'])->name('rekomendasi.detail');
-
-
 Route::post('/add_rekomendasi', [rekomendasiController::class, 'create'])->name('rekomendasi.create');
-
 Route::get('/add_rekomendasi', [rekomendasiController::class, 'index'])->name('rekomendasi.index');
-
 Route::get('/deleted_rekomendasi', [rekomendasiController::class, 'tampilDataTerhapus'])->name('rekomendasi.deleted');
 Route::post('/rekomendasi/{id_rek}/restore', [rekomendasiController::class, 'restore'])->name('rekomendasi.restore');
 Route::get('/daftar_rekomendasi', [rekomendasiController::class, 'tampilData'])
     ->name('rekomendasi.daftar');
 Route::get('/report', [rekomendasiController::class, 'laporan'])->name('report');
 Route::delete('/rekomendasi/{id_rek}', [rekomendasiController::class, 'destroy'])->name('rekomendasi.destroy');
-
-
 Route::get('/rekomendasi/{id_rek}/edit', [rekomendasiController::class, 'edit'])->name('rekomendasi.edit');
-
 Route::put('/rekomendasi/{id_rek}', [rekomendasiController::class, 'update'])->name('rekomendasi.update');
 Route::post('/rekomendasi/{id_rek}/approve', [rekomendasiController::class, 'updateStatus'])->name('rekomendasi.approve');
-
 Route::get('search', [rekomendasiController::class, 'searchRekomendasi'])->name('searchRekomendasi');
 Route::get('/print/{id}', [rekomendasiController::class, 'print'])->name('rekomendasi.print');
-
-
 Route::get('/rekomendasi/filter', [RekomendasiController::class, 'filterStatus'])->name('rekomendasi.filter');
-
-
 Route::post('/detail-rekomendasi/masukan/{id}', [App\Http\Controllers\DetailRekomendasiController::class, 'masukan'])->name('detailRekomendasi.masukan');
 
 // Update detail rekomendasi
