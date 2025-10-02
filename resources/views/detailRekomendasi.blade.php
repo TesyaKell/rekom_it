@@ -170,7 +170,7 @@
                                 <td class="ps-3">{{ $header->no_spb }}</td>
                             </tr>
                             <tr>
-                                <td class="ps-3 p-2" style="width: 170px;">Nama Pengaju</td>
+                                <td class="ps-3 p-2" style="width: 170px;">Dibuat Oleh</td>
                                 <td class="ps-3">{{ $header->nama_lengkap }}</td>
                             </tr>
                             <tr>
@@ -201,7 +201,7 @@
                 <table class="table table-bordered table-sm align-middle bg-light">
                     <thead>
                         <tr>
-                            <th class="ps-3">Jenis Unit</th>
+                            <th class="ps-3">Nama Unit</th>
                             <th class="ps-3">Keterangan</th>
                             <th class="ps-3">Estimasi Harga</th>
                             @if (session('loginRole') === 'IT')

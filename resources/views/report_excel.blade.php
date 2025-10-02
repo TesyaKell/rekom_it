@@ -14,11 +14,11 @@
             <tr>
                 <th>No. Rek</th>
                 <th>No. PR</th>
-                <th>Jenis Unit</th>
+                <th>Nama Unit</th>
                 <th>Keterangan</th>
                 <th>Alasan</th>
                 <th>Estimasi Harga</th>
-                <th>Nama Pengaju</th>
+                <th>Dibuat Oleh</th>
                 <th>Department</th>
                 <th>Tanggal Pengajuan</th>
                 <th>Status</th>

@@ -22,7 +22,7 @@
         }
 
         .logo-img {
-            max-width: 60px;
+            max-width: 85px;
             height: auto;
             margin-top: 10px;
             margin-bottom: 20px;
@@ -32,9 +32,9 @@
         .title {
             text-align: center;
             font-weight: bold;
-            margin-top: -60px;
-            margin-bottom: 40px;
-            font-size: 18px;
+            margin-top: -75px;
+            margin-bottom: 80px;
+            font-size: 20px;
         }
 
         table {
@@ -46,7 +46,6 @@
 
         th,
         td {
-            border: 1px solid #000000;
             padding: 7px 10px;
             font-size: 14px;
             background-color: #ffffff;
@@ -66,14 +65,15 @@
             width: 100%;
             text-align: center;
             margin-left: -38px;
-            margin-top: -70px;
+            margin-top: -40px;
         }
 
         .ttd-table td {
             border: none;
             background: none;
-            height: 80px;
+            height: 40px;
             vertical-align: bottom;
+            padding-bottom: 10px;
         }
 
         .ttd-label {
@@ -81,8 +81,9 @@
         }
 
         .ttd-name {
-            padding-top: 0px;
             font-size: 14px;
+            padding-top: 5px;
+            margin-top: 0;
         }
 
         .ttd-role {
@@ -93,7 +94,7 @@
             width: 100%;
             margin-top: 50px;
             text-align: right;
-            margin-left: -20px;
+            margin-left: -60px;
         }
 
         .date-table td {
@@ -124,27 +125,33 @@
             <tbody>
                 @if ($data)
                     <tr>
-                        <td>No. Rek</td>
+                        <td>No. Rekomendasi</td>
+                        <td> : </td>
                         <td>{{ $data->id_rek }}</td>
                     </tr>
                     <tr>
                         <td>No. PR</td>
+                        <td> : </td>
                         <td>{{ $data->no_spb }}</td>
                     </tr>
                     <tr>
-                        <td>Nama Pengaju</td>
+                        <td>Dibuat Oleh</td>
+                        <td> : </td>
                         <td>{{ $data->nama_lengkap }}</td>
                     </tr>
                     <tr>
                         <td>Department</td>
+                        <td> : </td>
                         <td>{{ $data->nama_dep }}</td>
                     </tr>
                     <tr>
                         <td>Tanggal Pengajuan</td>
+                        <td> : </td>
                         <td>{{ $data->tgl_masuk }}</td>
                     </tr>
                     <tr>
                         <td>Alasan</td>
+                        <td> : </td>
                         <td>{{ $data->alasan_rek }}</td>
                     </tr>
                 @else
@@ -155,32 +162,34 @@
             </tbody>
         </table>
 
-        <table>
+        <table border="1" style="border-collapse: collapse;">
             <thead>
                 <tr>
-                    <th>No</th>
-                    <th>Jenis Unit</th>
-                    <th>Keterangan Unit</th>
-                    <th>Estimasi Harga</th>
-                    <th>Masukan Kabag</th>
-                    <th>Masukan IT</th>
+                    <th style="text-align:left;">No</th>
+                    <th style="text-align:left;">Nama Unit</th>
+                    <th style="text-align:left;">Keterangan Unit</th>
+                    <th style="text-align:left;">Estimasi Harga</th>
+                    <th style="text-align:left;">Masukan Kabag</th>
+                    <th style="text-align:left;">Rekomendasi IT</th>
                 </tr>
             </thead>
             <tbody>
                 @if ($details && count($details))
                     @foreach ($details as $idx => $detail)
                         <tr>
-                            <td>{{ $idx + 1 }}</td>
-                            <td>{{ $detail->jenis_unit }}</td>
-                            <td>{{ $detail->ket_unit }}</td>
-                            <td>Rp. {{ number_format($detail->estimasi_harga, 0, ',', '.') }}</td>
-                            <td>{{ $detail->masukan_kabag }}</td>
-                            <td>{{ $detail->masukan_it }}</td>
+                            <td style="border: 1px solid #747474;">{{ $idx + 1 }}</td>
+                            <td style="border: 1px solid #747474;">{{ $detail->jenis_unit }}</td>
+                            <td style="border: 1px solid #747474;">{{ $detail->ket_unit }}</td>
+                            <td style="border: 1px solid #747474;">Rp.
+                                {{ number_format($detail->estimasi_harga, 0, ',', '.') }}</td>
+                            <td style="border: 1px solid #747474;">{{ $detail->masukan_kabag }}</td>
+                            <td style="border: 1px solid #747474;">{{ $detail->masukan_it }}</td>
                         </tr>
                     @endforeach
                 @else
                     <tr>
-                        <td colspan="6" class="text-center">Detail rekomendasi tidak ditemukan.</td>
+                        <td colspan="6" class="text-center" style="border: 1px solid #ddd;">Detail rekomendasi tidak
+                            ditemukan.</td>
                     </tr>
                 @endif
             </tbody>
@@ -203,12 +212,12 @@
             <tr>
                 <td>
                     @if ($data && $data->status === 'Diterima' && !empty($sign_approval))
-                        <img src="{{ asset($sign_approval) }}" style="height:60px;">
+                        <img src="{{ asset($sign_approval) }}" style="height:60px; margin-bottom:0;">
                     @endif
                 </td>
                 <td>
                     @if ($data && $data->status === 'Diterima' && !empty($sign_user))
-                        <img src="{{ asset($sign_user) }}" style="height:60px;">
+                        <img src="{{ asset($sign_user) }}" style="height:60px; margin-bottom:0;">
                     @endif
                 </td>
                 <td></td>

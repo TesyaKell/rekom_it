@@ -49,16 +49,13 @@
             margin-left: 30px;
             border-radius: 16px;
             transition: box-shadow 0.2s;
+            box-shadow: #0d606e 2px 2px 8px;
         }
 
-        .card-4 .card-body-4:hover {
-            box-shadow: 0 8px 24px rgba(78, 78, 78, 0.13);
-        }
 
-        /* Card detail rekomendasi */
         .card-3 .card-body-3 {
             background: #ffffff;
-            box-shadow: 0 2px 8px rgba(232, 178, 0, 0.10);
+            box-shadow: #0d606e 2px 2px 8px;
             padding: 18px;
             width: 100%;
             max-width: 500px;
@@ -67,9 +64,6 @@
             transition: box-shadow 0.2s;
         }
 
-        .card-3 .card-body-3:hover {
-            box-shadow: 0 8px 24px rgba(232, 178, 0, 0.13);
-        }
 
         .btn-success,
         .btn-primary,
@@ -176,36 +170,34 @@
                             <div class="card-body-4">
                                 <form id="mainForm" class="ms-2" method="POST" action="/add_rekomendasi">
                                     @csrf
-                                    <div class="form-group">
-                                        <label for="exampleFormControlInput1" class="mb-1">No. Rekomendasi</label>
-                                        <input type="text" readonly
-                                            class="form-control-plaintext border px-2 text-center" id="norekom"
-                                            name="norekom" value="{{ $lastId + 1 }}" style="font-weight: bold;">
-                                    </div>
                                     <div class="form-group mt-2">
                                         <label for="exampleFormControlInput1" class="mb-1 mt-2">No. PR</label>
-                                        <input class="form-control" id="no_spb" name="no_spb">
+                                        <input class="form-control" id="no_spb" name="no_spb"
+                                            placeholder="Masukkan No. PR">
                                     </div>
                                     <div class="form-group mt-2">
                                         <label for="tanggal_pengajuan" class="mb-1 mt-2">Tanggal Pengajuan</label>
-                                        <input type="date" class="form-control" id="tanggal_pengajuan" name="tgl_masuk">
+                                        <input type="date" class="form-control" id="tanggal_pengajuan" name="tgl_masuk"
+                                            required>
                                     </div>
                                     <div class="form-group mt-2">
-                                        <label for="exampleFormControlInput1" class="mb-1 mt-2">Nama Pengaju</label>
+                                        <label for="exampleFormControlInput1" class="mb-1 mt-2">Dibuat Oleh</label>
                                         <input class="form-control" id="namapengaju" name="nama_lengkap"
-                                            placeholder="Masukan Nama Anda">
+                                            placeholder="Masukan Nama Anda" required>
                                     </div>
                                     <div class="form-group mt-2">
                                         <label for="department" class="mb-1 mt-2">Department</label>
-                                        <select class="form-control" id="kode_dep" name="kode_dep">
+                                        <select class="form-control" id="kode_dep" name="kode_dep" required>
+                                            <option value="" disabled selected>Pilih Department</option>
                                             @foreach ($departments as $dep)
                                                 <option value="{{ $dep->kode_dep }}">{{ $dep->nama_dep }}</option>
                                             @endforeach
                                         </select>
                                     </div>
+
                                     <div class="form-group mt-2">
-                                        <label for="alasan" class="mb-1 mt-2">Alasan</label>
-                                        <textarea class="form-control" id="alasan" name="alasan_rek" rows="3" placeholder="Masukkan Alasan"></textarea>
+                                        <label for="alasan" class="mb-1 mt-2">Permintaan</label>
+                                        <textarea class="form-control" id="alasan" name="alasan_rek" rows="3" placeholder="Masukkan Permintaan"></textarea>
                                     </div>
 
                                     <!-- Tempatkan input detail rekomendasi di sini -->
@@ -226,8 +218,9 @@
                     </div>
 
                     <div class="col-md-7">
-                        <button id="addRekomendasiBtn" type="button" class="btn btn-primary mb-3 ms-4 shadow-sm">
-                            <i class="bi bi-plus-circle me-1"></i>Tambah Rekomendasi
+                        <button id="addRekomendasiBtn" type="button" class="btn mb-3 ms-4 shadow-sm"
+                            style="background-color: #0d606e; color: #ffffff; font-weight: bold;">
+                            <i class="bi bi-plus-circle me-1"></i>Tambah Detail
                         </button>
                         <div id="rekomendasiCards"></div>
                     </div>
@@ -238,6 +231,22 @@
         @php
             $pageTitle = 'Add Rekomendasi';
         @endphp
+
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const form = document.getElementById('mainForm');
+                form.addEventListener('submit', function(e) {
+                    const tgl = form.tgl_masuk.value;
+                    const nama = form.nama_lengkap.value;
+                    const dep = form.kode_dep.value;
+                    if (!tgl || !nama || !dep) {
+                        alert('Semua field wajib diisi!');
+                        e.preventDefault();
+                    }
+                });
+            });
+        </script>
 
         <script>
             let detailList = [];
@@ -255,19 +264,22 @@
                     card.innerHTML = `
                     <div class="card-body-3">
                         <div class="form-group">
-                            <label for="jenisunit_${idx}" class="mb-1">Jenis Unit</label>
-                            <input class="form-control" id="jenisunit_${idx}" placeholder="Masukkan Jenis Unit">
+                            <label for="jenisunit_${idx}" class="mb-1">Nama Unit</label>
+                            <input class="form-control" id="jenisunit_${idx}" placeholder="Masukkan Nama Unit">
                         </div>
-                        <div class="form-group">
-                            <label for="keterangan_${idx}" class="mb-1 mt-2">Keterangan</label>
-                            <input class="form-control" id="keterangan_${idx}" placeholder="Masukkan Keterangan">
-                        </div>
+
                         <div class="form-group mt-2">
-                            <label for="estimasiharga_${idx}" class="mb-1 mt-1">Estimasi Harga (Rp)</label>
+                            <label for="estimasiharga_${idx}" class="mb-1 mt-2">Estimasi Harga (Rp)</label>
                             <input class="form-control" id="estimasiharga_${idx}" placeholder="Rp.">
                         </div>
+
+                        <div class="form-group mt-2">
+                            <label for="keterangan_${idx}" class="mb-1 mt-2">Keterangan</label>
+                            <textarea class="form-control" id="keterangan_${idx}" rows="2" placeholder="Masukkan Keterangan"></textarea>
+                        </div>
+
                         <button type="button" class="btn btn-success mt-3 shadow-sm" onclick="addDetail(${idx})">
-                            <i class="bi bi-check2-circle me-1"></i>Simpan Detail
+                            <i class="bi bi-check2-circle me-1"></i>Simpan
                         </button>
                     </div>
                 `;
@@ -300,7 +312,7 @@
                         <div class="card-body-3">
                             <table class="table table-bordered mb-0">
                                 <tr>
-                                    <th style="width: 30%; font-weight: normal;">Jenis Unit</th>
+                                    <th style="width: 30%; font-weight: normal;">Nama Unit</th>
                                     <td style="width: 70%;">${jenis}</td>
                                 </tr>
                                 <tr>

@@ -82,8 +82,8 @@
                         <tr>
                             <th class="ps-2">No. Rek</th>
                             <th class="ps-2">No. PR</th>
-                            <th class="ps-2">Jenis Unit</th>
-                            <th class="ps-2">Nama Pengaju</th>
+                            <th class="ps-2">Nama Unit</th>
+                            <th class="ps-2">Dibuat Oleh</th>
                             <th class="ps-2">Department</th>
                             <th class="ps-2">Tanggal Pengajuan</th>
                             <th class="ps-2">Status</th>

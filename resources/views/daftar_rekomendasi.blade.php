@@ -177,7 +177,7 @@
                     <tr>
                         <th class="ps-2">No. Rek</th>
                         <th class="ps-2">No. PR</th>
-                        <th class="ps-2">Nama Pengaju</th>
+                        <th class="ps-2">Dibuat Oleh</th>
                         <th class="ps-2">Department</th>
                         <th class="ps-2">Tanggal Pengajuan</th>
                         <th class="ps-2">Status</th>
@@ -193,7 +193,7 @@
                         <tr>
                             <td class="ps-2">
                                 <a href="{{ route('rekomendasi.detail', $item->id_rek) }}"
-                                    class="text-decoration-none text-dark">
+                                    class="badge text-white text-decoration-none" style="background-color: #0d606e;">
                                     {{ $item->id_rek }}
                                 </a>
                             </td>

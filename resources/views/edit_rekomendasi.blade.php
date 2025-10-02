@@ -116,7 +116,7 @@
                                         value="{{ $header->no_spb }}" {{ $disabled }}>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label">Nama Pengaju</label>
+                                    <label class="form-label">Dibuat Oleh</label>
                                     <input type="text" name="nama_lengkap" class="form-control"
                                         value="{{ $header->nama_lengkap }}" {{ $disabled }}>
                                 </div>
@@ -156,7 +156,7 @@
                     <table class="table table-bordered table-sm align-middle bg-light">
                         <thead>
                             <tr>
-                                <th class="ps-3">Jenis Unit</th>
+                                <th class="ps-3">Nama Unit</th>
                                 <th class="ps-3">Keterangan</th>
                                 <th class="ps-3">Estimasi Harga</th>
                                 <th class="ps-3">Masukan</th>

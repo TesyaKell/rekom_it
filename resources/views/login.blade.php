@@ -62,7 +62,7 @@
                 <div class="form-group">
                     <label for="exampleInputUser">Username</label>
                     <input type="text" class="form-control" id="exampleInputUser" name="username"
-                        placeholder="Enter username">
+                        placeholder="Username">
                 </div>
                 <div class="form-group mt-3">
                     <label for="exampleInputPassword1">Password</label>
