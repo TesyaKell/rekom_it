@@ -49,12 +49,8 @@
         }
 
         .container-notes {
-            background: #ffa80022;
-            border-radius: 8px;
-            width: 1150px;
-            min-height: 50px;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 8px #ffa80022;
+            background-color: #ffde093b;
+            border-radius: 5px;
         }
 
         .container-table {
@@ -203,7 +199,7 @@
             </form>
         </div>
         <div class="container-notes me-5 ms-5">
-            <p class="p-3 mt-4" style="color: #e68e00">
+            <p class="p-3 mt-4" style="color: #b85600; font-weight: 100px;">
                 * Hasil Pencarian :
                 {{ $results->sum(fn($item) => $item->detail_rekomendasi->count()) }} data
             </p>
