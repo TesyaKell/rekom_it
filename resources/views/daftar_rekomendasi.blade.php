@@ -38,7 +38,7 @@
 
         .row-header .col-header {
             border-bottom: 2px solid #d8d8d8;
-            background-color: #ffffff;
+            background: white;
             text-align: left;
         }
 
@@ -204,13 +204,13 @@
                             <td class="ps-2">
                                 @if ($item->status == 'menunggu verifikasi Kabag')
                                     <span class="badge text-light p-1"
-                                        style="background-color: rgb(245, 139, 9);">Menunggu
+                                        style="background-color: rgba(245, 139, 9, 0.767);">Menunggu
                                         Kabag</span>
                                 @elseif($item->status == 'menunggu verifikasi Tim IT')
                                     <span
                                         class="badge
                                             bg-orange text-light p-1"
-                                        style="background-color: rgb(41, 63, 230);">Menunggu
+                                        style="background-color: rgba(32, 55, 230, 0.79);">Menunggu
                                         Tim IT</span>
                                 @elseif($item->status == 'Ditolak')
                                     <span class="badge bg-danger p-1">Ditolak</span>
