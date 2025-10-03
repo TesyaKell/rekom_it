@@ -234,14 +234,14 @@
         @endphp
 
 
-        <!-- Toast Notifikasi -->
+
         <div id="notifSimpan" style="display:none;position:fixed;top:30px;right:30px;z-index:9999;">
             <div class="alert alert-success py-2 px-4 mb-0 rounded shadow" role="alert" style="font-size:15px;">
                 Data berhasil disimpan!
             </div>
         </div>
 
-        <!-- Toast untuk simpan detail -->
+
         <div id="notifDetailSimpan" style="display:none;position:fixed;top:80px;right:30px;z-index:9999;">
             <div class="alert alert-success py-2 px-4 mb-0 rounded shadow" role="alert" style="font-size:15px;">
                 Berhasil simpan detail!

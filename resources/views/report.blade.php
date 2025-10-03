@@ -13,15 +13,7 @@
 
     <style>
         body {
-            background-color: #efefef;
-        }
-
-        .row .col {
-            border: 1px solid #000;
-            background-color: #fff;
-            padding: 20px;
-            margin: 10px 0;
-            text-align: center;
+            background: linear-gradient(120deg, #fff 60%, #0d606e 100%);
         }
 
         .container-header {
@@ -29,60 +21,118 @@
         }
 
         .row-header .col-header {
-            border-bottom: 2px solid #d8d8d8;
-            background-color: #ffffff;
+            background: white;
             text-align: left;
+            margin-top: 16px;
+            border-radius: 12px 12px 0 0;
+            box-shadow: 0 2px 8px #0d606e22;
+            border-bottom: 2px solid #d8d8d8;
         }
 
         p {
             text-align: left;
             font-size: 14px;
+            font-weight: bold;
             color: #e8b200;
-            font-weight: 600;
+            letter-spacing: 1px;
         }
 
         .container-form {
-            background-color: #ffffff;
-            border-radius: 5px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px #0d606e22;
             width: 440px;
-            height: 350px;
-            box-shadow: #0d606e 2px 2px 8px;
+            min-height: 350px;
+            padding: 24px 28px;
+            margin-bottom: 24px;
+            border: 1.5px solid #0d606e;
         }
 
         .container-notes {
-            background-color: #f8bf1444;
-            border-radius: 5px;
+            background: #ffa80022;
+            border-radius: 8px;
             width: 1150px;
-            height: 50px;
+            min-height: 50px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 8px #ffa80022;
         }
 
         .container-table {
-            background-color: #ffffff;
-            border-radius: 5px;
+            background: #fff;
             width: 1150px;
-            height: auto;
+            box-shadow: 0 4px 16px #0d606e22;
+            border-radius: 15px;
         }
 
-        title {
+        .table thead th {
+            background: #0d606e;
+            color: #fff;
             font-weight: bold;
         }
 
-        tr {
-            background-color: #ffffff;
+        .table-bordered th,
+        .table-bordered td {
+            border: 1.5px solid #0d606e !important;
         }
 
-        th,
-        td {
-            font-size: 14px;
+        .btn-success {
+            background-color: #0d606e;
+            border: none;
+            color: #fff;
         }
 
-        .col-md-4 {
-            background: #ffffff;
+        .btn-success:hover {
+            background-color: #ffa800;
+            color: #fff;
         }
 
-        label {
+        .btn-warning {
+            background-color: #ffa800;
+            border: none;
+            color: #fff !important;
+        }
+
+        .btn-warning:hover {
+            background-color: #0d606e;
+            color: #fff !important;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #0d606e;
+        }
+
+        .form-control,
+        .form-select {
+            border-radius: 8px;
+            border: 1px solid #0d606e;
+            background: #fff;
             font-size: 15px;
+        }
+
+        .input-group-text {
+            background: #ffa80022;
+            color: #0d606e;
             font-weight: bold;
+        }
+
+        .badge {
+            font-size: 13px;
+            border-radius: 6px;
+        }
+
+        .select2-container--default .select2-selection--multiple {
+            border-radius: 8px;
+            border: 1px solid #0d606e;
+            min-height: 38px;
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            background-color: #ffa800;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            margin-top: 4px;
         }
     </style>
 </head>
@@ -97,10 +147,9 @@
 
 
     <body>
-        <div class="container-form mt-4 mb-5 me-5 ms-5 p-4">
+        <div class="container-form mt-4 mb-5 me-5 ms-5">
             <form method="GET" action="{{ route('report') }}" class="mb-4">
                 <div class="row g-3">
-
                     <div class="col-md-12">
                         <label for="noRek" class="form-label">No. Rekomendasi</label>
                         <div class="input-group">
@@ -112,8 +161,6 @@
                                 value="{{ request('noRek2') }}" placeholder="Sampai" disabled>
                         </div>
                     </div>
-
-
                     <div class="col-md-12">
                         <label for="tgl_awal" class="form-label ms-2">Periode Tanggal Masuk</label>
                         <div class="input-group">
@@ -125,47 +172,45 @@
                                 value="{{ request('tgl_akhir') }}" disabled>
                         </div>
                     </div>
-
-
-                    <div class="col-md-12 mb-2">
-                        @if (session('loginRole') === 'IT')
+                    @if (session('loginRole') === 'IT')
+                        <div class="col-md-12">
                             <label for="department" class="form-label">Department</label>
-                            <div class="input-group">
-                                <input class="form-check-input me-3" type="checkbox" id="chkDepartment">
-                                <select class="form-select" name="department[]" id="department" multiple disabled>
-                                    @foreach ($departmentList ?? [] as $department)
-                                        <option value="{{ $department }}"
-                                            {{ in_array($department, (array) request('department')) ? 'selected' : '' }}>
-                                            {{ $department }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                            <div class="row align-items-center">
+                                <div class="col-auto">
+                                    <input class="form-check-input" type="checkbox" id="chkDepartment"
+                                        style="margin-top:8px;">
+                                </div>
+                                <div class="col">
+                                    <select class="form-select" name="department[]" id="department" multiple disabled
+                                        style="min-width: 180px;">
+                                        @foreach ($departmentList ?? [] as $department)
+                                            <option value="{{ $department }}"
+                                                {{ in_array($department, (array) request('department')) ? 'selected' : '' }}>
+                                                {{ $department }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
-                        @endif
-                    </div>
-
+                        </div>
+                    @endif
                     <div class="col-md-12 d-flex align-items-end">
                         <button type="submit" class="btn btn-success w-50 fw-bold">Tampilkan</button>
                         <a href="{{ route('report.export', request()->query()) }}"
-                            class="btn btn-warning ms-2 w-50 fw-bold" style="color: #343a40;">Export Excel</a>
+                            class="btn btn-warning ms-2 w-50 fw-bold">Export Excel</a>
                     </div>
-
                 </div>
-
             </form>
         </div>
-
         <div class="container-notes me-5 ms-5">
             <p class="p-3 mt-4" style="color: #e68e00">
                 * Hasil Pencarian :
                 {{ $results->sum(fn($item) => $item->detail_rekomendasi->count()) }} data
             </p>
         </div>
-
         <div class="container-table mb-5 me-5 ms-5 p-2">
-
             <table class="table table-bordered table-sm align-middle me-5 mt-3">
-                <thead class="table-light">
+                <thead>
                     <tr>
                         <th class="ps-2">No. Rek</th>
                         <th class="ps-2">No. PR</th>
@@ -189,17 +234,17 @@
                                 <td class="ps-2">{{ $detail->jenis_unit }}</td>
                                 <td class="ps-2">{{ $detail->ket_unit }} </td>
                                 <td class="ps-2">{{ $item->alasan_rek }}</td>
-                                <td class="ps-2">Rp. {{ $detail->estimasi_harga }}</td>
+                                <td class="ps-2">Rp. {{ number_format($detail->estimasi_harga, 0, ',', '.') }}</td>
                                 <td class="ps-2">{{ $item->nama_lengkap }}</td>
                                 <td class="ps-2">{{ $item->nama_dep }}</td>
                                 <td class="ps-2">{{ $item->tgl_masuk }}</td>
                                 <td class="ps-2">
                                     @if ($item->status == 'menunggu verifikasi Kabag')
-                                        <span class="badge text-light p-1"
-                                            style="background-color: rgb(249, 137, 0);">Menunggu Kabag</span>
+                                        <span class="badge text-light p-1" style="background-color: #ffa800;">Menunggu
+                                            Kabag</span>
                                     @elseif($item->status == 'menunggu verifikasi Tim IT')
-                                        <span class="badge bg-orange text-light p-1"
-                                            style="background-color: rgb(41, 63, 230);">Menunggu Tim IT</span>
+                                        <span class="badge text-light p-1" style="background-color: #0d606e;">Menunggu
+                                            Tim IT</span>
                                     @elseif($item->status == 'Ditolak')
                                         <span class="badge bg-danger p-1">Ditolak</span>
                                     @elseif($item->status == 'Diterima')
@@ -220,7 +265,6 @@
                     @endforeach
                 </tbody>
             </table>
-
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">

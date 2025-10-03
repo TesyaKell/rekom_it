@@ -20,8 +20,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <style>
         body {
-            background-color: #f8fafc;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(120deg, #fff 60%, #0d606e 100%);
         }
 
 
@@ -47,6 +46,8 @@
         .card-detail {
             margin-top: 10px;
             margin-bottom: 10px;
+            box-shadow: #0d606e 2px 2px 8px;
+            border-radius: 10px;
         }
 
         .card-rekomendasi .card-body-rekomendasi,
@@ -119,6 +120,12 @@
             font-weight: 500;
         }
 
+        .table thead th {
+            background: #0d606e;
+            color: #fff;
+            font-weight: bold;
+        }
+
         .text-muted {
             color: #bdbdbd !important;
         }
@@ -127,6 +134,7 @@
             .card-detail .card-body-detail {
                 width: 100%;
                 padding: 10px;
+
             }
 
             .card-rekomendasi .card-body-rekomendasi {
@@ -150,151 +158,153 @@
                 <p class="pt-3 ms-5 ps-5">DETAIL REKOMENDASI</p>
             </div>
         </div>
-    </div>
 
 
-    <div class="container mt-1 mb-5 me-5 ms-5 p-2">
-        <h6 class="mt-3 mb-2 fw-bold"><i class="bi bi-star-fill me-2"></i>Rekomendasi</h6>
-        <div class="card-rekomendasi">
-            <div class="card-body-rekomendasi">
-                <table class="table table-bordered table-sm align-middle bg-light" style="width: 100%;">
-                    <tbody class="table-light">
-                        @if ($data->count())
-                            @php $header = $data->first(); @endphp
-                            <tr>
-                                <td class="ps-3 p-2" style="width: 170px;">No. Rek</td>
-                                <td class="ps-3">{{ $header->id_rek }}</td>
-                            </tr>
-                            <tr>
-                                <td class="ps-3 p-2" style="width: 170px;">No. PR</td>
-                                <td class="ps-3">{{ $header->no_spb }}</td>
-                            </tr>
-                            <tr>
-                                <td class="ps-3 p-2" style="width: 170px;">Dibuat Oleh</td>
-                                <td class="ps-3">{{ $header->nama_lengkap }}</td>
-                            </tr>
-                            <tr>
-                                <td class="ps-3 p-2" style="width: 170px;">Department</td>
-                                <td class="ps-3">{{ $header->nama_dep ?? $header->jabatan_receiver }}</td>
-                            </tr>
-                            <tr>
-                                <td class="ps-3 p-2" style="width: 170px;">Tanggal Pengajuan</td>
-                                <td class="ps-3">{{ $header->tgl_masuk }}</td>
-                            </tr>
-                            <tr>
-                                <td class="ps-3 p-2" style="width: 170px;">Alasan</td>
-                                <td class="ps-3">{{ $header->alasan_rek }}</td>
-                            </tr>
-                        @else
-                            <tr>
-                                <td colspan="2" class="text-center">Data tidak ditemukan.</td>
-                            </tr>
-                        @endif
-                    </tbody>
-                </table>
-            </div>
-        </div>
 
-        <h6 class="mt-4 mb-2 fw-bold"><i class="bi bi-list-check me-2"></i>Detail Rekomendasi</h6>
-        <div class="card-detail">
-            <div class="card-body-detail">
-                <table class="table table-bordered table-sm align-middle bg-light">
-                    <thead>
-                        <tr>
-                            <th class="ps-3">Nama Unit</th>
-                            <th class="ps-3">Keterangan</th>
-                            <th class="ps-3">Estimasi Harga</th>
-                            @if (session('loginRole') === 'IT')
-                                <th class="ps-3">Berikan Masukan</th>
-                            @elseif (session('loginRole') === 'Kabag')
-                                <th class="ps-3">Berikan Masukan Kabag</th>
-                            @else
-                                <th class="ps-3">Masukan dari Tim IT</th>
-                            @endif
-                            <th class="ps-3">Tanggal Realisasi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (isset($details) && count($details))
-                            @foreach ($details as $detail)
+        <div class="container mt-1 mb-5 me-5 ms-5 p-2">
+            <h6 class="mt-3 mb-2 fw-bold" style="color:#ffa800;"></i>Rekomendasi</h6>
+            <div class="card-rekomendasi">
+                <div class="card-body-rekomendasi">
+                    <table class="table table-bordered table-sm align-middle bg-light" style="width: 100%;">
+                        <tbody class="table-light">
+                            @if ($data->count())
+                                @php $header = $data->first(); @endphp
                                 <tr>
-                                    <td class="ps-3">{{ $detail->jenis_unit }}</td>
-                                    <td class="ps-3">{{ $detail->ket_unit }}</td>
-                                    <td class="ps-3">Rp. {{ number_format($detail->estimasi_harga, 0, ',', '.') }}
-                                    </td>
-                                    @if (session('loginRole') === 'IT')
-                                        <td class="ps-3">
-                                            @if ($detail->masukan_it)
-                                                <span class="text-success">{{ $detail->masukan_it }}</span>
-                                            @else
-                                                @if ($status == 'menunggu verifikasi Tim IT')
-                                                    <form method="POST"
-                                                        action="{{ route('detailRekomendasi.masukan', $detail->id_detail_rekomendasi) }}"
-                                                        class="d-flex align-items-center masukan-form">
-                                                        @csrf
-                                                        <input class="form-control me-2 masukan-input" type="text"
-                                                            name="masukan_it" placeholder="Berikan masukan IT">
-                                                        <button type="submit"
-                                                            class="btn btn-sm btn-primary">Simpan</button>
-                                                    </form>
-                                                @else
-                                                    <span class="text-muted">Belum bisa beri masukan karena belum di
-                                                        ACC Kabag</span>
-                                                @endif
-                                            @endif
-                                        </td>
-                                    @elseif (session('loginRole') === 'Kabag')
-                                        <td class="ps-3">
-                                            @if ($detail->masukan_kabag)
-                                                <span class="text-success">{{ $detail->masukan_kabag }}</span>
-                                            @else
-                                                @if ($status == 'menunggu verifikasi Kabag')
-                                                    <form method="POST"
-                                                        action="{{ route('detailRekomendasi.masukan', $detail->id_detail_rekomendasi) }}"
-                                                        class="d-flex align-items-center masukan-form">
-                                                        @csrf
-                                                        <input class="form-control me-2 masukan-input" type="text"
-                                                            name="masukan_kabag" placeholder="Berikan masukan Kabag">
-                                                        <button type="submit"
-                                                            class="btn btn-sm btn-primary">Simpan</button>
-                                                    </form>
-                                                @else
-                                                    <span class="text-muted">sudah di acc</span>
-                                                @endif
-                                            @endif
-                                        </td>
-                                    @else
-                                        <td class="ps-3">
-                                            @if ($detail->masukan_it)
-                                                <span class="text-success">{{ $detail->masukan_it }}</span>
-                                            @else
-                                                <span class="text-muted">Belum ada masukan</span>
-                                            @endif
-                                        </td>
-                                    @endif
-                                    <td class="ps-3">
-                                        @if ($detail->tanggal_realisasi)
-                                            {{ $detail->tanggal_realisasi }}
-                                        @else
-                                            <span class="text-muted">Belum Terealisasi</span>
-                                        @endif
-                                    </td>
+                                    <td class="ps-3 p-2" style="width: 170px;">No. Rek</td>
+                                    <td class="ps-3">{{ $header->id_rek }}</td>
                                 </tr>
-                            @endforeach
-                        @else
+                                <tr>
+                                    <td class="ps-3 p-2" style="width: 170px;">No. PR</td>
+                                    <td class="ps-3">{{ $header->no_spb }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-3 p-2" style="width: 170px;">Dibuat Oleh</td>
+                                    <td class="ps-3">{{ $header->nama_lengkap }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-3 p-2" style="width: 170px;">Department</td>
+                                    <td class="ps-3">{{ $header->nama_dep ?? $header->jabatan_receiver }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-3 p-2" style="width: 170px;">Tanggal Pengajuan</td>
+                                    <td class="ps-3">{{ $header->tgl_masuk }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-3 p-2" style="width: 170px;">Alasan</td>
+                                    <td class="ps-3">{{ $header->alasan_rek }}</td>
+                                </tr>
+                            @else
+                                <tr>
+                                    <td colspan="2" class="text-center">Data tidak ditemukan.</td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <h6 class="mt-4 mb-2 fw-bold" style="color:#ffa800;"></i>Detail Rekomendasi</h6>
+            <div class="card-detail">
+                <div class="card-body-detail">
+                    <table class="table table-bordered table-sm align-middle bg-light">
+                        <thead>
                             <tr>
-                                <td colspan="5" class="text-center">Detail tidak ditemukan.</td>
+                                <th class="ps-3">Nama Unit</th>
+                                <th class="ps-3">Keterangan</th>
+                                <th class="ps-3">Estimasi Harga</th>
+                                @if (session('loginRole') === 'IT')
+                                    <th class="ps-3">Berikan Masukan</th>
+                                @elseif (session('loginRole') === 'Kabag')
+                                    <th class="ps-3">Berikan Masukan Kabag</th>
+                                @else
+                                    <th class="ps-3">Masukan dari Tim IT</th>
+                                @endif
+                                <th class="ps-3">Tanggal Realisasi</th>
                             </tr>
-                        @endif
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @if (isset($details) && count($details))
+                                @foreach ($details as $detail)
+                                    <tr>
+                                        <td class="ps-3">{{ $detail->jenis_unit }}</td>
+                                        <td class="ps-3">{{ $detail->ket_unit }}</td>
+                                        <td class="ps-3">Rp. {{ number_format($detail->estimasi_harga, 0, ',', '.') }}
+                                        </td>
+                                        @if (session('loginRole') === 'IT')
+                                            <td class="ps-3">
+                                                @if ($detail->masukan_it)
+                                                    <span class="text-success">{{ $detail->masukan_it }}</span>
+                                                @else
+                                                    @if ($status == 'menunggu verifikasi Tim IT')
+                                                        <form method="POST"
+                                                            action="{{ route('detailRekomendasi.masukan', $detail->id_detail_rekomendasi) }}"
+                                                            class="d-flex align-items-center masukan-form">
+                                                            @csrf
+                                                            <input class="form-control me-2 masukan-input"
+                                                                type="text" name="masukan_it"
+                                                                placeholder="Berikan masukan IT">
+                                                            <button type="submit"
+                                                                class="btn btn-sm btn-primary">Simpan</button>
+                                                        </form>
+                                                    @else
+                                                        <span class="text-muted">Belum bisa beri masukan karena belum di
+                                                            ACC Kabag</span>
+                                                    @endif
+                                                @endif
+                                            </td>
+                                        @elseif (session('loginRole') === 'Kabag')
+                                            <td class="ps-3">
+                                                @if ($detail->masukan_kabag)
+                                                    <span class="text-success">{{ $detail->masukan_kabag }}</span>
+                                                @else
+                                                    @if ($status == 'menunggu verifikasi Kabag')
+                                                        <form method="POST"
+                                                            action="{{ route('detailRekomendasi.masukan', $detail->id_detail_rekomendasi) }}"
+                                                            class="d-flex align-items-center masukan-form">
+                                                            @csrf
+                                                            <input class="form-control me-2 masukan-input"
+                                                                type="text" name="masukan_kabag"
+                                                                placeholder="Berikan masukan Kabag">
+                                                            <button type="submit"
+                                                                class="btn btn-sm btn-primary">Simpan</button>
+                                                        </form>
+                                                    @else
+                                                        <span class="text-muted">sudah di acc</span>
+                                                    @endif
+                                                @endif
+                                            </td>
+                                        @else
+                                            <td class="ps-3">
+                                                @if ($detail->masukan_it)
+                                                    <span class="text-success">{{ $detail->masukan_it }}</span>
+                                                @else
+                                                    <span class="text-muted">Belum ada masukan</span>
+                                                @endif
+                                            </td>
+                                        @endif
+                                        <td class="ps-3">
+                                            @if ($detail->tanggal_realisasi)
+                                                {{ $detail->tanggal_realisasi }}
+                                            @else
+                                                <span class="text-muted">Belum Terealisasi</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="5" class="text-center">Detail tidak ditemukan.</td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
-    </script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
+        </script>
 </body>
 
 </html>

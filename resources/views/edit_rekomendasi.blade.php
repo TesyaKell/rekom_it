@@ -21,15 +21,7 @@
 
     <style>
         body {
-            background-color: #efefef;
-        }
-
-        .row .col {
-            border: 1px solid #000;
-            background-color: #fff;
-            padding: 20px;
-            margin: 10px 0;
-            text-align: center;
+            background: linear-gradient(120deg, #fff 60%, #0d606e 100%);
         }
 
         .container-header {
@@ -37,9 +29,12 @@
         }
 
         .row-header .col-header {
-            border-bottom: 2px solid #d8d8d8;
-            background-color: #ffffff;
+            background: white;
             text-align: left;
+            margin-top: 16px;
+            border-radius: 12px 12px 0 0;
+            box-shadow: 0 2px 8px #0d606e22;
+            border-bottom: 2px solid #d8d8d8;
         }
 
         p {
@@ -47,40 +42,77 @@
             font-size: 14px;
             font-weight: bold;
             color: #e8b200;
+            letter-spacing: 1px;
         }
 
-        title {
-            font-weight: bold;
+        .card-edit-rekomendasi .card-body-edit-rekomendasi,
+        .card-edit-detail .card-body-edit-detail {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px #0d606e22;
+            padding: 18px 24px;
+            margin-bottom: 24px;
+            border: 1.5px solid #0d606e;
         }
 
-        tr {
-            background-color: #ffffff;
+        .card-edit-rekomendasi .card-body-edit-rekomendasi {
+            width: 100%;
+            max-width: 900px;
         }
 
-        th,
-        td {
-            font-size: 13px;
+        .card-edit-detail .card-body-edit-detail {
+            width: 100%;
+            max-width: 1150px;
         }
 
         .form-label {
             font-weight: 600;
-            color: #000000cb;
+            color: #0d606e;
         }
 
-        .card-edit-rekomendasi .card-body-edit-rekomendasi {
-            background-color: #ffffff;
-            height: auto;
-            width: 880px;
-            padding: 15px;
-            border-radius: 5px;
+        .form-control,
+        .form-select {
+            border-radius: 8px;
+            border: 1px solid #0d606e;
+            background: #fff;
+            font-size: 15px;
         }
 
-        .card-edit-detail .card-body-edit-detail {
-            background-color: #ffffff;
-            height: auto;
-            width: 1150px;
-            padding: 15px;
-            border-radius: 5px;
+        .btn-primary {
+            background-color: #ffa800;
+            border: none;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0d606e;
+            color: #fff;
+        }
+
+        .btn-success {
+            background-color: #0d606e;
+            border: none;
+            color: #fff;
+        }
+
+        .btn-success:hover {
+            background-color: #ffa800;
+            color: #fff;
+        }
+
+        .table-bordered th,
+        .table-bordered td {
+            border: 1.5px solid #0d606e !important;
+        }
+
+        .table thead th {
+            background: #0d606e;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .fw-bold {
+            color: #0d606e;
         }
     </style>
 </head>
@@ -96,7 +128,7 @@
 
     <body>
         <div class="container mt-1 mb-5 me-5 ms-5 p-2">
-            <h6 class="mt-3 mb-2 fw-bold">Edit Data Rekomendasi</h6>
+            <h6 class="mt-3 mb-2 fw-bold" style="color:#ffa800;">Edit Data Rekomendasi</h6>
             <div class="card-edit-rekomendasi">
                 <div class="card-body-edit-rekomendasi">
                     @if ($data->count())
@@ -104,12 +136,10 @@
                         <form method="POST" action="{{ route('rekomendasi.update', $header->id_rek) }}" class="mb-4">
                             @csrf
                             @method('PUT')
-
                             <div class="row mb-2">
                                 @php
                                     $disabled = !in_array(session('loginRole'), ['IT', 'USER']) ? 'disabled' : '';
                                 @endphp
-
                                 <div class="col-md-4">
                                     <label class="form-label">No. PR</label>
                                     <input type="text" name="no_spb" class="form-control"
@@ -122,12 +152,12 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Department</label>
-                                    <select name="nama_dep" class="form-control" {{ $disabled }}>
+                                    <select name="nama_dep" class="form-select" {{ $disabled }}>
                                         @foreach ($departments as $dep)
                                             <option value="{{ $dep->nama_dep }}"
                                                 {{ $header->nama_dep == $dep->nama_dep ? 'selected' : '' }}>
                                                 {{ $dep->nama_dep }}
-                                                {{ $disabled }}</option>
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -144,13 +174,12 @@
                                         value="{{ $header->alasan_rek }}" {{ $disabled }}>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary mt-3">Simpan Perubahan Rekomendasi</button>
+                            <button type="submit" class="btn btn-success mt-3 text-light">Simpan</button>
                         </form>
                     @endif
                 </div>
             </div>
-
-            <h6 class="mt-4 mb-2 fw-bold">Edit Detail Rekomendasi</h6>
+            <h6 class="mt-4 mb-2 fw-bold" style="color:#ffa800;">Edit Detail Rekomendasi</h6>
             <div class="card-edit-detail">
                 <div class="card-body-edit-detail">
                     <table class="table table-bordered table-sm align-middle bg-light">
@@ -163,7 +192,7 @@
                                 @if (session('loginRole') === 'IT')
                                     <th class="ps-3">Tanggal Realisasi</th>
                                 @endif
-                                <th class="ps-3">Aksi</th>
+                                <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -191,9 +220,7 @@
                                             </td>
                                             @if (session('loginRole') === 'IT')
                                                 <td class="ps-3">
-                                                    <input type="text" name="masukan_it"
-                                                        class="form-control form-control-sm"
-                                                        value="{{ $detail->masukan_it }}">
+                                                    <textarea name="masukan_it" class="form-control form-control-sm" rows="2">{{ $detail->masukan_it }}</textarea>
                                                 </td>
                                                 <td class="ps-3">
                                                     <input type="date" name="tanggal_realisasi"
@@ -206,9 +233,7 @@
                                                 </td>
                                             @elseif (session('loginRole') === 'Kabag')
                                                 <td class="ps-3">
-                                                    <input type="text" name="masukan_kabag"
-                                                        class="form-control form-control-sm"
-                                                        value="{{ $detail->masukan_kabag }}">
+                                                    <textarea name="masukan_kabag" class="form-control form-control-sm" rows="2">{{ $detail->masukan_kabag }}</textarea>
                                                 </td>
                                                 <td class="ps-3">
                                                     <button type="submit"
