@@ -75,6 +75,26 @@
 
     <body class="bg-body p-4">
         <div class="container my-4">
+            @if (session('success'))
+                <div id="loginToast"
+                    class="toast align-items-center text-white bg-success border-0 position-fixed top-0 start-50 translate-middle-x mt-4"
+                    role="alert" aria-live="assertive" aria-atomic="true" style="z-index:9999; min-width:220px;">
+                    <div class="d-flex">
+                        <div class="toast-body fw-bold">
+                            {{ session('success') }}
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        var toastEl = document.getElementById('loginToast');
+                        var toast = new bootstrap.Toast(toastEl, {
+                            delay: 2200
+                        });
+                        toast.show();
+                    });
+                </script>
+            @endif
             <!-- Header -->
             <div class="text-center mb-5">
                 <h1 class="display-5 fw-bold mb-2 text-shadow">

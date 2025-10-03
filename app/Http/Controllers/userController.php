@@ -41,6 +41,6 @@ class userController extends Controller
         ]);
         Log::info("User {$user->id_user} logged in as {$role}");
 
-        return redirect('/daftar_rekomendasi')->with('success', 'Login successful');
+        return redirect('/home')->with('success', 'Berhasil Login!');
     }
 }
