@@ -227,15 +227,19 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Jabatan</label>
-                                <input type="text" class="form-control" name="jabatan"
-                                    value="{{ $signature->jabatan }}" required>
+                                <select class="form-control" name="jabatan" required>
+                                    <option value="">Pilih jabatan</option>
+                                    @foreach ($department as $jabatan)
+                                        <option value="{{ $jabatan }}">{{ $jabatan }}</option>
+                                    @endforeach
+                                </select>
                             </div>
 
-                            <div class="row g-0 w-50">
-                                <div class="col-4 d-flex justify-content-start p-3 fw-bold">Tanda Tangan</div>
-                                <div class="col-8 p-2">
-                                    <input class="form-control" type="file" name="sign" accept="image/*">
-                                </div>
+                            <div class="mb-3">
+                                <label class="form-label">Tanda Tangan</label>
+
+                                <input class="form-control" type="file" name="sign" accept="image/*">
+
                             </div>
 
                         </div>

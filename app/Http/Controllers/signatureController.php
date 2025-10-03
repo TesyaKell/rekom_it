@@ -90,15 +90,18 @@ class signatureController extends Controller
 
     public function destroy($id)
     {
-        $signature = signature::findOrFail($id);
+        $signature = Signature::findOrFail($id);
 
         $user = DB::table('users')->where('id_user', session('loginId'))->first();
         $deletedBy = $user ? $user->nama_leng : '';
 
+        $signature->sign = null;
         $signature->deleted_by = $deletedBy;
         $signature->save();
-        $signature->delete();
-        \Log::info("Signature {$signature->nama_approval} (ID: {$signature->id_sign}) dihapus oleh user ID: " . session('loginId'));
-        return redirect()->route('signature.index')->with('success', 'Signature berhasil dihapus.');
+
+        \Log::info("Signature {$signature->nama_approval} (ID: {$signature->id_sign}) dihapus isinya oleh user ID: " . session('loginId'));
+
+        return redirect()->route('signature.index')->with('success', 'Signature berhasil dikosongkan.');
+
     }
 }

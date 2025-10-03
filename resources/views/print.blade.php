@@ -211,26 +211,41 @@
             </tr>
             <tr>
                 <td>
-                    @if ($data && $data->status === 'Diterima' && !empty($sign_approval))
-                        <img src="{{ asset($sign_approval) }}" style="height:60px; margin-bottom:0;">
+                    @if ($data && $data->status === 'Diterima')
+                        @php
+                            $sign = \DB::table('signature')
+                                ->where('nama_approval', $data->nama_receiver)
+                                ->value('sign');
+                        @endphp
+                        @if ($sign)
+                            <img src="{{ asset($sign) }}" style="height:60px; margin-bottom:0;">
+                        @endif
                     @endif
                 </td>
                 <td>
-                    @if ($data && $data->status === 'Diterima' && !empty($sign_user))
-                        <img src="{{ asset($sign_user) }}" style="height:60px; margin-bottom:0;">
+                    @if ($data && $data->status === 'Diterima')
+                        <img src="{{ asset($signIT) }}" style="height:60px; margin-bottom:0;">
+                    @endif
+                </td>
+                <td>
+                    @if ($data && $data->status === 'Diterima')
+                        <img src="{{ asset($signRequester) }}" style="height:60px; margin-bottom:0;">
                     @endif
                 </td>
                 <td></td>
             </tr>
             <tr>
+
                 <td class="ttd-name">
-                    <u>{{ $data->nama_receiver ?? '' }}</u><br>
-                    <span class="ttd-role">Kepala Bagian {{ $data->nama_dep ?? 'Accounting' }}</span>
+                    <u>{{ $receiverName }}</u><br>
+                    <span class="ttd-role">{{ $receiverRole }} </span>
                 </td>
+
                 <td class="ttd-name">
                     <u>{{ $data->nama_it ?? '' }}</u><br>
-                    <span class="ttd-role">Departement IT</span>
+                    <span class="ttd-role">{{ $jabatanIT ?? '' }}</span>
                 </td>
+
                 <td class="ttd-name">
                     <u>{{ $data->nama_lengkap ?? '' }}</u><br>
                     <span class="ttd-role">Pemohon</span>
@@ -242,5 +257,7 @@
         @endif
     </div>
 </body>
+
+</html>
 
 </html>

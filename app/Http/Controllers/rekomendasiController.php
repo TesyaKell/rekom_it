@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\department;
+use App\Models\signature;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\rekomendasi;
@@ -293,36 +294,66 @@ class rekomendasiController extends Controller
         if (!session()->has('loginId')) {
             return redirect('/login');
         }
+
         $user = DB::table('users')->where('id_user', session('loginId'))->first();
         $data = rekomendasi::findOrFail($id);
-        $alamat = User::where('id_user', $data->id_user)->first()->alamat ?? '';
-
+        $alamat = User::where('id_user', $data->id_user)->value('alamat') ?? '';
+        $details = DB::table('detail_rekomendasi')->where('id_rek', $id)->get();
         $nama_dep = $data->nama_dep ?? '';
-        $details = \DB::table('detail_rekomendasi')->where('id_rek', $id)->get();
 
-        $signature_approval = DB::table('signature')
-            ->where('jabatan', $nama_dep)
-            ->first();
-        $nama_approval = $signature_approval ? $signature_approval->nama_approval : '';
-        $sign_approval = $signature_approval ? $signature_approval->sign : null;
-
-        $signature_user = DB::table('signature')
-            ->where('nama_approval', $data->nama_it)
+        $receiver = DB::table('users')
+            ->join('jabatan', 'users.id_jab', '=', 'jabatan.id_jab')
+            ->join('department', 'users.kode_dep', '=', 'department.kode_dep')
+            ->where('users.nama_leng', $data->nama_receiver)
+            ->select('users.nama_leng', 'jabatan.nama_jab', 'department.nama_dep')
             ->first();
 
-        $sign_user = $signature_user ? $signature_user->sign : null;
+        $receiverName = $receiver->nama_leng ?? $data->nama_receiver;
+        $receiverRole = $receiver->nama_jab ?? '';
+        $receiverDep  = $receiver->nama_dep ?? $nama_dep;
 
+        $getSignature = function ($nama) {
+            $user = DB::table('users')
+                ->join('jabatan', 'users.id_jab', '=', 'jabatan.id_jab')
+                ->where('users.nama_leng', $nama)
+                ->select('jabatan.nama_jab')
+                ->first();
+
+            $jabatan = $user->nama_jab ?? '';
+
+            $sign = DB::table('signature')
+                ->where('nama_approval', $nama)
+                ->value('sign');
+
+            return [$sign, $jabatan];
+        };
+
+        // Diminta Oleh
+        [$signRequester, $jabatanRequester] = $getSignature($data->nama_lengkap);
+
+        // Diketahui Oleh (IT)
+        [$signIT, $jabatanIT] = $getSignature($data->nama_it);
+
+        // Disetujui Oleh
+        [$signApproval, $jabatanApproval] = $getSignature($data->nama_approval);
 
         return view('print', compact(
             'data',
             'details',
             'alamat',
             'nama_dep',
-            'nama_approval',
-            'sign_approval',
-            'sign_user'
+            'receiverName',
+            'receiverRole',
+            'receiverDep',
+            'signRequester',
+            'jabatanRequester',
+            'signIT',
+            'jabatanIT',
+            'signApproval',
+            'jabatanApproval'
         ));
     }
+
 
     public function searchRekomendasi(Request $id_rek)
     {

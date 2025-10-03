@@ -23,7 +23,6 @@ class User extends Authenticatable
         'kode_dep',
         'id_jab',
         'nama_leng',
-        'nip',
         'alamat'
     ];
 
