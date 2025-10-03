@@ -132,11 +132,10 @@
                             <label for="department" class="form-label">Department</label>
                             <div class="input-group">
                                 <input class="form-check-input me-3" type="checkbox" id="chkDepartment">
-                                <select class="form-select" name="department" id="department" disabled>
-                                    <option value="">Semua Department</option>
+                                <select class="form-select" name="department[]" id="department" multiple disabled>
                                     @foreach ($departmentList ?? [] as $department)
                                         <option value="{{ $department }}"
-                                            {{ request('department') == $department ? 'selected' : '' }}>
+                                            {{ in_array($department, (array) request('department')) ? 'selected' : '' }}>
                                             {{ $department }}
                                         </option>
                                     @endforeach
@@ -223,10 +222,13 @@
             </table>
 
         </div>
-
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
         </script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
     </body>
 
 </html>
@@ -259,11 +261,25 @@
             tglAkhir.disabled = !this.checked;
         });
 
-        const chkDepartment = document.getElementById("chkDepartment");
-        const department = document.getElementById("department");
+        $(document).ready(function() {
+            const department = $("#department");
 
-        chkDepartment.addEventListener("change", function() {
-            department.disabled = !this.checked;
+            department.select2({
+                placeholder: "Pilih Department",
+                allowClear: true,
+                width: '100%',
+                dropdownParent: $('.container-form')
+            });
+
+            department.prop("disabled", true);
+
+            $("#chkDepartment").on("change", function() {
+                if (this.checked) {
+                    department.prop("disabled", false);
+                } else {
+                    department.prop("disabled", true).val(null).trigger("change");
+                }
+            });
         });
     });
 </script>

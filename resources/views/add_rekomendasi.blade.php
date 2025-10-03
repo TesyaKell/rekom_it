@@ -207,7 +207,8 @@
                                         <div class="card-body-6">
                                             <div class="d-flex gap-2 mt-3 justify-content-end"
                                                 style="margin-bottom: -30px;">
-                                                <button type="submit" class="btn btn-success fw-bold fs-6">Simpan</button>
+                                                <button type="submit" class="btn btn-success fw-bold fs-6" id="btnSimpan"
+                                                    disabled>Simpan</button>
                                                 <button type="button" class="btn btn-danger fw-bold fs-6">Batal</button>
                                             </div>
                                         </div>
@@ -233,6 +234,20 @@
         @endphp
 
 
+        <!-- Toast Notifikasi -->
+        <div id="notifSimpan" style="display:none;position:fixed;top:30px;right:30px;z-index:9999;">
+            <div class="alert alert-success py-2 px-4 mb-0 rounded shadow" role="alert" style="font-size:15px;">
+                Data berhasil disimpan!
+            </div>
+        </div>
+
+        <!-- Toast untuk simpan detail -->
+        <div id="notifDetailSimpan" style="display:none;position:fixed;top:80px;right:30px;z-index:9999;">
+            <div class="alert alert-success py-2 px-4 mb-0 rounded shadow" role="alert" style="font-size:15px;">
+                Berhasil simpan detail!
+            </div>
+        </div>
+
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const form = document.getElementById('mainForm');
@@ -243,6 +258,14 @@
                     if (!tgl || !nama || !dep) {
                         alert('Semua field wajib diisi!');
                         e.preventDefault();
+                    } else {
+                        // Tampilkan toast dan submit form setelah toast hilang
+                        e.preventDefault();
+                        document.getElementById('notifSimpan').style.display = 'block';
+                        setTimeout(function() {
+                            document.getElementById('notifSimpan').style.display = 'none';
+                            form.submit();
+                        }, 1500);
                     }
                 });
             });
@@ -256,6 +279,12 @@
                 const detailInputs = document.getElementById('detailInputs');
                 const mainForm = document.getElementById('mainForm');
                 const batalBtn = mainForm.querySelector('.btn-danger');
+                const btnSimpan = document.getElementById('btnSimpan');
+
+                // Disable simpan sampai ada detail
+                function updateSimpanState() {
+                    btnSimpan.disabled = detailList.length === 0;
+                }
 
                 btn.addEventListener('click', function() {
                     const idx = detailList.length;
@@ -268,10 +297,11 @@
                             <input class="form-control" id="jenisunit_${idx}" placeholder="Masukkan Nama Unit">
                         </div>
 
-                        <div class="form-group mt-2">
-                            <label for="estimasiharga_${idx}" class="mb-1 mt-2">Estimasi Harga (Rp)</label>
-                            <input class="form-control" id="estimasiharga_${idx}" placeholder="Rp.">
-                        </div>
+                   <div class="form-group mt-2">
+                        <label for="estimasiharga_${idx}" class="mb-1 mt-2">Estimasi Harga (Rp)</label>
+                        <input type="text" class="form-control" id="estimasiharga_${idx}" placeholder="Rp." oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                    </div>
+
 
                         <div class="form-group mt-2">
                             <label for="keterangan_${idx}" class="mb-1 mt-2">Keterangan</label>
@@ -333,9 +363,27 @@
                         const inputCard = document.getElementById(`jenisunit_${idx}`).closest('.card-3');
                         inputCard.remove();
 
-                        alert('Detail berhasil ditambahkan!');
+                        // Ganti alert dengan toast
+                        document.getElementById('notifDetailSimpan').style.display = 'block';
+                        setTimeout(function() {
+                            document.getElementById('notifDetailSimpan').style.display = 'none';
+                        }, 1200);
+
+                        updateSimpanState();
                     } else {
-                        alert('Semua field detail harus diisi!');
+                        // Ganti alert dengan toast error
+                        if (!document.getElementById('notifDetailError')) {
+                            const errorToast = document.createElement('div');
+                            errorToast.id = 'notifDetailError';
+                            errorToast.style = 'display:block;position:fixed;top:120px;right:30px;z-index:9999;';
+                            errorToast.innerHTML =
+                                '<div class="alert alert-danger py-2 px-4 mb-0 rounded shadow" role="alert" style="font-size:15px;">Semua field detail harus diisi!</div>';
+                            document.body.appendChild(errorToast);
+                            setTimeout(function() {
+                                errorToast.style.display = 'none';
+                                errorToast.remove();
+                            }, 1500);
+                        }
                     }
                 }
 
@@ -351,7 +399,11 @@
                     });
                     // Kosongkan input hidden detail
                     detailInputs.innerHTML = '';
+                    detailList = [];
+                    updateSimpanState();
                 });
+
+                updateSimpanState();
             });
         </script>
 

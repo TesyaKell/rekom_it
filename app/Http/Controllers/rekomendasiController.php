@@ -249,12 +249,16 @@ class rekomendasiController extends Controller
             if ($req->filled('noRek') && $req->filled('noRek2')) {
                 $query->whereBetween('id_rek', [$req->noRek, $req->noRek2]);
             }
+
             if ($req->filled('tgl_awal') && $req->filled('tgl_akhir')) {
                 $query->whereBetween('tgl_masuk', [$req->tgl_awal, $req->tgl_akhir]);
             }
-            if ($req->filled('department')) {
-                $query->where('nama_dep', $req->department);
+
+            if (!empty($req->department)) {
+                $query->whereIn('nama_dep', $req->department);
             }
+
+
             if (session('loginRole') !== 'IT') {
                 $user = \DB::table('users')->where('id_user', session('loginId'))->first();
                 if ($user) {
@@ -268,7 +272,6 @@ class rekomendasiController extends Controller
             $results = $query->get();
             $departmentList = \DB::table('department')->pluck('nama_dep');
 
-            // Ambil detail_rekomendasi untuk setiap rekomendasi
             foreach ($results as $item) {
                 $item->detail_rekomendasi = \DB::table('detail_rekomendasi')->where('id_rek', $item->id_rek)->get();
             }
@@ -280,8 +283,10 @@ class rekomendasiController extends Controller
             $results = collect();
             $departmentList = collect();
         }
+
         return view('report', compact('results', 'departmentList'));
     }
+
 
     public function print($id)
     {
