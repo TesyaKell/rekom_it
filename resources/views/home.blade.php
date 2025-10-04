@@ -13,6 +13,10 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: linear-gradient(120deg, #fff 60%, #0d606e 100%);
+            width: 100vw;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
         }
 
         canvas {
@@ -71,7 +75,7 @@
         }
     </style>
 </head>
-<div class= "container-header">
+<div class="container-header">
 
     <body class="bg-body p-4">
         <div class="container my-4">
@@ -86,7 +90,7 @@
                     </div>
                 </div>
                 <script>
-                    document.addEventListener('DOMContentLoaded', function() {
+                    document.addEventListener('DOMContentLoaded', function () {
                         var toastEl = document.getElementById('loginToast');
                         var toast = new bootstrap.Toast(toastEl, {
                             delay: 2200

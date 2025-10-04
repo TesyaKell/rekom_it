@@ -15,9 +15,9 @@ class department extends Model
     protected $primaryKey = 'kode_dep';
     protected $fillable = [
         'kode_dep',
-    'nama_dep',
-    'created_by',
+        'nama_dep',
+        'created_by',
         'updated_by',
-        'deleted_by'];
-
+        'deleted_by'
+    ];
 }

@@ -100,7 +100,7 @@
 
 
     <div style="position: relative; width: 100%; max-width: 1285px; margin: 0 auto;">
-        <img src="{{ asset('images/rekom_home.png') }}" style="width:100%; height:auto;" id="home-screen"
+        <img src="{{ asset('images/rekom_home.png') }}" style="width:100%; height:auto;"
             alt="No image">
         <div
             style="position: absolute; bottom: -35px; left: 50%; transform: translateX(-50%); width: 100%; height: auto; z-index: 2; display: flex; justify-content: center;">
@@ -376,9 +376,12 @@
                     <tr>
                         <td colspan="8" class="text-center">Data tidak ditemukan.</td>
                     </tr>
-                    @endforelse
+                @endforelse
                 </tbody>
             </table>
+            <div class="d-flex justify-content-end me-3">
+                {{ $data->links() }}
+            </div>
         </div>
     </div>
 

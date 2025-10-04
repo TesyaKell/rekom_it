@@ -14,6 +14,7 @@
     <style>
         body {
             background: linear-gradient(120deg, #fff 60%, #0d606e 100%);
+            min-height: 100vh;
         }
 
         .container-header {
@@ -273,14 +274,12 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="editModalLabel{{ $signature->id_sign }}">Edit Signature</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <div class="mb-3">
                                 <label class="form-label">No. signature</label>
-                                <input type="text" class="form-control" value="{{ $signature->id_sign }}"
-                                    disabled>
+                                <input type="text" class="form-control" value="{{ $signature->id_sign }}" disabled>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Nama signature</label>
@@ -315,8 +314,8 @@
 
     <script>
         // Tangkap klik tombol Edit
-        document.querySelectorAll('.dropdown-item[href*="edit"]').forEach(function(btn) {
-            btn.addEventListener('click', function(e) {
+        document.querySelectorAll('.dropdown-item[href*="edit"]').forEach(function (btn) {
+            btn.addEventListener('click', function (e) {
                 e.preventDefault();
                 // Ambil data dari baris yang diklik
                 var row = btn.closest('.row');

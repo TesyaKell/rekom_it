@@ -13,6 +13,7 @@
     <style>
         body {
             background: linear-gradient(120deg, #fff 60%, #0d606e 100%);
+            min-height: 100vh;
         }
 
         .container-header {

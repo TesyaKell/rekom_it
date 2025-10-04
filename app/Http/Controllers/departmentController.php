@@ -10,10 +10,18 @@ class departmentController extends Controller
 {
     // Add index method to fetch departments
 
-    public function index()
+    public function index(Request $request)
     {
-        $departments = department::all();
-        return view('department', compact('departments'));
+        $perPage = $request->get('per_page', 5);
+        $currentPage = $request->get('page', 1);
+
+        $departments = department::paginate($perPage, ['*'], 'page', $currentPage);
+
+        // Append the per_page parameter to pagination links
+        $departments->appends(['per_page' => $perPage]);
+
+        $newId = $this->generateDepartmentId();
+        return view('department', compact('departments', 'newId', 'perPage'));
     }
 
     public function generateDepartmentId()
@@ -22,7 +30,7 @@ class departmentController extends Controller
             $lastNumber = department::withTrashed()
                 ->select('kode_dep')
                 ->get()
-                ->map(fn ($item) => (int) substr($item->kode_dep, 3))
+                ->map(fn($item) => (int) substr($item->kode_dep, 3))
                 ->sortDesc()
                 ->first();
 
@@ -58,6 +66,7 @@ class departmentController extends Controller
         } catch (\Exception $e) {
             \Log::info("Data department: ", $req->all());
             \Log::error("Gagal simpan data : {$e->getMessage()}");
+            return redirect()->route('department.index')->with(['error', "Gagal simpan department!"]);
         }
 
     }

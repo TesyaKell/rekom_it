@@ -8,9 +8,11 @@
     <title>Daftar Department</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ asset('css/pagination.css') }}" />
     <style>
         body {
             background: linear-gradient(120deg, #fff 60%, #0d606e 100%);
+            min-height: 100vh;
         }
 
         .container-header {
@@ -156,6 +158,12 @@
             border-radius: 8px;
             border: 1px solid #0d606e;
         }
+
+        .header-text {
+            font-size: 14px;
+            font-weight: bold;
+            color: #0d606e;
+        }
     </style>
 </head>
 
@@ -163,7 +171,7 @@
     <div class="container-header">
         <div class="row-header">
             <div class="col-header">
-                <p class="pt-3 ms-5 ps-5">DAFTAR DEPARTMENT</p>
+                <p class="pt-3 ms-5 ps-5 header-text">DAFTAR DEPARTMENT</p>
             </div>
         </div>
 
@@ -175,21 +183,13 @@
                         Nomor Department
                     </div>
                     <div class="col-8">
-                        @php
-                            $lastDep = $departments->last();
-                            if ($lastDep) {
-                                $lastNum = (int) substr($lastDep->kode_dep, 3);
-                                $newId = 'DEP' . str_pad($lastNum + 1, 3, '0', STR_PAD_LEFT);
-                            }
-                        @endphp
                         <span class="fw-bold" style="color:#ffa800">{{ $newId }}</span>
                     </div>
                 </div>
                 <div class="row g-0 w-100">
                     <div class="col-4 d-flex align-items-center fw-bold">Nama Department</div>
                     <div class="col-8 p-2">
-                        <input class="form-control" type="text" placeholder="Masukkan nama Department"
-                            name="nama_dep">
+                        <input class="form-control" type="text" placeholder="Masukkan nama Department" name="nama_dep">
                     </div>
                 </div>
                 <div class="row g-0 w-100">
@@ -209,12 +209,12 @@
                 <div class="col text-end" style="border: none; background: none;">
                     <label for="showCount" class="me-2 fw-bold" style="color:#ffa800;">Tampilkan</label>
                     <select id="showCount" class="form-select d-inline-block w-auto" style="width:80px;">
-                        <option value="6">5</option>
-                        <option value="11">10</option>
-                        <option value="16">15</option>
-                        <option value="21">20</option>
-                        <option value="51">50</option>
-                        <option value="101">100</option>
+                        <option value="5" {{ $perPage == 5 ? 'selected' : '' }}>5</option>
+                        <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
+                        <option value="15" {{ $perPage == 15 ? 'selected' : '' }}>15</option>
+                        <option value="20" {{ $perPage == 20 ? 'selected' : '' }}>20</option>
+                        <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
+                        <option value="100" {{ $perPage == 100 ? 'selected' : '' }}>100</option>
                     </select>
                 </div>
             </div>
@@ -237,7 +237,7 @@
                     @foreach ($departments as $department)
                         <div class="row g-0 row-cols-4 w-100 department-row" style="margin:0;">
                             <div class="col-2 d-flex justify-content-start ps-3" style="min-width:70px;">
-                                {{ $loop->iteration }}
+                                {{ ($departments->currentPage() - 1) * $departments->perPage() + $loop->iteration }}
                             </div>
                             <div class="col-3 d-flex justify-content-start ps-3" style="min-width:70px;">
                                 <span style="color:#ffa800">{{ $department->kode_dep }}</span>
@@ -250,15 +250,13 @@
                                         aria-expanded="false">
                                         <span class="fw-bold fs-4" style="color:#0d606e">⋮</span>
                                     </button>
-                                    <ul class="dropdown-menu"
-                                        aria-labelledby="dropdownMenuButton{{ $department->kode_dep }}">
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $department->kode_dep }}">
                                         <li>
                                             <a class="dropdown-item"
                                                 href="{{ url("department/{$department->kode_dep}/edit") }}">Edit</a>
                                         </li>
                                         <li>
-                                            <form action="{{ url("department/{$department->kode_dep}") }}"
-                                                method="POST"
+                                            <form action="{{ url("department/{$department->kode_dep}") }}" method="POST"
                                                 onsubmit="return confirm('Are you sure you want to delete this department?')"
                                                 style="display:inline;">
                                                 @csrf
@@ -271,6 +269,9 @@
                             </div>
                         </div>
                     @endforeach
+                    <div class="mt-3">
+                        {{ $departments->links() }}
+                    </div>
                 @else
                     <div class="row g-0 w-75" style="margin:0;">
                         <div class="col-12 text-center py-3">Tidak ada data department</div>
@@ -292,15 +293,14 @@
                         <h5 class="modal-title fw-bold" id="editDepartmentModalLabel">
                             Edit Nama Department
                         </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <input type="hidden" id="editDepartmentId" name="id">
                         <div class="mb-3">
                             <label for="editKodeDep" class="form-label">No. Department</label>
-                            <div class="col-3 d-flex justify-content-start ps-3"
-                                style="min-width:70px; color:#ffa800;" id="editKodeDep">
+                            <div class="col-3 d-flex justify-content-start ps-3" style="min-width:70px; color:#ffa800;"
+                                id="editKodeDep">
                             </div>
                         </div>
                         <div class="mb-3">
@@ -318,9 +318,32 @@
     </div>
 
     <script>
+        // Handle per page selection change
+        document.addEventListener('DOMContentLoaded', function () {
+            const showCount = document.getElementById('showCount');
+
+            showCount.addEventListener('change', function () {
+                const perPage = parseInt(this.value);
+                const url = new URL(window.location.href);
+                const currentPage = parseInt(url.searchParams.get('page')) || 1;
+                const currentPerPage = parseInt('{{ $perPage }}');
+
+                // ngitung item pertama di halaman sekarang
+                const firstItemOnCurrentPage = (currentPage - 1) * currentPerPage + 1;
+
+                // ini untuk ngitung page baru nya apa abis di ubah banyak datanya
+                const newPage = Math.ceil(firstItemOnCurrentPage / perPage);
+
+                url.searchParams.set('per_page', perPage);
+                url.searchParams.set('page', newPage);
+
+                window.location.href = url.toString();
+            });
+        });
+
         // Tangkap klik tombol Edit
-        document.querySelectorAll('.dropdown-item[href*="edit"]').forEach(function(btn) {
-            btn.addEventListener('click', function(e) {
+        document.querySelectorAll('.dropdown-item[href*="edit"]').forEach(function (btn) {
+            btn.addEventListener('click', function (e) {
                 e.preventDefault();
                 // Ambil data dari baris yang diklik
                 var row = btn.closest('.row');
@@ -339,20 +362,6 @@
             });
         });
 
-        // Pengfilter jumlah data yang ditampilkan
-        document.addEventListener('DOMContentLoaded', function() {
-            const showCount = document.getElementById('showCount');
-            const rows = document.querySelectorAll('.department-row');
-
-            function updateRows() {
-                const count = parseInt(showCount.value);
-                rows.forEach((row, idx) => {
-                    row.style.display = idx < count ? '' : 'none';
-                });
-            }
-            showCount.addEventListener('change', updateRows);
-            updateRows();
-        });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>

@@ -196,7 +196,7 @@ class rekomendasiController extends Controller
             }
         }
 
-        $data = $query->get();
+        $data = $query->paginate(10);
         $departments = department::all();
         return view('daftar_rekomendasi', compact('data', 'departments'));
     }
@@ -310,7 +310,7 @@ class rekomendasiController extends Controller
 
         $receiverName = $receiver->nama_leng ?? $data->nama_receiver;
         $receiverRole = $receiver->nama_jab ?? '';
-        $receiverDep  = $receiver->nama_dep ?? $nama_dep;
+        $receiverDep = $receiver->nama_dep ?? $nama_dep;
 
         $getSignature = function ($nama) {
             $user = DB::table('users')
@@ -436,7 +436,7 @@ class rekomendasiController extends Controller
     public function export()
     {
         $user = DB::table('users')->where('id_user', session('loginId'))
-             ->first();
+            ->first();
 
         $dep = DB::table('department')->where('kode_dep', $user->kode_dep)
             ->first();
@@ -501,17 +501,17 @@ class rekomendasiController extends Controller
             DB::raw('MONTH(tgl_masuk) as bulan'),
             DB::raw('COUNT(*) as total')
         )
-        ->whereYear('tgl_masuk', date('Y'))
-        ->groupBy('bulan')
-        ->orderBy('bulan')
-        ->get()
-        ->map(function ($item) {
-            $bulanNama = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-            return [
-                'bulan' => $bulanNama[$item->bulan - 1],
-                'total' => $item->total
-            ];
-        });
+            ->whereYear('tgl_masuk', date('Y'))
+            ->groupBy('bulan')
+            ->orderBy('bulan')
+            ->get()
+            ->map(function ($item) {
+                $bulanNama = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+                return [
+                    'bulan' => $bulanNama[$item->bulan - 1],
+                    'total' => $item->total
+                ];
+            });
 
         // Data per departemen
         $departmentData = Rekomendasi::select('nama_dep', DB::raw('COUNT(*) as total'))
