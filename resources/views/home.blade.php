@@ -95,7 +95,7 @@
                     });
                 </script>
             @endif
-            <!-- Header -->
+
             <div class="text-center mb-5">
                 <h1 class="display-5 fw-bold mb-2 text-shadow">
                     Grafik Rekomendasi
@@ -104,7 +104,7 @@
                 <div class="divider mb-3"></div>
             </div>
 
-            <!-- Charts Grid -->
+
             <div class="row g-4">
                 <!-- Monthly Chart -->
                 <div class="col-12 col-lg-6">

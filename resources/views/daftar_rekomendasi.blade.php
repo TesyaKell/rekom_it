@@ -276,7 +276,6 @@
                                                     method="POST" style="display:inline;">
                                                     @csrf
                                                     <input type="hidden" name="action" value="acc">
-                                                    {{-- Tambahkan input hidden masukan agar controller updateStatus bisa masuk ke blok perubahan status --}}
                                                     <input type="hidden" name="masukan_kabag"
                                                         value="Sudah ada masukan">
                                                     <button type="submit"

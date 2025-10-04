@@ -259,7 +259,6 @@
                         alert('Semua field wajib diisi!');
                         e.preventDefault();
                     } else {
-                        // Tampilkan toast dan submit form setelah toast hilang
                         e.preventDefault();
                         document.getElementById('notifSimpan').style.display = 'block';
                         setTimeout(function() {
@@ -356,14 +355,12 @@
                             </table>
                         </div>
                         `;
-                        // Tampilkan di bawah semua card
+
                         container.appendChild(savedCard);
 
-                        // Hapus card input yang baru saja diisi
                         const inputCard = document.getElementById(`jenisunit_${idx}`).closest('.card-3');
                         inputCard.remove();
 
-                        // Ganti alert dengan toast
                         document.getElementById('notifDetailSimpan').style.display = 'block';
                         setTimeout(function() {
                             document.getElementById('notifDetailSimpan').style.display = 'none';
@@ -371,7 +368,6 @@
 
                         updateSimpanState();
                     } else {
-                        // Ganti alert dengan toast error
                         if (!document.getElementById('notifDetailError')) {
                             const errorToast = document.createElement('div');
                             errorToast.id = 'notifDetailError';
@@ -388,16 +384,12 @@
                 }
 
                 batalBtn.addEventListener('click', function() {
-                    // Kosongkan semua input di form utama
                     mainForm.reset();
-                    // Kosongkan semua card input detail yang belum disimpan
                     Array.from(container.querySelectorAll('.card-3')).forEach(function(card) {
-                        // Hanya hapus card yang masih ada input (editable)
                         if (card.querySelector('input[id^="jenisunit_"]')) {
                             card.remove();
                         }
                     });
-                    // Kosongkan input hidden detail
                     detailInputs.innerHTML = '';
                     detailList = [];
                     updateSimpanState();

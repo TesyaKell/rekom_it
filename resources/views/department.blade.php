@@ -339,7 +339,7 @@
             });
         });
 
-        // Filter jumlah data yang ditampilkan
+        // Pengfilter jumlah data yang ditampilkan
         document.addEventListener('DOMContentLoaded', function() {
             const showCount = document.getElementById('showCount');
             const rows = document.querySelectorAll('.department-row');
