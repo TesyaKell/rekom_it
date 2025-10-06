@@ -75,7 +75,7 @@
 
         .table-bordered th,
         .table-bordered td {
-            border: 1.5px solid #0d606e !important;
+            border: 1.5px solid #c2c2c2ad !important;
         }
 
         .btn-success {
@@ -126,7 +126,7 @@
 
         .select2-container--default .select2-selection--multiple {
             border-radius: 8px;
-            border: 1px solid #0d606e;
+            border: 1px solid #c3c3c3;
             min-height: 38px;
         }
 
@@ -237,7 +237,8 @@
                                 <td class="ps-2">{{ $detail->jenis_unit }}</td>
                                 <td class="ps-2">{{ $detail->ket_unit }} </td>
                                 <td class="ps-2">{{ $item->alasan_rek }}</td>
-                                <td class="ps-2">Rp. {{ number_format($detail->estimasi_harga, 0, ',', '.') }}</td>
+                                <td class="ps-2">Rp. {{ number_format($detail->estimasi_harga, 0, ',', '.') }}
+                                </td>
                                 <td class="ps-2">{{ $item->nama_lengkap }}</td>
                                 <td class="ps-2">{{ $item->nama_dep }}</td>
                                 <td class="ps-2">{{ $item->tgl_masuk }}</td>
