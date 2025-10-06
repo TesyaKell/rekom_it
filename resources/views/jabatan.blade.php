@@ -122,17 +122,10 @@
             color: #0d606e;
         }
 
-        .table-header {
-            background: linear-gradient(90deg, #0d606e 70%, #ffa800 100%);
-            color: #fff;
-            font-weight: bold;
-            border-radius: 8px 8px 0 0;
-        }
 
         .jabatan-row {
             background: #fff;
             border-bottom: 1px solid #0d606e22;
-            border-radius: 0 0 8px 8px;
             transition: box-shadow 0.2s;
         }
 

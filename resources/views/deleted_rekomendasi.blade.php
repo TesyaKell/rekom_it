@@ -20,6 +20,13 @@
 
 
     <style>
+        body {
+            background-color: #f8fafc;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(120deg, #fff 60%, #0d606e 100%);
+            min-height: 100vh;
+        }
+
         .container-header {
             margin-top: -20px;
         }

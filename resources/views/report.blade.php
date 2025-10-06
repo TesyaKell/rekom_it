@@ -37,6 +37,13 @@
             letter-spacing: 1px;
         }
 
+        .p-3 {
+            text-align: left;
+            font-size: 14px;
+            color: #e8b200;
+            font-weight: 610;
+        }
+
         .container-form {
             background: #fff;
             border-radius: 12px;
@@ -199,7 +206,7 @@
             </form>
         </div>
         <div class="container-notes me-5 ms-5">
-            <p class="p-3 mt-4" style="color: #b85600; font-weight: 100px;">
+            <p class="p-3 mt-4 " style="color: #b85600;">
                 * Hasil Pencarian :
                 {{ $results->sum(fn($item) => $item->detail_rekomendasi->count()) }} data
             </p>
@@ -218,7 +225,7 @@
                         <th class="ps-2">Department</th>
                         <th class="ps-2">Tanggal Pengajuan</th>
                         <th class="ps-2">Status</th>
-                        <th class="ps-2">Tangal Realisasi</th>
+                        <th class="ps-2">Tanggal Realisasi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -239,7 +246,8 @@
                                         <span class="badge text-light p-1" style="background-color: #ffa800;">Menunggu
                                             Kabag</span>
                                     @elseif($item->status == 'menunggu verifikasi Tim IT')
-                                        <span class="badge text-light p-1" style="background-color: #0d606e;">Menunggu
+                                        <span class="badge text-light p-1"
+                                            style="background-color: rgba(32, 55, 230, 0.79);">Menunggu
                                             Tim IT</span>
                                     @elseif($item->status == 'Ditolak')
                                         <span class="badge bg-danger p-1">Ditolak</span>
@@ -249,7 +257,7 @@
                                         <span class="badge bg-secondary">{{ $item->status }}</span>
                                     @endif
                                 </td>
-                                <td class="ps-3">
+                                <td class="ps-2">
                                     @if ($detail->tanggal_realisasi)
                                         {{ $detail->tanggal_realisasi }}
                                     @else
