@@ -148,12 +148,16 @@
         }
 
         .modal-title {
-            color: #ffa800 !important;
+            color: #ffffff !important;
         }
 
         .form-select {
             border-radius: 8px;
             border: 1px solid #0d606e;
+        }
+
+        .modal-backdrop.show {
+            opacity: 0.2 !important;
         }
     </style>
 </head>
@@ -232,14 +236,13 @@
                                         Edit
                                     </button>
                                 </li>
+
                                 <li>
-                                    <form action="{{ url("jabatan/{$jabatan->id_jab}") }}" method="POST"
-                                        onsubmit="return confirm('Yakin ingin menghapus jabatan ini?')"
-                                        style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="dropdown-item text-danger">Hapus</button>
-                                    </form>
+                                    <button type="button" class="dropdown-item text-danger fw-bold"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteJabatanModal{{ $jabatan->id_jab }}">
+                                        Hapus
+                                    </button>
                                 </li>
                             </ul>
                         </div>
@@ -282,6 +285,33 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Batal</button>
                             <button type="submit" class="btn btn-success">Simpan Perubahan</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    @endforeach
+
+    <!-- Modal Hapus Jabatan -->
+    @foreach ($jabatans as $item)
+        <div class="modal fade" id="deleteJabatanModal{{ $item->id_jab }}" tabindex="-1"
+            aria-labelledby="deleteJabatanModalLabel{{ $item->id_jab }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <form action="{{ url("jabatan/{$item->id_jab}") }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteJabatanModalLabel{{ $item->id_jab }}">
+                                Konfirmasi Hapus Jabatan
+                            </h5>
+                        </div>
+                        <div class="modal-body">
+                            Apakah anda yakin ingin menghapus jabatan ini?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-danger">Hapus</button>
                         </div>
                     </div>
                 </form>

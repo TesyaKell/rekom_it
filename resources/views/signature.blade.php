@@ -149,12 +149,16 @@
         }
 
         .modal-title {
-            color: #ffa800 !important;
+            color: #ffffff !important;
         }
 
         .form-select {
             border-radius: 8px;
             border: 1px solid #0d606e;
+        }
+
+        .modal-backdrop.show {
+            opacity: 0.2 !important;
         }
     </style>
 </head>
@@ -241,14 +245,13 @@
                                         Edit
                                     </button>
                                 </li>
+
                                 <li>
-                                    <form action="{{ url("signature/{$signature->id_sign}") }}" method="POST"
-                                        onsubmit="return confirm('Are you sure you want to delete this signature?')"
-                                        style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="dropdown-item text-danger">Hapus</button>
-                                    </form>
+                                    <button type="button" class="dropdown-item text-danger fw-bold"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteSignatureModal{{ $signature->id_sign }}">
+                                        Hapus
+                                    </button>
                                 </li>
                             </ul>
                         </div>
@@ -307,6 +310,34 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Batal</button>
                             <button type="submit" class="btn btn-success">Simpan Perubahan</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    @endforeach
+
+
+    <!-- Modal Hapus Signature -->
+    @foreach ($signatures as $signature)
+        <div class="modal fade" id="deleteSignatureModal{{ $signature->id_sign }}" tabindex="-1"
+            aria-labelledby="deleteSignatureModalLabel{{ $signature->id_sign }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <form action="{{ url("signature/{$signature->id_sign}") }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteSignatureModalLabel{{ $signature->id_sign }}">
+                                Konfirmasi Hapus Signature
+                            </h5>
+                        </div>
+                        <div class="modal-body">
+                            Apakah anda yakin ingin menghapus signature ini?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-danger">Hapus</button>
                         </div>
                     </div>
                 </form>

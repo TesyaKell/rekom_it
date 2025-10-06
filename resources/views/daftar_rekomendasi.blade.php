@@ -79,6 +79,12 @@
             opacity: 0.2 !important;
         }
 
+        .modal-header {
+            background: linear-gradient(90deg, #0d606e 70%, #ffa800 100%);
+            color: #fff;
+            border-radius: 12px 12px 0 0;
+        }
+
         .form-label {
             font-weight: 600;
             color: #000000cb;
@@ -258,18 +264,13 @@
                                             @endif
                                         </li>
                                         <li>
-                                            <form action="{{ url("rekomendasi/{$item->id_rek}") }}" method="POST"
-                                                onsubmit="return confirm('Apakah Anda yakin ingin menghapus item ini?')"
-                                                style="display:inline;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="dropdown-item text-danger fw-bold">
-                                                    Hapus
-                                                </button>
-                                            </form>
+                                            <button type="button" class="dropdown-item text-danger fw-bold"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#deleteRekomendasiModal{{ $item->id_rek }}">
+                                                Hapus
+                                            </button>
                                         </li>
                                     </ul>
-
                                 </div>
                             </td>
                             @if (session('loginRole') === 'Kabag')
@@ -439,6 +440,33 @@
             </form>
         </div>
     </div>
+
+    @foreach ($data as $item)
+        <!-- Modal Hapus Rekomendasi -->
+        <div class="modal fade" id="deleteRekomendasiModal{{ $item->id_rek }}" tabindex="-1"
+            aria-labelledby="deleteRekomendasiModalLabel{{ $item->id_rek }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <form action="{{ url("rekomendasi/{$item->id_rek}") }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteRekomendasiModalLabel{{ $item->id_rek }}">
+                                Konfirmasi Hapus Rekomendasi
+                            </h5>
+                        </div>
+                        <div class="modal-body">
+                            Apakah anda yakin ingin menghapus rekomendasi?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-danger">Hapus</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    @endforeach
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">

@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\DB;
 
 class departmentController extends Controller
 {
-    // Add index method to fetch departments
 
     public function index(Request $request)
     {
@@ -17,7 +16,6 @@ class departmentController extends Controller
 
         $departments = department::paginate($perPage, ['*'], 'page', $currentPage);
 
-        // Append the per_page parameter to pagination links
         $departments->appends(['per_page' => $perPage]);
 
         $newId = $this->generateDepartmentId();

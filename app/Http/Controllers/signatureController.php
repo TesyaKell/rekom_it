@@ -83,25 +83,25 @@ class signatureController extends Controller
         $signature = Signature::findOrFail($id);
         $user = DB::table('users')->where('id_user', session('loginId'))->first();
 
-        $signature->update(['nama_approval' => $request->nama_approval, 'jabatan' => $request->jabatan,  'updated_by' => $user ? $user->nama_leng : '',]);
+        $signature->update(['nama_approval' => $request->nama_approval, 'jabatan' => $request->jabatan, 'updated_by' => $user ? $user->nama_leng : '',]);
 
         return redirect()->route('signature.index')->with('success', 'Data berhasil diperbarui!');
     }
 
     public function destroy($id)
     {
-        $signature = Signature::findOrFail($id);
+        $signature = Signature::find($id);
 
-        $user = DB::table('users')->where('id_user', session('loginId'))->first();
-        $deletedBy = $user ? $user->nama_leng : '';
+        if ($signature) {
+            $user = DB::table('users')->where('id_user', session('loginId'))->first();
+            $deletedBy = $user ? $user->nama_leng : '';
 
-        $signature->sign = null;
-        $signature->deleted_by = $deletedBy;
-        $signature->save();
+            \Log::info("Signature {$signature->nama_approval} (ID: {$signature->id_sign}) dihapus oleh user ID: " . session('loginId'));
 
-        \Log::info("Signature {$signature->nama_approval} (ID: {$signature->id_sign}) dihapus isinya oleh user ID: " . session('loginId'));
+            $signature->delete();
+        }
 
-        return redirect()->route('signature.index')->with('success', 'Signature berhasil dikosongkan.');
-
+        return redirect()->route('signature.index')->with('success', 'Signature berhasil dihapus.');
     }
+
 }
