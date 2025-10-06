@@ -169,8 +169,23 @@
                 telah memberikan persetujuan</p>
         </div>
     @endif
-    <div class="container-navigasi w-90 h-100 ms-3 me-3 mt-3 pt-2 pb-2 overflow-auto" style="max-width: 100%;">
+    <div class="container-navigasi w-90 h-100 ms-3 me-3 mt-3 pb-2 overflow-auto" style="max-width: 100%;">
         <div class="table-responsive ms-3 me-3 mt-2 mb-2">
+            <div class="row g-0 mb-2 d-flex justify-content-start" style="width: 220px;">
+                <div class="col text-start" style="border: none; background: none;">
+                    <label for="showCount" class="me-2 fw-bold"
+                        style="color:#ffa800; margin-left: -12px;">Tampilkan</label>
+                    <select id="showCount" class="form-select d-inline-block w-auto"
+                        style="width:100px; font-size: 14px; padding: 6px 24px;">
+                        <option value="5" {{ $perPage == 5 ? 'selected' : '' }}>5</option>
+                        <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
+                        <option value="15" {{ $perPage == 15 ? 'selected' : '' }}>15</option>
+                        <option value="20" {{ $perPage == 20 ? 'selected' : '' }}>20</option>
+                        <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
+                        <option value="100" {{ $perPage == 100 ? 'selected' : '' }}>100</option>
+                    </select>
+                </div>
+            </div>
             <table class="table table-sm align-middle m-0">
                 <thead class="table-light">
                     <tr>
@@ -378,7 +393,7 @@
                     @endforelse
                 </tbody>
             </table>
-            <div class="d-flex justify-content-end me-3">
+            <div class="mt-3">
                 {{ $data->links() }}
             </div>
         </div>
@@ -429,6 +444,23 @@
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
     </script>
     <script>
+        // Handle per page selection change
+        document.addEventListener('DOMContentLoaded', function() {
+            const showCount = document.getElementById('showCount');
+            showCount.addEventListener('change', function() {
+                const perPage = parseInt(this.value);
+                const url = new URL(window.location.href);
+                const currentPage = parseInt(url.searchParams.get('page')) || 1;
+                const currentPerPage = parseInt('{{ $perPage }}');
+                const firstItemOnCurrentPage = (currentPage - 1) * currentPerPage + 1;
+                const newPage = Math.ceil(firstItemOnCurrentPage / perPage);
+                url.searchParams.set('per_page', perPage);
+                url.searchParams.set('page', newPage);
+                window.location.href = url.toString();
+            });
+        });
+
+
         document.addEventListener('DOMContentLoaded', function() {
             @foreach ($data as $item)
                 @php

@@ -14,20 +14,27 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class rekomendasiController extends Controller
 {
-    public function index()
+
+    public function index(Request $request)
     {
         if (!session()->has('loginId')) {
             return redirect('/login');
         }
 
+        $perPage = $request->get('per_page', 10);
+        $currentPage = $request->get('page', 1);
+
         $user = \DB::table('users')->where('id_user', session('loginId'))->first();
 
-        $rekomendasi = rekomendasi::where('id_user', $user->id_user)->get();
-        $departments = \DB::table('department')->get();
-        $lastId = $rekomendasi->max('id_rek');
-        $data = $rekomendasi;
+        $query = rekomendasi::where('id_user', $user->id_user);
 
-        return view('add_rekomendasi', compact('user', 'departments', 'lastId', 'data'));
+        $data = $query->paginate($perPage, ['*'], 'page', $currentPage);
+        $data->appends(['per_page' => $perPage]);
+
+        $departments = \DB::table('department')->get();
+        $lastId = rekomendasi::where('id_user', $user->id_user)->max('id_rek');
+
+        return view('add_rekomendasi', compact('user', 'departments', 'lastId', 'data', 'perPage'));
     }
 
     public function create(Request $req)
@@ -185,6 +192,9 @@ class rekomendasiController extends Controller
         if (!session()->has('loginId')) {
             return redirect('/login');
         }
+        $perPage = request('per_page', 10);
+        $currentPage = request('page', 1);
+
         $query = rekomendasi::query();
 
         $user = \DB::table('users')->where('id_user', session('loginId'))->first();
@@ -196,9 +206,11 @@ class rekomendasiController extends Controller
             }
         }
 
-        $data = $query->paginate(10);
+        $data = $query->paginate($perPage, ['*'], 'page', $currentPage);
+        $data->appends(['per_page' => $perPage]);
+
         $departments = department::all();
-        return view('daftar_rekomendasi', compact('data', 'departments'));
+        return view('daftar_rekomendasi', compact('data', 'departments', 'perPage'));
     }
 
     public function tampilDataTerhapus()
