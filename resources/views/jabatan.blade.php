@@ -33,7 +33,7 @@
             text-align: left;
             font-size: 14px;
             font-weight: bold;
-            color: #e8b200;
+            color: #0d606e;
             letter-spacing: 1px;
         }
 
@@ -215,7 +215,7 @@
             @foreach ($jabatans as $jabatan)
                 <div class="row g-0 row-cols-3 w-100 jabatan-row" style="margin:0;">
                     <div class="col-2 d-flex justify-content-start ps-3" style="min-width:70px;">
-                        <span style="color:#ffa800">{{ $jabatan->id_jab }}</span>
+                        <span style="color:#000000">{{ $jabatan->id_jab }}</span>
                     </div>
                     <div class="col-7 d-flex justify-content-start ps-3">{{ $jabatan->nama_jab }}</div>
                     <div class="col-2 fw-bold p-2">

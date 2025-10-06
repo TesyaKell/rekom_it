@@ -22,7 +22,7 @@
         }
 
         p {
-            color: #e8b200;
+            color: #0d606e;
             margin-bottom: 5px;
             font-weight: bold;
             margin-left: 70px;
@@ -39,7 +39,6 @@
             text-align: left;
         }
 
-        /* Card utama form rekomendasi */
         .card-4 .card-body-4 {
             background: white;
             box-shadow: 0 4px 16px rgba(232, 178, 0, 0.08);

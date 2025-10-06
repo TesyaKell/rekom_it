@@ -29,7 +29,7 @@
             text-align: left;
             font-size: 14px;
             font-weight: bold;
-            color: #e8b200;
+            color: #0d606e;
         }
 
         .container-header {

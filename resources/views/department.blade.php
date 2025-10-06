@@ -32,7 +32,7 @@
             text-align: left;
             font-size: 14px;
             font-weight: bold;
-            color: #e8b200;
+            color: #0d606e;
             letter-spacing: 1px;
         }
 
@@ -158,12 +158,6 @@
             border-radius: 8px;
             border: 1px solid #0d606e;
         }
-
-        .header-text {
-            font-size: 14px;
-            font-weight: bold;
-            color: #0d606e;
-        }
     </style>
 </head>
 
@@ -171,7 +165,7 @@
     <div class="container-header">
         <div class="row-header">
             <div class="col-header">
-                <p class="pt-3 ms-5 ps-5 header-text">DAFTAR DEPARTMENT</p>
+                <p class="pt-3 ms-5 ps-5">DAFTAR DEPARTMENT</p>
             </div>
         </div>
 
@@ -189,7 +183,8 @@
                 <div class="row g-0 w-100">
                     <div class="col-4 d-flex align-items-center fw-bold">Nama Department</div>
                     <div class="col-8 p-2">
-                        <input class="form-control" type="text" placeholder="Masukkan nama Department" name="nama_dep">
+                        <input class="form-control" type="text" placeholder="Masukkan nama Department"
+                            name="nama_dep">
                     </div>
                 </div>
                 <div class="row g-0 w-100">
@@ -250,13 +245,15 @@
                                         aria-expanded="false">
                                         <span class="fw-bold fs-4" style="color:#0d606e">⋮</span>
                                     </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $department->kode_dep }}">
+                                    <ul class="dropdown-menu"
+                                        aria-labelledby="dropdownMenuButton{{ $department->kode_dep }}">
                                         <li>
                                             <a class="dropdown-item"
                                                 href="{{ url("department/{$department->kode_dep}/edit") }}">Edit</a>
                                         </li>
                                         <li>
-                                            <form action="{{ url("department/{$department->kode_dep}") }}" method="POST"
+                                            <form action="{{ url("department/{$department->kode_dep}") }}"
+                                                method="POST"
                                                 onsubmit="return confirm('Are you sure you want to delete this department?')"
                                                 style="display:inline;">
                                                 @csrf
@@ -293,14 +290,15 @@
                         <h5 class="modal-title fw-bold" id="editDepartmentModalLabel">
                             Edit Nama Department
                         </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <input type="hidden" id="editDepartmentId" name="id">
                         <div class="mb-3">
                             <label for="editKodeDep" class="form-label">No. Department</label>
-                            <div class="col-3 d-flex justify-content-start ps-3" style="min-width:70px; color:#ffa800;"
-                                id="editKodeDep">
+                            <div class="col-3 d-flex justify-content-start ps-3"
+                                style="min-width:70px; color:#ffa800;" id="editKodeDep">
                             </div>
                         </div>
                         <div class="mb-3">
@@ -319,10 +317,10 @@
 
     <script>
         // Handle per page selection change
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const showCount = document.getElementById('showCount');
 
-            showCount.addEventListener('change', function () {
+            showCount.addEventListener('change', function() {
                 const perPage = parseInt(this.value);
                 const url = new URL(window.location.href);
                 const currentPage = parseInt(url.searchParams.get('page')) || 1;
@@ -341,9 +339,9 @@
             });
         });
 
-        // Tangkap klik tombol Edit
-        document.querySelectorAll('.dropdown-item[href*="edit"]').forEach(function (btn) {
-            btn.addEventListener('click', function (e) {
+
+        document.querySelectorAll('.dropdown-item[href*="edit"]').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
                 e.preventDefault();
                 // Ambil data dari baris yang diklik
                 var row = btn.closest('.row');
@@ -361,7 +359,6 @@
                 modal.show();
             });
         });
-
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
