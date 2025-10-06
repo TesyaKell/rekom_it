@@ -220,9 +220,9 @@
                         <th class="ps-2">Nama Unit</th>
                         <th class="ps-2">Keterangan</th>
                         <th class="ps-2">Alasan</th>
-                        <th class="ps-2">Estimasi Harga</th>
+                        <th class="ps-3 pe-3">Estimasi Harga</th>
                         <th class="ps-2">Dibuat Oleh</th>
-                        <th class="ps-2">Department</th>
+                        <th class="ps-2 pe-2">Department</th>
                         <th class="ps-2">Tanggal Pengajuan</th>
                         <th class="ps-2">Status</th>
                         <th class="ps-2">Tanggal Realisasi</th>
@@ -241,7 +241,7 @@
                                 <td class="ps-2">{{ $item->nama_lengkap }}</td>
                                 <td class="ps-2">{{ $item->nama_dep }}</td>
                                 <td class="ps-2">{{ $item->tgl_masuk }}</td>
-                                <td class="ps-2">
+                                <td class="p-2">
                                     @if ($item->status == 'menunggu verifikasi Kabag')
                                         <span class="badge text-light p-1" style="background-color: #ffa800;">Menunggu
                                             Kabag</span>
