@@ -7,8 +7,12 @@ use App\Http\Controllers\departmentController;
 use App\Http\Controllers\rekomendasiController;
 
 Route::get('/login', function () {
+    if (session('loginId')) {
+        return redirect('/home');
+    }
     return view('login');
 });
+Route::post('/login', [App\Http\Controllers\userController::class, 'login']);
 
 Route::get('/', function () {
     if (session('loginId')) {
@@ -17,12 +21,6 @@ Route::get('/', function () {
 
     return redirect('/login');
 });
-
-Route::post('/login', [App\Http\Controllers\userController::class, 'login']);
-Route::get('/home', function () {
-    return view('home');
-});
-
 
 //REKOMENDASI
 Route::get('/home', [rekomendasiController::class, 'grafik'])->name('home');
@@ -60,13 +58,6 @@ Route::post('/department', [departmentController::class, 'create'])->name('depar
 Route::get('/department/{kode_dep}/edit', [departmentController::class, 'edit'])->name('department.edit');
 Route::put('/department/{kode_dep}', [departmentController::class, 'update'])->name('department.update');
 Route::delete('/department/{kode_dep}', [departmentController::class, 'destroy'])->name('department.destroy');
-Route::post('/logout', function () {
-    Auth::logout();
-    session()->invalidate();
-    session()->regenerateToken();
-
-    return redirect('/login')->with('message', 'You have been logged out successfully.');
-})->name('logout');
 
 
 //JABATAN
@@ -83,3 +74,11 @@ Route::get('/report/export', [rekomendasiController::class, 'export'])->name('re
 
 //print pdf
 Route::get('/rekomendasi/{id}/pdf', [rekomendasiController::class, 'printPdf'])->name('rekomendasi.pdf');
+
+Route::post('/logout', function () {
+    Auth::logout();
+    session()->invalidate();
+    session()->regenerateToken();
+
+    return redirect('/login')->with('message', 'You have been logged out successfully.');
+})->name('logout');
