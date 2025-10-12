@@ -90,7 +90,6 @@
                         <tr>
                             <th class="ps-2">No. Rek</th>
                             <th class="ps-2">No. PR</th>
-                            <th class="ps-2">Nama Unit</th>
                             <th class="ps-2">Dibuat Oleh</th>
                             <th class="ps-2">Department</th>
                             <th class="ps-2">Tanggal Pengajuan</th>
@@ -101,9 +100,13 @@
                     <tbody>
                         @forelse ($data as $item)
                             <tr>
-                                <td class="ps-2">{{ $item->id_rek }}</td>
+                                <td class="ps-2">
+                                    <a href="{{ route('deleted_rekomendasi.detail', $item->id_rek) }}"
+                                        class="text-decoration-underline text-primary">
+                                        {{ $item->id_rek }}
+                                    </a>
+                                </td>
                                 <td class="ps-2">{{ $item->no_spb }}</td>
-                                <td class="ps-2">{{ $item->jenis_unit }}</td>
                                 <td class="ps-2">{{ $item->nama_lengkap }}</td>
                                 <td class="ps-2">{{ $item->nama_dep }}</td>
                                 <td class="ps-2">{{ $item->tgl_masuk }}</td>

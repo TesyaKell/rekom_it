@@ -532,4 +532,25 @@ class rekomendasiController extends Controller
             ->get();
         return view('home', compact('monthlyData', 'departmentData'));
     }
+
+    public function detailDeleted($id_rek)
+    {
+        $data = DB::table('deleted')->where('id_rek', $id_rek)->first();
+        // Ambil detail unit dari tabel deleted jika ada, atau dari detail_rekomendasi jika masih ada
+        $details = DB::table('detail_rekomendasi')->where('id_rek', $id_rek)->get();
+        // Jika tidak ada detail di detail_rekomendasi, coba ambil dari kolom di tabel deleted (jika ada)
+        if ($details->isEmpty() && isset($data->jenis_unit)) {
+            $details = collect([
+                (object) [
+                    'jenis_unit' => $data->jenis_unit,
+                    'ket_unit' => $data->ket_unit ?? null,
+                    'estimasi_harga' => $data->estimasi_harga ?? null,
+                    'masukan_kabag' => $data->masukan_kabag ?? null,
+                    'masukan_it' => $data->masukan_it ?? null,
+                    'harga_akhir' => $data->harga_akhir ?? null,
+                ]
+            ]);
+        }
+        return view('detail_deleted_rekom', compact('data', 'details'));
+    }
 }

@@ -291,29 +291,32 @@
                     const card = document.createElement('div');
                     card.className = 'card-3 mb-3';
                     card.innerHTML = `
-                    <div class="card-body-3">
+                    <div class="card-body-3 position-relative">
+                        <button type="button" class="btn-close position-absolute end-0 top-0 m-2 ms-4" aria-label="Close" style="z-index:2;"></button>
                         <div class="form-group">
                             <label for="jenisunit_${idx}" class="mb-1">Nama Unit</label>
                             <input class="form-control" id="jenisunit_${idx}" placeholder="Masukkan Nama Unit">
                         </div>
-
-                   <div class="form-group mt-2">
-                        <label for="estimasiharga_${idx}" class="mb-1 mt-2">Estimasi Harga (Rp)</label>
-                        <input type="text" class="form-control" id="estimasiharga_${idx}" placeholder="Rp." oninput="this.value = this.value.replace(/[^0-9]/g, '');">
-                    </div>
-
-
+                        <div class="form-group mt-2">
+                            <label for="estimasiharga_${idx}" class="mb-1 mt-2">Estimasi Harga (Rp)</label>
+                            <input type="text" class="form-control" id="estimasiharga_${idx}" placeholder="Rp." oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                        </div>
                         <div class="form-group mt-2">
                             <label for="keterangan_${idx}" class="mb-1 mt-2">Keterangan</label>
                             <textarea class="form-control" id="keterangan_${idx}" rows="2" placeholder="Masukkan Keterangan"></textarea>
                         </div>
-
                         <button type="button" class="btn btn-success mt-3 shadow-sm" onclick="addDetail(${idx})">
                             <i class="bi bi-check2-circle me-1"></i>Simpan
                         </button>
                     </div>
-                `;
+                    `;
                     container.appendChild(card);
+
+                    // Add event listener for close button
+                    const closeBtn = card.querySelector('.btn-close');
+                    closeBtn.addEventListener('click', function() {
+                        card.remove();
+                    });
                 });
 
                 window.addDetail = function(idx) {

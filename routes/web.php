@@ -83,3 +83,4 @@ Route::get('/report/export', [rekomendasiController::class, 'export'])->name('re
 
 //print pdf
 Route::get('/rekomendasi/{id}/pdf', [rekomendasiController::class, 'printPdf'])->name('rekomendasi.pdf');
+Route::get('/deleted-rekomendasi/{id_rek}', [\App\Http\Controllers\rekomendasiController::class, 'detailDeleted'])->name('deleted_rekomendasi.detail');
