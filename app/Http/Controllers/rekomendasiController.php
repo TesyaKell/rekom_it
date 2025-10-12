@@ -509,6 +509,10 @@ class rekomendasiController extends Controller
     }
     public function grafik()
     {
+        if (!session('loginId')) {
+            return redirect('/login');
+        }
+
         $monthlyData = Rekomendasi::select(
             DB::raw('MONTH(tgl_masuk) as bulan'),
             DB::raw('COUNT(*) as total')
