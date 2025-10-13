@@ -14,7 +14,6 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class rekomendasiController extends Controller
 {
-
     public function index(Request $request)
     {
         if (!session()->has('loginId')) {
@@ -176,15 +175,45 @@ class rekomendasiController extends Controller
             return redirect()->route('rekomendasi.daftar')->with('error', 'Gagal update status!');
         }
     }
+
     public function destroy($id_rek)
     {
-        $rekomendasi = rekomendasi::where('id_rek', $id_rek)->first();
+        $rekomendasi = DB::table('rekomendasi')->where('id_rek', $id_rek)->first();
+
         if ($rekomendasi) {
-            $data = $rekomendasi->toArray();
-            DB::table('deleted')->insert($data);
-            $rekomendasi->delete();
+            DB::table('deleted')->insert((array) $rekomendasi);
+
+            $details = DB::table('detail_rekomendasi')->where('id_rek', $id_rek)->get();
+            foreach ($details as $detail) {
+                DB::table('detail_del')->insert((array) $detail);
+            }
+            DB::table('detail_rekomendasi')->where('id_rek', $id_rek)->delete();
+            DB::table('rekomendasi')->where('id_rek', $id_rek)->delete();
         }
-        return redirect()->route('rekomendasi.daftar')->with('success', 'Data berhasil dihapus!');
+        return redirect()->route('rekomendasi.daftar')->with('success', 'Data berhasil dihapus dan diarsipkan!');
+    }
+
+    public function restore($id_rek)
+    {
+        $deleted = DB::table('deleted')->where('id_rek', $id_rek)->first();
+
+        if ($deleted) {
+            $rekData = (array) $deleted;
+            unset($rekData['deleted_by'], $rekData['deleted_at']);
+            $newIdRek = DB::table('rekomendasi')->insertGetId($rekData);
+            $details = DB::table('detail_del')->where('id_rek', $id_rek)->get();
+
+            foreach ($details as $detail) {
+                $detailData = (array) $detail;
+                unset($detailData['id_detail_del']);
+                $detailData['id_rek'] = $newIdRek;
+                DB::table('detail_rekomendasi')->insert($detailData);
+            }
+            DB::table('deleted')->where('id_rek', $id_rek)->delete();
+            DB::table('detail_del')->where('id_rek', $id_rek)->delete();
+        }
+
+        return redirect()->route('rekomendasi.deleted')->with('success', 'Data berhasil direstore!');
     }
 
     public function tampilData()
@@ -388,42 +417,7 @@ class rekomendasiController extends Controller
         return view('daftar_rekomendasi', compact('data', 'departments', 'query'));
     }
 
-    public function restore($id_rek)
-    {
-        $deleted = DB::table('deleted')->where('id_rek', $id_rek)->first();
-        if ($deleted) {
-            $data = (array) $deleted;
 
-            $rekData = $data;
-            unset(
-                $rekData['id_rek'],
-                $rekData['deleted_by'],
-                $rekData['jenis_unit'],
-                $rekData['ket_unit'],
-                $rekData['masukan'],
-                $rekData['masukan_kabag'],
-                $rekData['masukan_it'],
-                $rekData['estimasi_harga'],
-                $rekData['harga_akhir']
-            );
-
-
-            $newIdRek = DB::table('rekomendasi')->insertGetId($rekData);
-            $detailData = [
-                'id_rek' => $newIdRek,
-                'jenis_unit' => $data['jenis_unit'] ?? '-',
-                'ket_unit' => $data['ket_unit'] ?? null,
-                'masukan_kabag' => $data['masukan_kabag'] ?? null,
-                'masukan_it' => $data['masukan_it'] ?? null,
-                'estimasi_harga' => $data['estimasi_harga'] ?? null,
-                'harga_akhir' => $data['harga_akhir'] ?? null,
-            ];
-
-            DB::table('detail_rekomendasi')->insert($detailData);
-            DB::table('deleted')->where('id_rek', $id_rek)->delete();
-        }
-        return redirect()->route('rekomendasi.deleted')->with('success', 'Data berhasil direstore!');
-    }
 
     public function filterStatus(Request $request)
     {
@@ -541,7 +535,7 @@ class rekomendasiController extends Controller
     {
         $data = DB::table('deleted')->where('id_rek', $id_rek)->first();
         // Ambil detail unit dari tabel deleted jika ada, atau dari detail_rekomendasi jika masih ada
-        $details = DB::table('detail_rekomendasi')->where('id_rek', $id_rek)->get();
+        $details = DB::table('detail_del')->where('id_rek', $id_rek)->get();
         // Jika tidak ada detail di detail_rekomendasi, coba ambil dari kolom di tabel deleted (jika ada)
         if ($details->isEmpty() && isset($data->jenis_unit)) {
             $details = collect([
