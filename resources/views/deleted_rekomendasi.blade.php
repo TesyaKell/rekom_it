@@ -101,9 +101,11 @@
                         @forelse ($data as $item)
                             <tr>
                                 <td class="ps-2">
-                                    <a href="{{ route('deleted_rekomendasi.detail', $item->id_rek) }}"
-                                        class="text-decoration-underline text-primary">
-                                        {{ $item->id_rek }}
+                                    <a href="{{ route('deleted_rekomendasi.detail', $item->id_rek) }}">
+                                        <span class="badge text-white text-decoration-none"
+                                            style="background-color: #0d606e;">
+                                            {{ $item->id_rek }}
+                                        </span>
                                     </a>
                                 </td>
                                 <td class="ps-2">{{ $item->no_spb }}</td>
