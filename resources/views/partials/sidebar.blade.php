@@ -180,6 +180,10 @@
                     <ul class="list-unstyled mb-0">
                         <li class="mb-2 d-flex align-items-center">
                             <span style="color: orange; font-size: 1.2em; margin-right: 3px;">●</span>
+                            <a class="nav-link p-2" href="{{ url('add_user') }}">Tambah User</a>
+                        </li>
+                        <li class="mb-2 d-flex align-items-center">
+                            <span style="color: orange; font-size: 1.2em; margin-right: 3px;">●</span>
                             <a class="nav-link p-2" href="{{ url('department') }}">Daftar Department</a>
                         </li>
                         <li class="mb-2 d-flex align-items-center">
@@ -190,6 +194,7 @@
                             <span style="color: orange; font-size: 1.2em; margin-right: 3px;">●</span>
                             <a class="nav-link p-2" href="{{ url('jabatan') }}">Daftar Jabatan</a>
                         </li>
+
                     </ul>
                 </div>
             </div>

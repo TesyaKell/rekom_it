@@ -69,8 +69,6 @@ class rekomendasiController extends Controller
                         'jenis_unit' => $detail['jenis_unit'] ?? null,
                         'ket_unit' => $detail['ket_unit'] ?? null,
                         'estimasi_harga' => $detail['estimasi_harga'] ?? null,
-
-
                     ]);
                 }
             }

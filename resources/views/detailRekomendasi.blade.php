@@ -168,30 +168,30 @@
                     <table class="table table-bordered table-sm align-middle bg-light" style="width: 100%;">
                         <tbody class="table-light">
                             @if ($data->count())
-                                @php $header = $data->first(); @endphp
+                                @php $header = $data; @endphp
                                 <tr>
                                     <td class="ps-3 p-2" style="width: 170px;">No. Rek</td>
-                                    <td class="ps-3">{{ $header->id_rek }}</td>
+                                    <td class="ps-3">{{ $data->id_rek }}</td>
                                 </tr>
                                 <tr>
                                     <td class="ps-3 p-2" style="width: 170px;">No. PR</td>
-                                    <td class="ps-3">{{ $header->no_spb }}</td>
+                                    <td class="ps-3">{{ $data->no_spb }}</td>
                                 </tr>
                                 <tr>
                                     <td class="ps-3 p-2" style="width: 170px;">Dibuat Oleh</td>
-                                    <td class="ps-3">{{ $header->nama_lengkap }}</td>
+                                    <td class="ps-3">{{ $data->nama_lengkap }}</td>
                                 </tr>
                                 <tr>
                                     <td class="ps-3 p-2" style="width: 170px;">Department</td>
-                                    <td class="ps-3">{{ $header->nama_dep ?? $header->jabatan_receiver }}</td>
+                                    <td class="ps-3">{{ $data->nama_dep ?? $data->jabatan_receiver }}</td>
                                 </tr>
                                 <tr>
                                     <td class="ps-3 p-2" style="width: 170px;">Tanggal Pengajuan</td>
-                                    <td class="ps-3">{{ $header->tgl_masuk }}</td>
+                                    <td class="ps-3">{{ $data->tgl_masuk }}</td>
                                 </tr>
                                 <tr>
                                     <td class="ps-3 p-2" style="width: 170px;">Alasan</td>
-                                    <td class="ps-3">{{ $header->alasan_rek }}</td>
+                                    <td class="ps-3">{{ $data->alasan_rek }}</td>
                                 </tr>
                             @else
                                 <tr>

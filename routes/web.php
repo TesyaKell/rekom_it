@@ -23,8 +23,14 @@ Route::post('/logout', function () {
 })->name('logout');
 Route::middleware(['cekLogin'])->group(function () {
     Route::get('/', fn () => redirect('/home'));
-    //REKOMENDASI
+    //User
+    Route::get('/add_user', [UserController::class, 'index'])->name('user.index');
+    Route::post('/add_user', [UserController::class, 'create'])->name('user.create');
+    Route::get('/add_user/{id_user}/edit', [UserController::class, 'index'])->name('user.edit');
+    Route::delete('/add_user/{id_user}', [UserController::class, 'destroy'])->name('user.destroy');
+    Route::put('/add_user/{id_user}', [UserController::class, 'update'])->name('user.update');
 
+    //REKOMENDASI
     Route::get('/home', [rekomendasiController::class, 'grafik'])->name('home');
     Route::get('/detailRekomendasi/{id_rek}', [rekomendasiController::class, 'tampilDetail'])->name('rekomendasi.detail');
     Route::post('/add_rekomendasi', [rekomendasiController::class, 'create'])->name('rekomendasi.create');

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\department;
+use App\Models\Jabatan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -42,5 +44,104 @@ class userController extends Controller
         Log::info("User {$user->id_user} logged in as {$role}");
 
         return redirect('/home')->with('success', 'Berhasil Login!');
+    }
+
+    public function index()
+    {
+        if (session('loginRole') !== 'IT' && session('loginRole') !== 'GSK') {
+            return redirect('/home')->withErrors(['access' => 'Anda tidak punya akses']);
+        }
+
+        $users = User::all();
+        $lastId = User::max('id_user');
+        $positions = Jabatan::all();
+        $departments = Department::all();
+
+        Log::info('Jumlah user: ' . $users->count());
+
+        return view('add_user', compact('users', 'lastId', 'positions', 'departments'));
+    }
+
+
+    public function edit($id)
+    {
+        $user = User::findOrFail($id);
+        return view('user_edit', compact('user'));
+    }
+
+
+    public function create(Request $req)
+    {
+        if (session('loginRole') !== 'IT' && session('loginRole') !== 'GSK') {
+            return redirect('/home')->withErrors(['access' => 'Anda tidak punya akses']);
+        }
+
+        try {
+            $req->validate([
+                'username' => 'required|string|max:255',
+                'password' => 'required|string',
+                'nama_leng' => 'required|string|max:255',
+                'id_jab' => 'required',
+                'kode_dep' => 'required',
+            ]);
+
+            $user = User::create([
+                'username' => $req->input('username'),
+                'password' => $req->input('password'),
+                'nama_leng' => $req->input('nama_leng'),
+                'id_jab' => $req->input('id_jab'),
+                'kode_dep' => $req->input('kode_dep'),
+            ]);
+
+            Log::info("User created with ID: {$user->id_user}");
+            return redirect()->back()->with('success', 'User created successfully.');
+        } catch (\Exception $e) {
+            Log::error("Error creating user: " . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to create user.');
+        }
+    }
+
+
+    public function update(Request $req, $id)
+    {
+        if (session('loginRole') !== 'IT' && session('loginRole') !== 'GSK') {
+            return redirect('/home')->withErrors(['access' => 'Anda tidak punya akses']);
+        }
+
+        try {
+            $req->validate([
+                'username' => 'required|string|max:255',
+                'password' => 'nullable|string',
+            ]);
+
+            $user = User::findOrFail($id);
+            $user->username = $req->input('username');
+            $user->password = $req->input('password');
+            $user->save();
+
+            Log::info("User updated with ID: {$user->id_user}");
+            return redirect()->back()->with('success', 'User updated successfully.');
+        } catch (\Exception $e) {
+            Log::error("Error updating user: " . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to update user.');
+        }
+    }
+
+    public function destroy($id)
+    {
+        if (session('loginRole') !== 'IT' && session('loginRole') !== 'GSK') {
+            return redirect('/home')->withErrors(['access' => 'Anda tidak punya akses']);
+        }
+
+        try {
+            $user = User::findOrFail($id);
+            $user->delete();
+
+            Log::info("User deleted with ID: {$user->id_user}");
+            return redirect()->back()->with('success', 'User deleted successfully.');
+        } catch (\Exception $e) {
+            Log::error("Error deleting user: " . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to delete user.');
+        }
     }
 }
