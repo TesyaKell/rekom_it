@@ -20,10 +20,14 @@ class DetailRekomendasi extends Model
             'estimasi_harga',
             'harga_akhir',
             'tanggal_realisasi',
+            'id_jab',
+            'status_verifikasi_it',
+            'updated_at',
         ];
 
     public function rekomendasi()
     {
-        return $this->belongsTo(Rekomendasi::class, 'id_rek', 'id_rek');
+        return $this->hasMany(DetailRekomendasi::class, 'id_rek', 'id_rek');
     }
+
 }

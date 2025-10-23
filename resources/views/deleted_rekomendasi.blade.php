@@ -113,10 +113,10 @@
                                 <td class="ps-2">{{ $item->nama_dep }}</td>
                                 <td class="ps-2">{{ $item->tgl_masuk }}</td>
                                 <td class="ps-2">
-                                    @if ($item->status == 'menunggu verifikasi Kabag')
+                                    @if ($item->status == 'menunggu verifikasi IT GSK')
                                         <span class="badge text-light p-1"
                                             style="background-color: rgb(249, 137, 0);">Menunggu
-                                            Kabag</span>
+                                            IT GSK</span>
                                     @elseif($item->status == 'menunggu verifikasi Tim IT')
                                         <span
                                             class="badge

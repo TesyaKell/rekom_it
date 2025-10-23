@@ -214,8 +214,8 @@
                                 <th class="ps-3">Estimasi Harga</th>
                                 @if (session('loginRole') === 'IT')
                                     <th class="ps-3">Berikan Masukan</th>
-                                @elseif (session('loginRole') === 'Kabag')
-                                    <th class="ps-3">Berikan Masukan Kabag</th>
+                                @elseif (session('loginRole') === 'Server' || session('loginRole') === 'Network' || session('loginRole') === 'Helpdesk')
+                                    <th class="ps-3">Berikan Masukan IT GSK</th>
                                 @else
                                     <th class="ps-3">Masukan dari Tim IT</th>
                                 @endif
@@ -248,23 +248,23 @@
                                                         </form>
                                                     @else
                                                         <span class="text-muted">Belum bisa beri masukan karena belum di
-                                                            ACC Kabag</span>
+                                                            ACC IT GSK</span>
                                                     @endif
                                                 @endif
                                             </td>
-                                        @elseif (session('loginRole') === 'Kabag')
+                                        @elseif (session('loginRole') === 'Server' || session('loginRole') === 'Network' || session('loginRole') === 'Helpdesk')
                                             <td class="ps-3">
                                                 @if ($detail->masukan_kabag)
                                                     <span class="text-success">{{ $detail->masukan_kabag }}</span>
                                                 @else
-                                                    @if ($status == 'menunggu verifikasi Kabag')
+                                                    @if (Str::contains($status, 'menunggu verifikasi IT GSK'))
                                                         <form method="POST"
                                                             action="{{ route('detailRekomendasi.masukan', $detail->id_detail_rekomendasi) }}"
                                                             class="d-flex align-items-center masukan-form">
                                                             @csrf
                                                             <input class="form-control me-2 masukan-input"
                                                                 type="text" name="masukan_kabag"
-                                                                placeholder="Berikan masukan Kabag">
+                                                                placeholder="Berikan masukan">
                                                             <button type="submit"
                                                                 class="btn btn-sm btn-primary">Simpan</button>
                                                         </form>

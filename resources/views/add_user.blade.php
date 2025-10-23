@@ -148,7 +148,6 @@
             </div>
         </div>
 
-        {{-- FORM TAMBAH USER --}}
         <form method="POST" action="{{ route('user.create') }}" enctype="multipart/form-data">
             @csrf
             <div class="container-post tight-rows table-grid mt-3 ms-3">
@@ -198,6 +197,19 @@
                             required>
                     </div>
                 </div>
+                kalau dia darii dept IT tampilkan kolom ini
+                @if (stripos($departments, 'IT') !== false)
+                    {
+                    <div class="container-post tight-rows table-grid mt-3 ms-3">
+                        <div class="row g-0 w-100">
+                            <div class="col-4 d-flex align-items-center fw-bold">Alamat</div>
+                            <div class="col-8">
+                                <input class="form-control" type="text" placeholder="Masukkan alamat" name="alamat"
+                                    required>
+                            </div>
+                        </div>
+                        }
+                @endif
 
                 <div class="row g-0 w-100">
                     <div class="col">

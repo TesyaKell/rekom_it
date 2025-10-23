@@ -231,7 +231,7 @@
                                                     <button type="submit"
                                                         class="btn btn-sm btn-success me-2">Simpan</button>
                                                 </td>
-                                            @elseif (session('loginRole') === 'Kabag')
+                                            @elseif (session('loginRole') === 'Network' || session('loginRole') === 'Server' || session('loginRole') === 'Helpdesk')
                                                 <td class="ps-3">
                                                     <textarea name="masukan_kabag" class="form-control form-control-sm" rows="2">{{ $detail->masukan_kabag }}</textarea>
                                                 </td>

@@ -210,32 +210,20 @@
                 <td class="ttd-label">Diminta Oleh,</td>
             </tr>
             <tr>
-                <td>
-                    @if ($data && $data->status === 'Diterima')
-                        @php
-                            $sign = \DB::table('signature')
-                                ->where('nama_approval', $data->nama_receiver)
-                                ->value('sign');
-                        @endphp
-                        @if ($sign)
-                            <img src="{{ asset($sign) }}" style="height:60px; margin-bottom:0;">
-                        @endif
-                    @endif
-                </td>
-                <td>
-                    @if ($data && $data->status === 'Diterima')
-                        <img src="{{ asset($signIT) }}" style="height:60px; margin-bottom:0;">
-                    @endif
-                </td>
-                <td>
-                    @if ($data && $data->status === 'Diterima')
+                @if ($data && $data->status === 'Diterima')
+                    <td>
+                        <img src="{{ asset('images/IT GSK.png') }}" style="height:60px; margin-bottom:0;">
+                    </td>
+                    <td>
+                        <img src="{{ asset('images/IT GSK.png') }}" style="height:60px; margin-bottom:0;">
+                    </td>
+                    <td>
                         <img src="{{ asset($signRequester) }}" style="height:60px; margin-bottom:0;">
-                    @endif
-                </td>
-                <td></td>
+                    </td>
+                    <td>
+                    </td>
             </tr>
             <tr>
-
                 <td class="ttd-name">
                     <u>{{ $receiverName }}</u><br>
                     <span class="ttd-role">{{ $receiverRole }} </span>
@@ -251,6 +239,7 @@
                     <span class="ttd-role">Pemohon</span>
                 </td>
             </tr>
+            @endif
         </table>
         @if (!$data)
             <div class="text-center mt-3">Data tidak ditemukan.</div>

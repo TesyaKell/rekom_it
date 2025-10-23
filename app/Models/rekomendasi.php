@@ -39,4 +39,8 @@ class rekomendasi extends Model
         return $this->belongsTo(User::class, 'id_user', 'id_user');
     }
 
+    public function detailRekomendasi()
+    {
+        return $this->hasMany(DetailRekomendasi::class, 'id_rek', 'id_rek');
+    }
 }

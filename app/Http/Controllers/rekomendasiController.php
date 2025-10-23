@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\department;
 use App\Models\signature;
 use App\Models\User;
+use Illuminate\Auth\Events\Login;
 use Illuminate\Http\Request;
 use App\Models\rekomendasi;
 use App\Models\DetailRekomendasi;
@@ -20,6 +21,7 @@ class rekomendasiController extends Controller
             return redirect('/login');
         }
 
+
         $perPage = $request->get('per_page', 10);
         $currentPage = $request->get('page', 1);
 
@@ -32,8 +34,12 @@ class rekomendasiController extends Controller
 
         $departments = \DB::table('department')->get();
         $lastId = rekomendasi::where('id_user', $user->id_user)->max('id_rek');
+        $divisions = \DB::table('jabatan')
+            ->whereBetween('id_jab', [18, 20])
+            ->get();
+        return view('add_rekomendasi', compact('user', 'departments', 'lastId', 'data', 'perPage', 'divisions'));
 
-        return view('add_rekomendasi', compact('user', 'departments', 'lastId', 'data', 'perPage'));
+
     }
 
     public function create(Request $req)
@@ -44,6 +50,7 @@ class rekomendasiController extends Controller
 
         $user = \DB::table('users')->where('id_user', session('loginId'))->first();
         $departments = \DB::table('department')->get();
+        $divisions = \DB::table('jabatan')->get();
 
         try {
             // Simpan data utama ke tabel rekomendasi
@@ -57,7 +64,7 @@ class rekomendasiController extends Controller
                 'tgl_masuk' => $req->tgl_masuk,
                 'alasan_rek' => $req->alasan_rek,
                 'nama_dep' => $nama_dep,
-                'status' => 'menunggu verifikasi Kabag',
+                'status' => 'menunggu verifikasi IT GSK',
                 'created_by' => $user->nama_leng ?? '',
             ]);
 
@@ -69,17 +76,16 @@ class rekomendasiController extends Controller
                         'jenis_unit' => $detail['jenis_unit'] ?? null,
                         'ket_unit' => $detail['ket_unit'] ?? null,
                         'estimasi_harga' => $detail['estimasi_harga'] ?? null,
+                        'id_jab' => $detail['id_jab'] ?? null,
                     ]);
                 }
             }
 
-            \Log::info("Sukses tambah rekomendasi oleh user {$user->nama_leng}");
+            \Log::info('Sukses simpan semua data rekomendasi:', $rekomendasi->toArray());
             return redirect()->route('rekomendasi.daftar')->with('success', 'Data berhasil ditambahkan!');
         } catch (\Exception $e) {
             \Log::error("Gagal simpan data : {$e->getMessage()}");
-            $lastId = \App\Models\rekomendasi::max('id_rek');
-            return view('add_rekomendasi', compact('departments', 'lastId'))
-                ->with('error', 'Gagal simpan data!');
+            return redirect()->route('rekomendasi.index')->with('error', 'Gagal menyimpan data!');
         }
     }
 
@@ -118,55 +124,65 @@ class rekomendasiController extends Controller
             }
 
             $user = \DB::table('users')->where('id_user', session('loginId'))->first();
+            if (!$user) {
+                return redirect()->route('login')->with('error', 'Sesi login habis.');
+            }
+
+            $detailQuery = \DB::table('detail_rekomendasi')
+                ->where('id_rek', $id_rek)
+                ->where('id_jab', $user->id_jab);
+
 
             if ($req->input('action') === 'acc') {
-                $rekomendasi->nama_receiver = $user ? $user->nama_leng : '';
+                $rekomendasi->nama_receiver = $user->nama_leng;
                 $rekomendasi->tgl_verif_kabag = now();
-                $rekomendasi->status = 'menunggu verifikasi Tim IT';
+                $nama_jab = \DB::table('jabatan')
+                    ->where('id_jab', $user->id_jab)
+                    ->value('nama_jab');
 
-                // Jika centang "Tidak ada masukan", update semua detail yang belum ada masukan_kabag
-                if ($req->has('masukan_kabag') && $req->input('masukan_kabag') === 'Tidak ada masukan') {
-                    \DB::table('detail_rekomendasi')
-                        ->where('id_rek', $id_rek)
-                        ->whereNull('masukan_kabag')
-                        ->update(['masukan_kabag' => 'Tidak ada masukan']);
-                } else {
-                    // Cek apakah masih ada barang yang belum diisi masukan_kabag
-                    $countNull = \DB::table('detail_rekomendasi')
-                        ->where('id_rek', $id_rek)
-                        ->whereNull('masukan_kabag')
-                        ->count();
-                    if ($countNull > 0) {
-                        return redirect()->route('rekomendasi.daftar')->with('error', 'Masukan Kabag harus diisi untuk semua barang atau centang Tidak ada masukan.');
-                    }
+                $rekomendasi->jabatan_receiver = $nama_jab;
+                $detailQuery->update([
+                    'status_verifikasi_it' => 1,
+                    'updated_at' => now(),
+                ]);
+
+
+                if ($req->filled('masukan_kabag')) {
+                    $detailQuery->update(['masukan_kabag' => $req->masukan_kabag]);
                 }
+
+                $belumApprove = \DB::table('detail_rekomendasi')
+                    ->where('id_rek', $id_rek)
+                    ->whereNull('status_verifikasi_it')
+                    ->count();
+
+                $rekomendasi->status = $belumApprove === 0
+                    ? 'menunggu verifikasi Tim IT'
+                    : 'menunggu verifikasi IT GSK (parsial)';
+
                 $rekomendasi->save();
             } elseif ($req->input('action') === 'acc_it') {
-                $rekomendasi->nama_it = $user ? $user->nama_leng : '';
+                $rekomendasi->nama_it = $user->nama_leng;
                 $rekomendasi->tgl_verif_it = now();
                 $rekomendasi->status = 'Diterima';
 
-                if ($req->has('masukan_it') && $req->input('masukan_it') === 'Tidak ada masukan') {
-                    \DB::table('detail_rekomendasi')
-                        ->where('id_rek', $id_rek)
-                        ->whereNull('masukan_it')
-                        ->update(['masukan_it' => 'Tidak ada masukan']);
-                } else {
-                    $countNull = \DB::table('detail_rekomendasi')
-                        ->where('id_rek', $id_rek)
-                        ->whereNull('masukan_it')
-                        ->count();
-                    if ($countNull > 0) {
-                        return redirect()->route('rekomendasi.daftar')->with('error', 'Masukan IT harus diisi untuk semua barang atau centang Tidak ada masukan.');
-                    }
-                }
+                \DB::table('detail_rekomendasi')
+                    ->where('id_rek', $id_rek)
+                    ->update([
+                        'tanggal_realisasi' => now(),
+                        'status_verifikasi_it' => 1
+                    ]);
+
                 $rekomendasi->save();
             } elseif ($req->input('action') === 'tolak') {
+                $detailQuery->update([
+                    'status_verifikasi_it' => 0,
+                ]);
+
                 $rekomendasi->status = 'Ditolak';
                 $rekomendasi->save();
             }
 
-            \Log::info("Input status rekomendasi oleh user " . ($user ? $user->id_user : ''));
             return redirect()->route('rekomendasi.daftar')->with('success', 'Status berhasil diperbarui!');
         } catch (\Exception $e) {
             \Log::error("Gagal update status : {$e->getMessage()}");
@@ -174,13 +190,14 @@ class rekomendasiController extends Controller
         }
     }
 
+
+
     public function destroy($id_rek)
     {
         $rekomendasi = DB::table('rekomendasi')->where('id_rek', $id_rek)->first();
 
         if ($rekomendasi) {
             DB::table('deleted')->insert((array) $rekomendasi);
-
             $details = DB::table('detail_rekomendasi')->where('id_rek', $id_rek)->get();
             foreach ($details as $detail) {
                 DB::table('detail_del')->insert((array) $detail);
@@ -194,7 +211,6 @@ class rekomendasiController extends Controller
     public function restore($id_rek)
     {
         $deleted = DB::table('deleted')->where('id_rek', $id_rek)->first();
-
         if ($deleted) {
             $rekData = (array) $deleted;
             unset($rekData['deleted_by'], $rekData['deleted_at']);
@@ -223,21 +239,19 @@ class rekomendasiController extends Controller
         $currentPage = request('page', 1);
 
         $query = rekomendasi::query();
-
         $user = \DB::table('users')->where('id_user', session('loginId'))->first();
 
-        if (session('loginRole') === 'Kabag') {
-            $dep = \DB::table('department')->where('kode_dep', $user->kode_dep)->first();
-            if ($dep) {
-                $query->where('nama_dep', $dep->nama_dep);
-            }
+        if (session('loginRole') === 'Network' || session('loginRole') === 'Helpdesk' || session('loginRole') === 'Server') {
+            $query->whereHas('detailRekomendasi', function ($q) use ($user) {
+                $q->where('id_jab', $user->id_jab);
+            });
+
         }
 
         $data = $query->paginate($perPage, ['*'], 'page', $currentPage);
         $data->appends(['per_page' => $perPage]);
-
         $departments = department::all();
-        return view('daftar_rekomendasi', compact('data', 'departments', 'perPage'));
+        return view('daftar_rekomendasi', compact('data', 'departments', 'perPage', 'user'));
     }
 
     public function tampilDataTerhapus()
@@ -245,7 +259,6 @@ class rekomendasiController extends Controller
         if (!session()->has('loginId')) {
             return redirect('/login');
         }
-
         $data = DB::table('deleted')->get();
         $departments = department::all();
         return view('deleted_rekomendasi', compact('data', 'departments'));
@@ -263,10 +276,19 @@ class rekomendasiController extends Controller
         $status = $data?->status;
         $namauser = $user?->nama_leng ?? '';
 
-        $details = \DB::table('detail_rekomendasi')->where('id_rek', $id_rek)->get();
+        if ($user && in_array(session('loginRole'), [ 'Server', 'Network', 'Helpdesk'])) {
+            $details = \DB::table('detail_rekomendasi')
+                ->where('id_rek', $id_rek)
+                ->where('id_jab', $user->id_jab)
+                ->get();
+        } else {
+            $details = \DB::table('detail_rekomendasi')->where('id_rek', $id_rek)->get();
+        }
+
         \Log::info($status);
 
         return view('detailRekomendasi', compact('namauser', 'data', 'departments', 'details', 'status'));
+
     }
 
 
@@ -284,7 +306,7 @@ class rekomendasiController extends Controller
     public function laporan(Request $req)
     {
         try {
-            $query = rekomendasi::query();
+            $query = \App\Models\Rekomendasi::query();
 
             if ($req->filled('noRek') && $req->filled('noRek2')) {
                 $query->whereBetween('id_rek', [$req->noRek, $req->noRek2]);
@@ -298,11 +320,17 @@ class rekomendasiController extends Controller
                 $query->whereIn('nama_dep', $req->department);
             }
 
+            $user = DB::table('users')->where('id_user', session('loginId'))->first();
 
-            if (session('loginRole') !== 'IT') {
-                $user = \DB::table('users')->where('id_user', session('loginId'))->first();
+
+            if (in_array(session('loginRole'), ['Network', 'Helpdesk', 'Server'])) {
+                $idRekList = DB::table('detail_rekomendasi')
+                    ->where('id_jab', $user->id_jab)
+                    ->pluck('id_rek');
+                $query->whereIn('id_rek', $idRekList);
+            } elseif (session('loginRole') !== 'IT') {
                 if ($user) {
-                    $dep = \DB::table('department')->where('kode_dep', $user->kode_dep)->first();
+                    $dep = DB::table('department')->where('kode_dep', $user->kode_dep)->first();
                     if ($dep) {
                         $query->where('nama_dep', $dep->nama_dep);
                     }
@@ -310,18 +338,23 @@ class rekomendasiController extends Controller
             }
 
             $results = $query->get();
-            $departmentList = \DB::table('department')->pluck('nama_dep');
 
             foreach ($results as $item) {
-                $item->detail_rekomendasi = \DB::table('detail_rekomendasi')->where('id_rek', $item->id_rek)->get();
+                if (in_array(session('loginRole'), ['Network', 'Helpdesk', 'Server'])) {
+                    $item->detail_rekomendasi = DB::table('detail_rekomendasi')
+                        ->where('id_rek', $item->id_rek)
+                        ->where('id_jab', $user->id_jab)
+                        ->get();
+                } else {
+                    $item->detail_rekomendasi = DB::table('detail_rekomendasi')
+                        ->where('id_rek', $item->id_rek)
+                        ->get();
+                }
             }
 
-            \Log::info("Sukses menampilkan data laporan, total: " . $results->count());
-
+            $departmentList = DB::table('department')->pluck('nama_dep');
         } catch (\Exception $e) {
             \Log::error("Gagal menampilkan data laporan : {$e->getMessage()}");
-            $results = collect();
-            $departmentList = collect();
         }
 
         return view('report', compact('results', 'departmentList'));
@@ -367,13 +400,10 @@ class rekomendasiController extends Controller
             return [$sign, $jabatan];
         };
 
-        // Diminta Oleh
         [$signRequester, $jabatanRequester] = $getSignature($data->nama_lengkap);
 
-        // Diketahui Oleh (IT)
         [$signIT, $jabatanIT] = $getSignature($data->nama_it);
 
-        // Disetujui Oleh
         [$signApproval, $jabatanApproval] = $getSignature($data->nama_approval);
 
         return view('print', compact(
@@ -437,68 +467,57 @@ class rekomendasiController extends Controller
     }
 
 
-    public function export()
+    public function export(Request $req)
     {
-        $user = DB::table('users')->where('id_user', session('loginId'))
-            ->first();
+        try {
+            $query = Rekomendasi::query();
 
-        $dep = DB::table('department')->where('kode_dep', $user->kode_dep)
-            ->first();
+            if ($req->filled('noRek') && $req->filled('noRek2')) {
+                $query->whereBetween('id_rek', [$req->noRek, $req->noRek2]);
+            }
+            if ($req->filled('tgl_awal') && $req->filled('tgl_akhir')) {
+                $query->whereBetween('tgl_masuk', [$req->tgl_awal, $req->tgl_akhir]);
+            }
+            if (!empty($req->department)) {
+                $query->whereIn('nama_dep', $req->department);
+            }
+            $user = DB::table('users')->where('id_user', session('loginId'))->first();
 
-        $query = DB::table('detail_rekomendasi')
-            ->join('rekomendasi', 'detail_rekomendasi.id_rek', '=', 'rekomendasi.id_rek')
-            ->select(
-                'rekomendasi.*',
-                'detail_rekomendasi.jenis_unit',
-                'detail_rekomendasi.ket_unit',
-                'detail_rekomendasi.estimasi_harga',
-                'detail_rekomendasi.masukan_kabag',
-                'detail_rekomendasi.masukan_it',
-                'detail_rekomendasi.harga_akhir',
-                'detail_rekomendasi.tanggal_realisasi'
-            );
+            if (in_array(session('loginRole'), ['Network', 'Helpdesk', 'Server'])) {
+                $idRekList = DB::table('detail_rekomendasi')
+                    ->where('id_jab', $user->id_jab)
+                    ->pluck('id_rek');
+                $query->whereIn('id_rek', $idRekList);
+            } elseif (session('loginRole') !== 'IT') {
+                if ($user) {
+                    $dep = DB::table('department')->where('kode_dep', $user->kode_dep)->first();
+                    if ($dep) {
+                        $query->where('nama_dep', $dep->nama_dep);
+                    }
+                }
+            }
+            $results = $query->get();
 
-
-        if ($dep) {
-            $query->where('rekomendasi.nama_dep', $dep->nama_dep);
+            foreach ($results as $item) {
+                if (in_array(session('loginRole'), ['Network', 'Helpdesk', 'Server'])) {
+                    $item->detail_rekomendasi = DB::table('detail_rekomendasi')
+                        ->where('id_rek', $item->id_rek)
+                        ->where('id_jab', $user->id_jab)
+                        ->get();
+                } else {
+                    $item->detail_rekomendasi = DB::table('detail_rekomendasi')
+                        ->where('id_rek', $item->id_rek)
+                        ->get();
+                }
+            }
+            \Log::info('Jumlah data export: ' . $results->count());
+            return Excel::download(new ReportExport($results), 'report.xlsx');
+        } catch (\Exception $e) {
+            \Log::error("Gagal export laporan: {$e->getMessage()}");
+            return redirect()->back()->with('error', 'Gagal export laporan!');
         }
-
-        // filter tambahan dari request
-        if (request('noRek')) {
-            $query->where('rekomendasi.id_rek', '>=', request('noRek'));
-        }
-        if (request('nospb')) {
-            $query->where('rekomendasi.no_spb', '<=', request('nospb'));
-        }
-        if (request('nama_lengkap')) {
-            $query->where('rekomendasi.nama_lengkap', 'LIKE', '%' . request('nama_lengkap') . '%');
-        }
-        if (request('nama_dep')) {
-            $query->where('rekomendasi.nama_dep', 'LIKE', '%' . request('nama_dep') . '%');
-        }
-        if (request('jenis_unit')) {
-            $query->where('detail_rekomendasi.jenis_unit', 'LIKE', '%' . request('jenis_unit') . '%');
-        }
-        if (request('ket_unit')) {
-            $query->where('detail_rekomendasi.ket_unit', 'LIKE', '%' . request('ket_unit') . '%');
-        }
-        if (request('alasan_rek')) {
-            $query->where('rekomendasi.alasan_rek', 'LIKE', '%' . request('alasan_rek') . '%');
-        }
-        if (request('estimasi_harga')) {
-            $query->where('detail_rekomendasi.estimasi_harga', '<=', request('estimasi_harga'));
-        }
-        if (request('tgl_awal')) {
-            $query->where('rekomendasi.tgl_masuk', '>=', request('tgl_awal'));
-        }
-        if (request('tanggal_realisasi')) {
-            $query->where('detail_rekomendasi.tanggal_realisasi', '<=', request('tanggal_realisasi'));
-        }
-
-        $results = $query->get();
-
-        return Excel::download(new ReportExport($results), 'report.xlsx');
     }
+
     public function grafik()
     {
         if (!session('loginId')) {
@@ -521,7 +540,6 @@ class rekomendasiController extends Controller
                 ];
             });
 
-        // Data per departemen
         $departmentData = Rekomendasi::select('nama_dep', DB::raw('COUNT(*) as total'))
             ->groupBy('nama_dep')
             ->orderBy('total', 'desc')
@@ -532,9 +550,7 @@ class rekomendasiController extends Controller
     public function detailDeleted($id_rek)
     {
         $data = DB::table('deleted')->where('id_rek', $id_rek)->first();
-        // Ambil detail unit dari tabel deleted jika ada, atau dari detail_rekomendasi jika masih ada
         $details = DB::table('detail_del')->where('id_rek', $id_rek)->get();
-        // Jika tidak ada detail di detail_rekomendasi, coba ambil dari kolom di tabel deleted (jika ada)
         if ($details->isEmpty() && isset($data->jenis_unit)) {
             $details = collect([
                 (object) [

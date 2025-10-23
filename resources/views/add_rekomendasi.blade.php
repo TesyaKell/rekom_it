@@ -234,8 +234,6 @@
             $pageTitle = 'Add Rekomendasi';
         @endphp
 
-
-
         <div id="notifSimpan" style="display:none;position:fixed;top:30px;right:30px;z-index:9999;">
             <div class="alert alert-success py-2 px-4 mb-0 rounded shadow" role="alert" style="font-size:15px;">
                 Data berhasil disimpan!
@@ -305,6 +303,15 @@
                             <label for="keterangan_${idx}" class="mb-1 mt-2">Keterangan</label>
                             <textarea class="form-control" id="keterangan_${idx}" rows="2" placeholder="Masukkan Keterangan"></textarea>
                         </div>
+                        <div class="form-group mt-2">
+                            <label for="jabatan" class="mb-1 mt-2">Divisi</label>
+                            <select class="form-control" id="id_jab_${idx}" name="id_jab_${idx}" required>
+                                <option value="" disabled selected>Pilih Divisi</option>
+                                @foreach ($divisions as $div)
+                                    <option value="{{ $div->id_jab }}">{{ $div->nama_jab }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                         <button type="button" class="btn btn-success mt-3 shadow-sm" onclick="addDetail(${idx})">
                             <i class="bi bi-check2-circle me-1"></i>Simpan
                         </button>
@@ -323,6 +330,10 @@
                     const jenis = document.getElementById(`jenisunit_${idx}`).value;
                     const ket = document.getElementById(`keterangan_${idx}`).value;
                     const harga = document.getElementById(`estimasiharga_${idx}`).value;
+                    const selectDiv = document.getElementById(`id_jab_${idx}`);
+                    const divisionName = selectDiv.options[selectDiv.selectedIndex].text;
+                    const divisionId = selectDiv.value;
+
                     if (jenis && ket && harga) {
                         detailList.push({
                             jenis_unit: jenis,
@@ -335,6 +346,7 @@
                         <input type="hidden" name="detail_rekomendasi[${detailList.length-1}][jenis_unit]" value="${jenis}">
                         <input type="hidden" name="detail_rekomendasi[${detailList.length-1}][ket_unit]" value="${ket}">
                         <input type="hidden" name="detail_rekomendasi[${detailList.length-1}][estimasi_harga]" value="${harga}">
+                        <input type="hidden" name="detail_rekomendasi[${detailList.length-1}][id_jab]" value="${divisionId}">
                         `;
                         detailInputs.appendChild(inputDiv);
 
@@ -355,6 +367,10 @@
                                 <tr>
                                     <th style="width: 30%; font-weight: normal;">Estimasi Harga</th>
                                     <td style="width: 70%;">Rp. ${harga}</td>
+                                </tr>
+                                <tr>
+                                    <th style="width: 30%; font-weight: normal;">Divisi</th>
+                                    <td style="width: 70%;">${divisionName}</td>
                                 </tr>
                             </table>
                         </div>

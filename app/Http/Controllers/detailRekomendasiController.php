@@ -70,7 +70,7 @@ class detailRekomendasiController extends Controller
                 \DB::table('detail_rekomendasi')
                     ->where('id_detail_rekomendasi', $id_detail_rekomendasi)
                     ->update(['masukan_it' => $req->masukan_it]);
-            } elseif (session('loginRole') === 'Kabag') {
+            } elseif (session('loginRole') === 'Network' || session('loginRole') === 'Server' || session('loginRole') === 'Helpdesk') {
                 $req->validate([
                     'masukan_kabag' => 'required|string|max:255',
                 ]);

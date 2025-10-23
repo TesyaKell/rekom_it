@@ -29,13 +29,15 @@ class userController extends Controller
         $role = 'USER';
 
         $jabatan = trim($user->jabatan->nama_jab);
-        if (stripos($jabatan, 'Kepala Bagian') !== false) {
-            $role = 'Kabag';
+        if (stripos($jabatan, 'Network') !== false) {
+            $role = 'Network';
+        } elseif (stripos($jabatan, 'Helpdesk') !== false) {
+            $role = 'Helpdesk';
+        } elseif (stripos($jabatan, 'Server') !== false) {
+            $role = 'Server';
         } elseif (stripos($user->department->nama_dep, 'IT') !== false) {
             $role = 'IT';
         }
-
-
         session([
             'loginId' => $user->id_user,
             'loginRole' => $role,

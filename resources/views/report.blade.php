@@ -243,9 +243,9 @@
                                 <td class="ps-2">{{ $item->nama_dep }}</td>
                                 <td class="ps-2">{{ $item->tgl_masuk }}</td>
                                 <td class="p-2">
-                                    @if ($item->status == 'menunggu verifikasi Kabag')
+                                    @if ($item->status == 'menunggu verifikasi IT GSK')
                                         <span class="badge text-light p-1" style="background-color: #ffa800;">Menunggu
-                                            Kabag</span>
+                                            IT GSK</span>
                                     @elseif($item->status == 'menunggu verifikasi Tim IT')
                                         <span class="badge text-light p-1"
                                             style="background-color: rgba(32, 55, 230, 0.79);">Menunggu

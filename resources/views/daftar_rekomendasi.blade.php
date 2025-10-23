@@ -155,7 +155,7 @@
                         </form>
                     </div>
                     <div class="col-4 d-flex justify-content-end">
-                        @if (session('loginRole') === 'IT')
+                        @if (session('loginRole') === 'IT' || session('loginRole') === 'USER')
                             <a href="{{ url('add_rekomendasi') }}">
                                 <button type="button" class="btn mt-2 mb-2 me-2 fw-bold fs-6"
                                     style="background: #0d606e; color: white;">
@@ -175,6 +175,7 @@
                 telah memberikan persetujuan</p>
         </div>
     @endif
+
     <div class="container-navigasi w-90 h-100 ms-3 me-3 mt-3 pb-2 overflow-auto" style="max-width: 100%;">
         <div class="table-responsive ms-3 me-3 mt-2 mb-2">
             <div class="row g-0 mb-2 d-flex justify-content-start" style="width: 220px;">
@@ -194,6 +195,7 @@
             </div>
             <table class="table table-sm align-middle m-0">
                 <thead class="table-light">
+
                     <tr>
                         <th class="ps-2">No. Rek</th>
                         <th class="ps-2">No. PR</th>
@@ -202,14 +204,17 @@
                         <th class="ps-2">Tanggal Pengajuan</th>
                         <th class="ps-2">Status</th>
                         <th class="ps-2 text-center">Action</th>
-                        @if (session('loginRole') === 'IT' || session('loginRole') === 'Kabag')
+                        @if (session('loginRole') === 'IT' ||
+                                session('loginRole') === 'Network' ||
+                                session('loginRole') === 'Helpdesk' ||
+                                session('loginRole') === 'Server')
                             <th class="ps-2 text-center">Approval</th>
                         @endif
-
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($data as $item)
+
                         <tr>
                             <td class="ps-2">
                                 <a href="{{ route('rekomendasi.detail', $item->id_rek) }}"
@@ -222,10 +227,10 @@
                             <td class="ps-2">{{ $item->nama_dep }}</td>
                             <td class="ps-2">{{ $item->tgl_masuk }}</td>
                             <td class="ps-2">
-                                @if ($item->status == 'menunggu verifikasi Kabag')
+                                @if ($item->status == 'menunggu verifikasi IT GSK')
                                     <span class="badge text-light p-1"
                                         style="background-color: rgba(245, 139, 9, 0.767);">Menunggu
-                                        Kabag</span>
+                                        IT GSK</span>
                                 @elseif($item->status == 'menunggu verifikasi Tim IT')
                                     <span
                                         class="badge
@@ -257,7 +262,11 @@
                                             </a>
                                         </li>
                                         <li>
-                                            @if ($item->status == 'menunggu verifikasi Kabag' || session('loginRole') === 'IT' || session('loginRole') === 'Kabag')
+                                            @if (
+                                                $item->status == 'menunggu verifikasi IT GSK' ||
+                                                    session('loginRole') === 'Network' ||
+                                                    session('loginRole') === 'Helpdesk' ||
+                                                    session('loginRole') === 'Server')
                                                 <a class="dropdown-item"
                                                     href="{{ route('rekomendasi.edit', $item->id_rek) }}">
                                                     Edit </a>
@@ -273,56 +282,48 @@
                                     </ul>
                                 </div>
                             </td>
-                            @if (session('loginRole') === 'Kabag')
-
-                                @if ($item->status === 'menunggu verifikasi Kabag')
-                                    <td class="ps-2">
+                            @if (session('loginRole') === 'Network' || session('loginRole') === 'Helpdesk' || session('loginRole') === 'Server')
+                                @if ($item->status === 'menunggu verifikasi IT GSK (parsial)' || $item->status === 'menunggu verifikasi IT GSK')
+                                    <td class="ps-2 text-center">
                                         <div class="d-flex gap-2 mt-2 mb-2 justify-content-center">
                                             @php
-                                                // Cek apakah semua detail sudah ada masukan
-                                                $allMasukanFilled =
-                                                    \DB::table('detail_rekomendasi')
-                                                        ->where('id_rek', $item->id_rek)
-                                                        ->whereNull('masukan_kabag')
-                                                        ->count() === 0;
+                                                $user = \DB::table('users')
+                                                    ->where('id_user', session('loginId'))
+                                                    ->first();
+
+                                                $statusVerifikasi = \DB::table('detail_rekomendasi')
+                                                    ->where('id_rek', $item->id_rek)
+                                                    ->where('id_jab', $user->id_jab)
+                                                    ->value('status_verifikasi_it');
                                             @endphp
-                                            @if ($allMasukanFilled)
+
+                                            @if (is_null($statusVerifikasi))
                                                 <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
                                                     method="POST" style="display:inline;">
                                                     @csrf
                                                     <input type="hidden" name="action" value="acc">
-                                                    <input type="hidden" name="masukan_kabag"
-                                                        value="Sudah ada masukan">
                                                     <button type="submit"
-                                                        class="btn btn-primary btn-lg active btn-sm fw-bold">
-                                                        Approve
-                                                    </button>
+                                                        class="btn btn-primary btn-sm fw-bold">Approve</button>
                                                 </form>
-                                            @else
-                                                <button type="button"
-                                                    class="btn btn-primary btn-lg active btn-sm fw-bold"
-                                                    id="approveBtnKabag{{ $item->id_rek }}">
-                                                    Approve
-                                                </button>
-                                            @endif
-                                            <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
-                                                method="POST" style="display:inline;">
-                                                @csrf
-                                                <input type="hidden" name="action" value="tolak">
-                                                <button type="submit"
-                                                    class="btn btn-danger btn-sm fw-bold">Tolak</button>
-                                            </form>
-                                            @if ($item->status === 'acc')
-                                                <span class="badge bg-success">Menunggu verifikasi Tim IT</span>
-                                            @elseif ($item->status === 'tolak')
-                                                <span class="badge bg-danger">Ditolak</span>
+
+                                                <!-- Tombol Tolak aktif -->
+                                                <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
+                                                    method="POST" style="display:inline;">
+                                                    @csrf
+                                                    <input type="hidden" name="action" value="tolak">
+                                                    <button type="submit"
+                                                        class="btn btn-danger btn-sm fw-bold">Tolak</button>
+                                                </form>
+                                            @elseif($statusVerifikasi == 1)
+                                                <span class="badge bg-success p-2" style="width:130px;">Selesai</span>
+                                            @elseif($statusVerifikasi == 0)
+                                                <span class="badge bg-danger p-2" style="width:130px;">Ditolak</span>
                                             @endif
                                         </div>
                                     </td>
                                 @else
                                     <td class="ps-2 text-center">
-                                        <span class="badge p-2"
-                                            style="font-size: small; background-color: rgba(0, 128, 0, 0.463); width: 130px;">Selesai</span>
+                                        <span class="badge bg-secondary p-2">Tidak Bisa Approve</span>
                                     </td>
                                 @endif
                             @else
@@ -405,8 +406,10 @@
         <div class="modal-dialog">
             <form id="approveMasukanForm" method="POST">
                 @csrf
-                <input type="hidden" name="action" id="approveMasukanAction" value="acc">
+                {{-- <input type="hidden" name="action" id="approveMasukanAction" value="acc"> --}}
+                <input type="hidden" name="action" id="approveMasukanAction">
                 <input type="hidden" name="id_rek" id="approveMasukanIdRek">
+
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="approveMasukanModalLabel">Berikan Masukan pada Rekomendasi
@@ -471,70 +474,91 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
     </script>
+
+
+
     <script>
-        // Handle per page selection change
         document.addEventListener('DOMContentLoaded', function() {
             const showCount = document.getElementById('showCount');
-            showCount.addEventListener('change', function() {
-                const perPage = parseInt(this.value);
-                const url = new URL(window.location.href);
-                const currentPage = parseInt(url.searchParams.get('page')) || 1;
-                const currentPerPage = parseInt('{{ $perPage }}');
-                const firstItemOnCurrentPage = (currentPage - 1) * currentPerPage + 1;
-                const newPage = Math.ceil(firstItemOnCurrentPage / perPage);
-                url.searchParams.set('per_page', perPage);
-                url.searchParams.set('page', newPage);
-                window.location.href = url.toString();
-            });
-        });
+            if (showCount) {
+                showCount.addEventListener('change', function() {
+                    const perPage = parseInt(this.value);
+                    const url = new URL(window.location.href);
+                    const currentPage = parseInt(url.searchParams.get('page')) || 1;
+                    const currentPerPage = parseInt('{{ $perPage }}');
+                    const firstItemOnCurrentPage = (currentPage - 1) * currentPerPage + 1;
+                    const newPage = Math.ceil(firstItemOnCurrentPage / perPage);
+                    url.searchParams.set('per_page', perPage);
+                    url.searchParams.set('page', newPage);
+                    window.location.href = url.toString();
+                });
+            }
 
-
-        document.addEventListener('DOMContentLoaded', function() {
+            //untuk acc 3 role
             @foreach ($data as $item)
                 @php
-                    $allMasukanFilled = \DB::table('detail_rekomendasi')->where('id_rek', $item->id_rek)->whereNull('masukan_kabag')->count() === 0;
+                    $user = \DB::table('users')->where('id_user', session('loginId'))->first();
+                    $statusVerifikasi = null;
+
+                    if ($user) {
+                        $statusVerifikasi = \DB::table('detail_rekomendasi')->where('id_rek', $item->id_rek)->where('id_jab', $user->id_jab)->value('status_verifikasi_it');
+                    }
+
+                    $canApprove = $user && in_array(session('loginRole'), ['Network', 'Server', 'Helpdesk']);
                 @endphp
-                @if (session('loginRole') === 'Kabag' && $item->status === 'menunggu verifikasi Kabag' && !$allMasukanFilled)
-                    var btnKabag = document.getElementById('approveBtnKabag{{ $item->id_rek }}');
-                    if (btnKabag) {
-                        btnKabag.addEventListener('click', function(e) {
+
+                @if ($canApprove && is_null($statusVerifikasi))
+                    const btnKabag{{ $item->id_rek }} = document.getElementById(
+                        'approveBtnKabag{{ $item->id_rek }}');
+                    if (btnKabag{{ $item->id_rek }}) {
+                        btnKabag{{ $item->id_rek }}.addEventListener('click', function() {
                             document.getElementById('approveMasukanIdRek').value = '{{ $item->id_rek }}';
                             document.getElementById('approveMasukanForm').action =
                                 "{{ route('rekomendasi.approve', $item->id_rek) }}";
-                            document.getElementById('approveMasukanAction').value = 'acc'; // Kabag
+                            document.getElementById('approveMasukanAction').value = 'acc';
                             document.getElementById('tidakAdaMasukanCheckbox').checked = false;
                             document.getElementById('masukanError').style.display = 'none';
-                            var modal = new bootstrap.Modal(document.getElementById('approveMasukanModal'));
+                            const modal = new bootstrap.Modal(document.getElementById(
+                                'approveMasukanModal'));
                             modal.show();
                         });
                     }
                 @endif
+
+                //acc  IT
                 @php
                     $allMasukanFilledIT = \DB::table('detail_rekomendasi')->where('id_rek', $item->id_rek)->whereNull('masukan_it')->count() === 0;
                 @endphp
+
                 @if (session('loginRole') === 'IT' && $item->status === 'menunggu verifikasi Tim IT' && !$allMasukanFilledIT)
-                    var btnIT = document.getElementById('approveBtnIT{{ $item->id_rek }}');
-                    if (btnIT) {
-                        btnIT.addEventListener('click', function(e) {
+                    const btnIT{{ $item->id_rek }} = document.getElementById('approveBtnIT{{ $item->id_rek }}');
+                    if (btnIT{{ $item->id_rek }}) {
+                        btnIT{{ $item->id_rek }}.addEventListener('click', function() {
                             document.getElementById('approveMasukanIdRek').value = '{{ $item->id_rek }}';
                             document.getElementById('approveMasukanForm').action =
                                 "{{ route('rekomendasi.approve', $item->id_rek) }}";
-                            document.getElementById('approveMasukanAction').value = 'acc_it'; // IT
+                            document.getElementById('approveMasukanAction').value = 'acc_it';
                             document.getElementById('tidakAdaMasukanCheckbox').checked = false;
                             document.getElementById('masukanError').style.display = 'none';
-                            var modal = new bootstrap.Modal(document.getElementById('approveMasukanModal'));
+                            const modal = new bootstrap.Modal(document.getElementById(
+                                'approveMasukanModal'));
                             modal.show();
                         });
                     }
                 @endif
             @endforeach
 
-            document.getElementById('approveMasukanForm').addEventListener('submit', function(e) {
-                if (!document.getElementById('tidakAdaMasukanCheckbox').checked) {
-                    e.preventDefault();
-                    document.getElementById('masukanError').style.display = 'block';
-                }
-            });
+
+            const form = document.getElementById('approveMasukanForm');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    if (!document.getElementById('tidakAdaMasukanCheckbox').checked) {
+                        e.preventDefault();
+                        document.getElementById('masukanError').style.display = 'block';
+                    }
+                });
+            }
+
         });
     </script>
 
