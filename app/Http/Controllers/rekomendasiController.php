@@ -505,9 +505,7 @@ class rekomendasiController extends Controller
                         ->where('id_jab', $user->id_jab)
                         ->get();
                 } else {
-                    $item->detail_rekomendasi = DB::table('detail_rekomendasi')
-                        ->where('id_rek', $item->id_rek)
-                        ->get();
+                    $item->detail_rekomendasi = DB::table('detail_rekomendasi')->where('id_rek', $item->id_rek)->get();
                 }
             }
             \Log::info('Jumlah data export: ' . $results->count());
