@@ -134,6 +134,13 @@ class rekomendasiController extends Controller
 
 
             if ($req->input('action') === 'acc') {
+                if ($req->has('masukan_kabag') && $req->input('masukan_kabag') === 'Tidak ada masukan') {
+                    \DB::table('detail_rekomendasi')
+                        ->where('id_jab', $user->id_jab)
+                        ->where('id_rek', $id_rek)
+                        ->whereNull('masukan_kabag')
+                        ->update(['masukan_kabag' => 'Tidak ada masukan']);
+                }
                 $rekomendasi->nama_receiver = $user->nama_leng;
                 $rekomendasi->tgl_verif_kabag = now();
                 $nama_jab = \DB::table('jabatan')
@@ -144,6 +151,7 @@ class rekomendasiController extends Controller
                 $detailQuery->update([
                     'status_verifikasi_it' => 1,
                     'updated_at' => now(),
+
                 ]);
 
 
@@ -166,13 +174,20 @@ class rekomendasiController extends Controller
                 $rekomendasi->tgl_verif_it = now();
                 $rekomendasi->status = 'Diterima';
 
-                \DB::table('detail_rekomendasi')
-                    ->where('id_rek', $id_rek)
-                    ->update([
-                        'tanggal_realisasi' => now(),
-                        'status_verifikasi_it' => 1
-                    ]);
-
+                if ($req->has('masukan_it') && $req->input('masukan_it') === 'Tidak ada masukan') {
+                    \DB::table('detail_rekomendasi')
+                        ->where('id_rek', $id_rek)
+                        ->whereNull('masukan_it')
+                        ->update(['masukan_it' => 'Tidak ada masukan']);
+                } else {
+                    $countNull = \DB::table('detail_rekomendasi')
+                        ->where('id_rek', $id_rek)
+                        ->whereNull('masukan_it')
+                        ->count();
+                    if ($countNull > 0) {
+                        return redirect()->route('rekomendasi.daftar')->with('error', 'Masukan IT harus diisi untuk semua barang atau centang Tidak ada masukan.');
+                    }
+                }
                 $rekomendasi->save();
             } elseif ($req->input('action') === 'tolak') {
                 $detailQuery->update([

@@ -291,22 +291,33 @@
                                                     ->where('id_user', session('loginId'))
                                                     ->first();
 
-                                                $statusVerifikasi = \DB::table('detail_rekomendasi')
+                                                $detail = \DB::table('detail_rekomendasi')
                                                     ->where('id_rek', $item->id_rek)
                                                     ->where('id_jab', $user->id_jab)
-                                                    ->value('status_verifikasi_it');
+                                                    ->first();
+
+                                                $statusVerifikasi = $detail->status_verifikasi_it ?? null;
+                                                $masukanKabagKosong = is_null($detail->masukan_kabag);
                                             @endphp
 
                                             @if (is_null($statusVerifikasi))
-                                                <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
-                                                    method="POST" style="display:inline;">
-                                                    @csrf
-                                                    <input type="hidden" name="action" value="acc">
-                                                    <button type="submit"
-                                                        class="btn btn-primary btn-sm fw-bold">Approve</button>
-                                                </form>
+                                                @if ($masukanKabagKosong)
+                                                    {{-- Belum kasih masukan: tampilkan tombol yg akan munculkan modal --}}
+                                                    <button type="button" class="btn btn-primary btn-sm fw-bold"
+                                                        id="approveBtnKabag{{ $item->id_rek }}">
+                                                        Approve
+                                                    </button>
+                                                @else
+                                                    {{-- Sudah kasih masukan: langsung bisa approve tanpa modal --}}
+                                                    <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
+                                                        method="POST" style="display:inline;">
+                                                        @csrf
+                                                        <input type="hidden" name="action" value="acc">
+                                                        <button type="submit"
+                                                            class="btn btn-primary btn-sm fw-bold">Approve</button>
+                                                    </form>
+                                                @endif
 
-                                                <!-- Tombol Tolak aktif -->
                                                 <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
                                                     method="POST" style="display:inline;">
                                                     @csrf
@@ -319,6 +330,7 @@
                                             @elseif($statusVerifikasi == 0)
                                                 <span class="badge bg-danger p-2" style="width:130px;">Ditolak</span>
                                             @endif
+
                                         </div>
                                     </td>
                                 @else
@@ -501,7 +513,7 @@
                     $statusVerifikasi = null;
 
                     if ($user) {
-                        $statusVerifikasi = \DB::table('detail_rekomendasi')->where('id_rek', $item->id_rek)->where('id_jab', $user->id_jab)->value('status_verifikasi_it');
+                        $statusVerifikasi = \DB::table('detail_rekomendasi')->where('id_rek', $item->id_rek)->where('id_jab', $user->id_jab)->whereNull('masukan_kabag')->value('status_verifikasi_it');
                     }
 
                     $canApprove = $user && in_array(session('loginRole'), ['Network', 'Server', 'Helpdesk']);
