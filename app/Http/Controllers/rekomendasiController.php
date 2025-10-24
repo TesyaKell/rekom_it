@@ -294,10 +294,22 @@ class rekomendasiController extends Controller
 
     public function edit($id)
     {
-        // Ambil data rekomendasi (bisa lebih dari satu, gunakan get() agar konsisten dengan view)
-        $data = rekomendasi::where('id_rek', $id)->get();
+        if (!session()->has('loginId')) {
+            return redirect('/login');
+        }
+
+        $user = \DB::table('users')->where('id_user', session('loginId'))->first();
         $departments = department::all();
-        $details = \DB::table('detail_rekomendasi')->where('id_rek', $id)->get();
+        $data = rekomendasi::where('id_rek', $id)->get();
+
+        if ($user && in_array(session('loginRole'), ['Server', 'Network', 'Helpdesk'])) {
+            $details = \DB::table('detail_rekomendasi')
+                ->where('id_rek', $id)
+                ->where('id_jab', $user->id_jab)
+                ->get();
+        } else {
+            $details = \DB::table('detail_rekomendasi')->where('id_rek', $id)->get();
+        }
 
         return view('edit_rekomendasi', compact('data', 'departments', 'details'));
     }

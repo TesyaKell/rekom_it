@@ -23,8 +23,6 @@
             background: linear-gradient(120deg, #fff 60%, #0d606e 100%);
         }
 
-
-
         p {
             text-align: left;
             font-size: 14px;
@@ -149,8 +147,6 @@
     </style>
 </head>
 
-
-
 <body>
     <div class= "container-header">
         <div class="row-header">
@@ -158,9 +154,6 @@
                 <p class="pt-3 ms-5 ps-5">DETAIL REKOMENDASI</p>
             </div>
         </div>
-
-
-
         <div class="container mt-1 mb-5 me-5 ms-5 p-2">
             <h6 class="mt-3 mb-2 fw-bold" style="color:#ffa800;"></i>Rekomendasi</h6>
             <div class="card-rekomendasi">
