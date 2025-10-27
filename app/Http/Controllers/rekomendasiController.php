@@ -110,103 +110,6 @@ class rekomendasiController extends Controller
     }
 
 
-    public function updateStatus(Request $req, $id_rek = null)
-    {
-        try {
-            $id_rek = $req->input('id_rek') ?? $id_rek;
-            if (!$id_rek) {
-                return redirect()->route('rekomendasi.daftar')->with('error', 'ID rekomendasi tidak ditemukan!');
-            }
-
-            $rekomendasi = rekomendasi::find($id_rek);
-            if (!$rekomendasi) {
-                return redirect()->route('rekomendasi.daftar')->with('error', 'Data rekomendasi tidak ditemukan!');
-            }
-
-            $user = \DB::table('users')->where('id_user', session('loginId'))->first();
-            if (!$user) {
-                return redirect()->route('login')->with('error', 'Sesi login habis.');
-            }
-
-            $detailQuery = \DB::table('detail_rekomendasi')
-                ->where('id_rek', $id_rek)
-                ->where('id_jab', $user->id_jab);
-
-
-            if ($req->input('action') === 'acc') {
-                if ($req->has('masukan_kabag') && $req->input('masukan_kabag') === 'Tidak ada masukan') {
-                    \DB::table('detail_rekomendasi')
-                        ->where('id_jab', $user->id_jab)
-                        ->where('id_rek', $id_rek)
-                        ->whereNull('masukan_kabag')
-                        ->update(['masukan_kabag' => 'Tidak ada masukan']);
-                }
-                $rekomendasi->nama_receiver = $user->nama_leng;
-                $rekomendasi->tgl_verif_kabag = now();
-                $nama_jab = \DB::table('jabatan')
-                    ->where('id_jab', $user->id_jab)
-                    ->value('nama_jab');
-
-                $rekomendasi->jabatan_receiver = $nama_jab;
-                $detailQuery->update([
-                    'status_verifikasi_it' => 1,
-                    'updated_at' => now(),
-
-                ]);
-
-
-                if ($req->filled('masukan_kabag')) {
-                    $detailQuery->update(['masukan_kabag' => $req->masukan_kabag]);
-                }
-
-                $belumApprove = \DB::table('detail_rekomendasi')
-                    ->where('id_rek', $id_rek)
-                    ->whereNull('status_verifikasi_it')
-                    ->count();
-
-                $rekomendasi->status = $belumApprove === 0
-                    ? 'menunggu verifikasi Tim IT'
-                    : 'menunggu verifikasi IT GSK (parsial)';
-
-                $rekomendasi->save();
-            } elseif ($req->input('action') === 'acc_it') {
-                $rekomendasi->nama_it = $user->nama_leng;
-                $rekomendasi->tgl_verif_it = now();
-                $rekomendasi->status = 'Diterima';
-
-                if ($req->has('masukan_it') && $req->input('masukan_it') === 'Tidak ada masukan') {
-                    \DB::table('detail_rekomendasi')
-                        ->where('id_rek', $id_rek)
-                        ->whereNull('masukan_it')
-                        ->update(['masukan_it' => 'Tidak ada masukan']);
-                } else {
-                    $countNull = \DB::table('detail_rekomendasi')
-                        ->where('id_rek', $id_rek)
-                        ->whereNull('masukan_it')
-                        ->count();
-                    if ($countNull > 0) {
-                        return redirect()->route('rekomendasi.daftar')->with('error', 'Masukan IT harus diisi untuk semua barang atau centang Tidak ada masukan.');
-                    }
-                }
-                $rekomendasi->save();
-            } elseif ($req->input('action') === 'tolak') {
-                $detailQuery->update([
-                    'status_verifikasi_it' => 0,
-                ]);
-
-                $rekomendasi->status = 'Ditolak';
-                $rekomendasi->save();
-            }
-
-            return redirect()->route('rekomendasi.daftar')->with('success', 'Status berhasil diperbarui!');
-        } catch (\Exception $e) {
-            \Log::error("Gagal update status : {$e->getMessage()}");
-            return redirect()->route('rekomendasi.daftar')->with('error', 'Gagal update status!');
-        }
-    }
-
-
-
     public function destroy($id_rek)
     {
         $rekomendasi = DB::table('rekomendasi')->where('id_rek', $id_rek)->first();
@@ -589,5 +492,140 @@ class rekomendasiController extends Controller
             ]);
         }
         return view('detail_deleted_rekom', compact('data', 'details'));
+    }
+
+    public function updateStatus(Request $req, $id_rek = null)
+    {
+        try {
+            $id_rek = $req->input('id_rek') ?? $id_rek;
+            if (!$id_rek) {
+                return redirect()->route('rekomendasi.daftar')->with('error', 'ID rekomendasi tidak ditemukan!');
+            }
+
+            $rekomendasi = rekomendasi::find($id_rek);
+            if (!$rekomendasi) {
+                return redirect()->route('rekomendasi.daftar')->with('error', 'Data rekomendasi tidak ditemukan!');
+            }
+
+            $user = \DB::table('users')->where('id_user', session('loginId'))->first();
+            if (!$user) {
+                return redirect()->route('login')->with('error', 'Sesi login habis.');
+            }
+
+            $detailQuery = \DB::table('detail_rekomendasi')
+                ->where('id_rek', $id_rek)
+                ->where('id_jab', $user->id_jab);
+
+
+            if ($req->input('action') === 'acc') {
+                if ($req->has('masukan_kabag') && $req->input('masukan_kabag') === 'Tidak ada masukan') {
+                    \DB::table('detail_rekomendasi')
+                        ->where('id_jab', $user->id_jab)
+                        ->where('id_rek', $id_rek)
+                        ->whereNull('masukan_kabag')
+                        ->update(['masukan_kabag' => 'Tidak ada masukan']);
+                }
+                $rekomendasi->nama_receiver = $user->nama_leng;
+                $rekomendasi->tgl_verif_kabag = now();
+                $nama_jab = \DB::table('jabatan')
+                    ->where('id_jab', $user->id_jab)
+                    ->value('nama_jab');
+
+                $rekomendasi->jabatan_receiver = $nama_jab;
+                $detailQuery->update([
+                    'status_verifikasi_it' => 1,
+                    'updated_at' => now(),
+
+                ]);
+
+
+                if ($req->filled('masukan_kabag')) {
+                    $detailQuery->update(['masukan_kabag' => $req->masukan_kabag]);
+                }
+
+                $belumApprove = \DB::table('detail_rekomendasi')
+                    ->where('id_rek', $id_rek)
+                    ->whereNull('status_verifikasi_it')
+                    ->count();
+
+                $rekomendasi->status = $belumApprove === 0
+                    ? 'menunggu verifikasi Tim IT'
+                    : 'menunggu verifikasi IT GSK (parsial)';
+
+                $rekomendasi->save();
+            } elseif ($req->input('action') === 'acc_it') {
+                $rekomendasi->nama_it = $user->nama_leng;
+                $rekomendasi->tgl_verif_it = now();
+                $rekomendasi->status = 'Diterima';
+
+                if ($req->has('masukan_it') && $req->input('masukan_it') === 'Tidak ada masukan') {
+                    \DB::table('detail_rekomendasi')
+                        ->where('id_rek', $id_rek)
+                        ->whereNull('masukan_it')
+                        ->update(['masukan_it' => 'Tidak ada masukan']);
+                } else {
+                    $countNull = \DB::table('detail_rekomendasi')
+                        ->where('id_rek', $id_rek)
+                        ->whereNull('masukan_it')
+                        ->count();
+                    if ($countNull > 0) {
+                        return redirect()->route('rekomendasi.daftar')->with('error', 'Masukan IT harus diisi untuk semua barang atau centang Tidak ada masukan.');
+                    }
+                }
+                $rekomendasi->save();
+            } elseif ($req->input('action') === 'tolak') {
+                $id_detail = $req->input('id_detail');
+
+                if (!$id_detail) {
+                    return redirect()->route('rekomendasi.daftar')->with('error', 'ID detail tidak ditemukan!');
+                }
+
+                // Hanya update detail yang ditekan
+                \DB::table('detail_rekomendasi')
+                    ->where('id_detail_rekomendasi', $id_detail)
+                    ->update([
+                        'status_verifikasi_it' => 0,
+                        'updated_at' => now(),
+                    ]);
+
+
+                // Cek apakah semua sudah tolak atau ada yang masih null
+                $adaYangBelum = \DB::table('detail_rekomendasi')
+                    ->where('id_rek', $id_rek)
+                    ->whereNull('status_verifikasi_it')
+                    ->exists();
+
+                // Kalau semua sudah ada keputusan, baru ubah status utama
+                if (!$adaYangBelum) {
+                    $totalAcc = \DB::table('detail_rekomendasi')
+                        ->where('id_rek', $id_rek)
+                        ->where('status_verifikasi_it', 1)
+                        ->count();
+
+                    $totalTolak = \DB::table('detail_rekomendasi')
+                        ->where('id_rek', $id_rek)
+                        ->where('status_verifikasi_it', 0)
+                        ->count();
+
+                    if ($totalTolak > 0 && $totalAcc === 0) {
+                        $rekomendasi->status = 'Ditolak';
+                    } elseif ($totalAcc > 0 && $totalTolak === 0) {
+                        $rekomendasi->status = 'menunggu verifikasi Tim IT';
+                    } else {
+                        $rekomendasi->status = 'menunggu verifikasi IT GSK (parsial)';
+                    }
+
+                    $rekomendasi->save();
+                }
+
+                \Log::info('Sukses update status tolak');
+            }
+
+
+            return redirect()->route('rekomendasi.daftar')->with('success', 'Status berhasil diperbarui!');
+        } catch (\Exception $e) {
+            \Log::error("Gagal update status : {$e->getMessage()}");
+            return redirect()->route('rekomendasi.daftar')->with('error', 'Gagal update status!');
+        }
     }
 }

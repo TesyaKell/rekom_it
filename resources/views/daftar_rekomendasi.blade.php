@@ -292,13 +292,19 @@
                                                     ->first();
 
                                                 $detail = \DB::table('detail_rekomendasi')
+                                                    ->select(
+                                                        'id_detail_rekomendasi',
+                                                        'status_verifikasi_it',
+                                                        'masukan_kabag',
+                                                    )
                                                     ->where('id_rek', $item->id_rek)
                                                     ->where('id_jab', $user->id_jab)
                                                     ->first();
 
                                                 $statusVerifikasi = $detail->status_verifikasi_it ?? null;
-                                                $masukanKabagKosong = is_null($detail->masukan_kabag);
+                                                $masukanKabagKosong = $detail ? is_null($detail->masukan_kabag) : true;
                                             @endphp
+
 
                                             @if (is_null($statusVerifikasi))
                                                 @if ($masukanKabagKosong)
@@ -322,6 +328,9 @@
                                                     method="POST" style="display:inline;">
                                                     @csrf
                                                     <input type="hidden" name="action" value="tolak">
+                                                    <input type="hidden" name="id_detail"
+                                                        value="{{ $detail->id_detail_rekomendasi ?? '' }}">
+
                                                     <button type="submit"
                                                         class="btn btn-danger btn-sm fw-bold">Tolak</button>
                                                 </form>
@@ -421,6 +430,8 @@
                 {{-- <input type="hidden" name="action" id="approveMasukanAction" value="acc"> --}}
                 <input type="hidden" name="action" id="approveMasukanAction">
                 <input type="hidden" name="id_rek" id="approveMasukanIdRek">
+                <input type="hidden" name="id_detail" value="{{ $detail->id_detail ?? '' }}">
+
 
                 <div class="modal-content">
                     <div class="modal-header">
