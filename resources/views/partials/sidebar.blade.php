@@ -24,7 +24,6 @@
     }
 
     .position-fixed {
-        /* background-color: rgb(253, 253, 253); */
         background-color: #0d606e;
     }
 
@@ -180,7 +179,7 @@
                     <ul class="list-unstyled mb-0">
                         <li class="mb-2 d-flex align-items-center">
                             <span style="color: orange; font-size: 1.2em; margin-right: 3px;">●</span>
-                            <a class="nav-link p-2" href="{{ url('add_user') }}">Tambah User</a>
+                            <a class="nav-link p-2" href="{{ url('add_user') }}">Daftar User</a>
                         </li>
                         <li class="mb-2 d-flex align-items-center">
                             <span style="color: orange; font-size: 1.2em; margin-right: 3px;">●</span>
