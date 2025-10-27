@@ -314,7 +314,6 @@
                                                         Approve
                                                     </button>
                                                 @else
-                                                    {{-- Sudah kasih masukan: langsung bisa approve tanpa modal --}}
                                                     <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
                                                         method="POST" style="display:inline;">
                                                         @csrf
@@ -324,16 +323,10 @@
                                                     </form>
                                                 @endif
 
-                                                <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
-                                                    method="POST" style="display:inline;">
-                                                    @csrf
-                                                    <input type="hidden" name="action" value="tolak">
-                                                    <input type="hidden" name="id_detail"
-                                                        value="{{ $detail->id_detail_rekomendasi ?? '' }}">
-
-                                                    <button type="submit"
-                                                        class="btn btn-danger btn-sm fw-bold">Tolak</button>
-                                                </form>
+                                                <button type="button" class="btn btn-danger btn-sm fw-bold"
+                                                    id="rejectBtnKabag{{ $item->id_rek }}">
+                                                    Tolak
+                                                </button>
                                             @elseif($statusVerifikasi == 1)
                                                 <span class="badge bg-success p-2" style="width:130px;">Selesai</span>
                                             @elseif($statusVerifikasi == 0)
@@ -383,6 +376,7 @@
                                                         Approve
                                                     </button>
                                                 @endif
+
                                                 <form action="{{ route('rekomendasi.approve', $item->id_rek) }}"
                                                     method="POST" style="display:inline;">
                                                     @csrf
@@ -391,6 +385,7 @@
                                                         Tolak
                                                     </button>
                                                 </form>
+
                                             </div>
                                         </td>
                                     @else
@@ -431,6 +426,7 @@
                 <input type="hidden" name="action" id="approveMasukanAction">
                 <input type="hidden" name="id_rek" id="approveMasukanIdRek">
                 <input type="hidden" name="id_detail" value="{{ $detail->id_detail ?? '' }}">
+                <input type="hidden" name="id_detail" id="approveMasukanIdDetail">
 
 
                 <div class="modal-content">
@@ -581,6 +577,42 @@
                     }
                 });
             }
+
+
+            const rejectBtnKabag{{ $item->id_rek }} = document.getElementById(
+                'rejectBtnKabag{{ $item->id_rek }}');
+            if (rejectBtnKabag{{ $item->id_rek }}) {
+                rejectBtnKabag{{ $item->id_rek }}.addEventListener('click', function() {
+                    document.getElementById('approveMasukanIdRek').value = '{{ $item->id_rek }}';
+                    document.getElementById('approveMasukanForm').action =
+                        "{{ route('rekomendasi.approve', $item->id_rek) }}";
+                    document.getElementById('approveMasukanAction').value = 'tolak';
+                    document.getElementById('tidakAdaMasukanCheckbox').checked = false;
+                    document.getElementById('masukanError').style.display = 'none';
+                    document.getElementById('approveMasukanIdDetail').value =
+                        '{{ $detail->id_detail_rekomendasi ?? '' }}';
+
+                    const modal = new bootstrap.Modal(document.getElementById('approveMasukanModal'));
+                    modal.show();
+                });
+            }
+
+
+            // Untuk role IT
+            const rejectBtnIT{{ $item->id_rek }} = document.getElementById('rejectBtnIT{{ $item->id_rek }}');
+            if (rejectBtnIT{{ $item->id_rek }}) {
+                rejectBtnIT{{ $item->id_rek }}.addEventListener('click', function() {
+                    document.getElementById('approveMasukanIdRek').value = '{{ $item->id_rek }}';
+                    document.getElementById('approveMasukanForm').action =
+                        "{{ route('rekomendasi.approve', $item->id_rek) }}";
+                    document.getElementById('approveMasukanAction').value = 'tolak';
+                    document.getElementById('tidakAdaMasukanCheckbox').checked = false;
+                    document.getElementById('masukanError').style.display = 'none';
+                    const modal = new bootstrap.Modal(document.getElementById('approveMasukanModal'));
+                    modal.show();
+                });
+            }
+
 
         });
     </script>
