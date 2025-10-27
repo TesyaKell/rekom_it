@@ -523,7 +523,7 @@ class rekomendasiController extends Controller
                         ->where('id_jab', $user->id_jab)
                         ->where('id_rek', $id_rek)
                         ->whereNull('masukan_kabag')
-                        ->update(['masukan_kabag' => 'Tidak ada masukan dari ' . $user->nama_leng]);
+                        ->update(['masukan_kabag' => "Tidak ada masukan dari ID " . session('loginId'), ]);
                 }
                 $rekomendasi->nama_receiver = $user->nama_leng;
                 $rekomendasi->tgl_verif_kabag = now();
@@ -580,25 +580,22 @@ class rekomendasiController extends Controller
                     return redirect()->route('rekomendasi.daftar')->with('error', 'ID detail tidak ditemukan!');
                 }
 
-                if ($req->has('masukan_kabag') && $req->input('masukan_kabag') === 'Tidak ada masukan') {
+                if ($req->has('masukan_kabag') && !empty($req->input('masukan_kabag'))) {
                     \DB::table('detail_rekomendasi')
                         ->where('id_jab', $user->id_jab)
                         ->where('id_rek', $id_rek)
-                        ->whereNull('masukan_kabag')
-                        ->whereNull('masukan_it')
-                        ->update([
-                            'masukan_kabag' => 'Tidak ada masukan dari ' . $user->nama_leng,
-                            // 'masukan_it' => 'Tidak ada masukan dari ' . $user->nama_leng,
-                        ]);
+                        ->update(['masukan_kabag' => 'Tidak ada masukan dari '  . $user->nama_leng]);
+                    \Log::info("Masukan kabag berhasil disimpan: " . $req->input('masukan_kabag'));
                 }
 
-                // Hanya update detail yang ditekan
+
                 \DB::table('detail_rekomendasi')
                 ->where('id_detail_rekomendasi', $id_detail)
                     ->update([
                         'status_verifikasi_it' => 0,
                         'updated_at' => now(),
                     ]);
+
 
                 // Cek apakah semua sudah tolak atau ada yang masih null
                 $adaYangBelum = \DB::table('detail_rekomendasi')
@@ -607,16 +604,28 @@ class rekomendasiController extends Controller
                     ->exists();
 
                 // Kalau semua sudah ada keputusan, baru ubah status utama
-                $belumApprove = \DB::table('detail_rekomendasi')
-                    ->where('id_rek', $id_rek)
-                    ->whereNull('status_verifikasi_it')
-                    ->count();
+                if (!$adaYangBelum) {
+                    $totalAcc = \DB::table('detail_rekomendasi')
+                        ->where('id_rek', $id_rek)
+                        ->where('status_verifikasi_it', 1)
+                        ->count();
 
-                $rekomendasi->status = $belumApprove === 0
-                    ? 'menunggu verifikasi Tim IT'
-                    : 'menunggu verifikasi IT GSK (parsial)';
+                    $totalTolak = \DB::table('detail_rekomendasi')
+                        ->where('id_rek', $id_rek)
+                        ->where('status_verifikasi_it', 0)
+                        ->count();
+
+                    if ($totalTolak > 0 && $totalAcc === 0) {
+                        $rekomendasi->status = 'Ditolak';
+                    } elseif ($totalAcc > 0 && $totalTolak === 0) {
+                        $rekomendasi->status = 'menunggu verifikasi Tim IT';
+                    } else {
+                        $rekomendasi->status = 'menunggu verifikasi IT GSK (parsial)';
+                    }
+
+                    $rekomendasi->save();
+                }
             }
-
             return redirect()->route('rekomendasi.daftar')->with('success', 'Status berhasil diperbarui!');
         } catch (\Exception $e) {
             \Log::error("Gagal update status : {$e->getMessage()}");

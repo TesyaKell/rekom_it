@@ -444,8 +444,9 @@
                                 Tidak ada masukan
                             </label>
                         @else
-                            <input class="form-check-input" type="checkbox" value="Tidak ada masukan"
-                                id="tidakAdaMasukanCheckbox" name="masukan_kabag">
+                            <input class="form-check-input" type="checkbox"
+                                value="Tidak ada masukan dari {{ $user->nama_leng }}" id="tidakAdaMasukanCheckbox"
+                                name="masukan_kabag">
                             <label class="form-check-label" for="tidakAdaMasukanCheckbox">
                                 Tidak ada masukan
                             </label>
