@@ -119,6 +119,15 @@
         .modal-backdrop.show {
             opacity: 0.2 !important;
         }
+
+        .page-item.active .page-link {
+            background-color: #0d606e !important;
+            color: #fff !important;
+        }
+
+        .pagination .page-link {
+            color: #0d606e;
+        }
     </style>
 </head>
 
@@ -225,6 +234,19 @@
 
         {{-- DATA USER --}}
         <div class="container-data mt-4 tight-rows table-grid ms-3">
+            <div class="row g-0 mb-4 d-flex justify-content-end" style="width: 195px; margin-left: -20px;">
+                <div class="col text-end" style="border: none; background: none;">
+                    <label for="showCount" class="me-2 fw-bold" style="color:#ffa800;">Tampilkan</label>
+                    <select id="showCount" class="form-select d-inline-block w-auto" style="width:80px;">
+                        <option value="5" {{ $perPage == 5 ? 'selected' : '' }}>5</option>
+                        <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
+                        <option value="15" {{ $perPage == 15 ? 'selected' : '' }}>15</option>
+                        <option value="20" {{ $perPage == 20 ? 'selected' : '' }}>20</option>
+                        <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
+                        <option value="100" {{ $perPage == 100 ? 'selected' : '' }}>100</option>
+                    </select>
+                </div>
+            </div>
             <div class="row w-100 table-header signature-row" style="margin:0;">
                 <div class="col-3 fw-bold p-2 text-start mb-1">Nama Lengkap</div>
                 <div class="col-2 fw-bold p-2 text-start mb-1">Username</div>
@@ -317,6 +339,9 @@
                         </div>
                     </div>
                 @endforeach
+                <div class="mt-3">
+                    {{ $users->links() }}
+                </div>
             @else
                 <div class="row g-0 w-100 text-center py-3">
                     <div class="col-12">Tidak ada data users</div>
@@ -325,7 +350,7 @@
         </div>
     </div>
 
-    {{-- <script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             const showCount = document.getElementById('showCount');
 
@@ -347,7 +372,7 @@
                 window.location.href = url.toString();
             });
         });
-    </script> --}}
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

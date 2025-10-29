@@ -94,6 +94,15 @@
             background-color: #ffde093b;
             border-radius: 5px;
         }
+
+        .page-item.active .page-link {
+            background-color: #0d606e !important;
+            color: #fff !important;
+        }
+
+        .pagination .page-link {
+            color: #0d606e;
+        }
     </style>
 </head>
 

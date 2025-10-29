@@ -9,16 +9,21 @@ use Log;
 
 class JabatanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-
         if (session('loginRole') !== 'IT') {
             return redirect('/home')->withErrors(['access' => 'Anda tidak punya akses']);
         }
 
-        $jabatans = Jabatan::all();
+        $perPage = (int) $request->get('per_page', 5);
+        $currentPage = (int) $request->get('page', 1);
+
+        $jabatans = Jabatan::paginate($perPage, ['*'], 'page', $currentPage);
+        $jabatans->appends(['per_page' => $perPage]);
+
         $lastId = Jabatan::max('id_jab');
-        return view('jabatan', compact('jabatans', 'lastId'));
+
+        return view('jabatan', compact('jabatans', 'lastId', 'perPage'));
     }
 
 
@@ -63,7 +68,7 @@ class JabatanController extends Controller
         $user = DB::table('users')->where('id_user', session('loginId'))->first();
 
         $jabatan->update([
-            'nama_jab'   => $request->nama_jab,
+            'nama_jab' => $request->nama_jab,
             'updated_by' => $user ? $user->nama_leng : '',
         ]);
         \Log::info("Jabatan ID: {$jabatan->id_jab} diperbarui oleh user ID: " . session('loginId'));

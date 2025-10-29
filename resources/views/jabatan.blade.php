@@ -152,6 +152,15 @@
         .modal-backdrop.show {
             opacity: 0.2 !important;
         }
+
+        .page-item.active .page-link {
+            background-color: #0d606e !important;
+            color: #fff !important;
+        }
+
+        .pagination .page-link {
+            color: #0d606e;
+        }
     </style>
 </head>
 
@@ -190,16 +199,16 @@
         </form>
     </div>
     <div class="container-data mt-4 tight-rows table-grid ms-3">
-        <div class="row g-0 mb-2 d-flex justify-content-end" style="width: 195px;">
+        <div class="row g-0 mb-2 d-flex justify-content-end" style="width: 195px; margin-left: -10px;">
             <div class="col text-end" style="border: none; background: none;">
                 <label for="showCount" class="me-2 fw-bold" style="color:#ffa800;">Tampilkan</label>
                 <select id="showCount" class="form-select d-inline-block w-auto" style="width:80px;">
-                    <option value="6">5</option>
-                    <option value="11">10</option>
-                    <option value="16">15</option>
-                    <option value="21">20</option>
-                    <option value="51">50</option>
-                    <option value="101">100</option>
+                    <option value="5" {{ $perPage == 5 ? 'selected' : '' }}>5</option>
+                    <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
+                    <option value="15" {{ $perPage == 15 ? 'selected' : '' }}>15</option>
+                    <option value="20" {{ $perPage == 20 ? 'selected' : '' }}>20</option>
+                    <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
+                    <option value="100" {{ $perPage == 100 ? 'selected' : '' }}>100</option>
                 </select>
             </div>
         </div>
@@ -212,7 +221,7 @@
             @foreach ($jabatans as $jabatan)
                 <div class="row g-0 row-cols-3 w-100 jabatan-row" style="margin:0;">
                     <div class="col-2 d-flex justify-content-start ps-3" style="min-width:70px;">
-                        <span style="color:#000000">{{ $jabatan->id_jab }}</span>
+                        {{ ($jabatans->currentPage() - 1) * $jabatans->perPage() + $loop->iteration }}
                     </div>
                     <div class="col-7 d-flex justify-content-start ps-3">{{ $jabatan->nama_jab }}</div>
                     <div class="col-2 fw-bold p-2">
@@ -242,6 +251,9 @@
                     </div>
                 </div>
             @endforeach
+            <div class="mt-3">
+                {{ $jabatans->links() }}
+            </div>
         @else
             <div class="row g-0 w-75" style="margin:0;">
                 <div class="col-12 text-center py-3">Tidak ada data jabatan</div>
@@ -315,16 +327,24 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const showCount = document.getElementById('showCount');
-            const rows = document.querySelectorAll('.jabatan-row');
 
-            function updateRows() {
-                const count = parseInt(showCount.value);
-                rows.forEach((row, idx) => {
-                    row.style.display = idx < count ? '' : 'none';
-                });
-            }
-            showCount.addEventListener('change', updateRows);
-            updateRows();
+            showCount.addEventListener('change', function() {
+                const perPage = parseInt(this.value);
+                const url = new URL(window.location.href);
+                const currentPage = parseInt(url.searchParams.get('page')) || 1;
+                const currentPerPage = parseInt('{{ $perPage }}');
+
+                // ngitung item pertama di halaman sekarang
+                const firstItemOnCurrentPage = (currentPage - 1) * currentPerPage + 1;
+
+                // ini untuk ngitung page baru nya apa abis di ubah banyak datanya
+                const newPage = Math.max(1, Math.ceil(firstItemOnCurrentPage / perPage));
+
+                url.searchParams.set('per_page', perPage);
+                url.searchParams.set('page', newPage);
+
+                window.location.href = url.toString();
+            });
         });
     </script>
 

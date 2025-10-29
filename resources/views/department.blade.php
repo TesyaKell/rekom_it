@@ -206,7 +206,7 @@
             <!-- Dropdown untuk memilih jumlah data yang ditampilkan -->
             <div class="row g-0 mb-2 d-flex justify-content-end" style="width: 195px;">
                 <div class="col text-end" style="border: none; background: none;">
-                    <label for="showCount" class="me-2 fw-bold" style="color:#ffa800;">Tampilkan</label>
+                    <label for="showCount" class="me-2 fw-bold" style="color:#ffa800; ">Tampilkan</label>
                     <select id="showCount" class="form-select d-inline-block w-auto" style="width:80px;">
                         <option value="5" {{ $perPage == 5 ? 'selected' : '' }}>5</option>
                         <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
@@ -346,7 +346,6 @@
     @endforeach
 
     <script>
-        // Handle per page selection change
         document.addEventListener('DOMContentLoaded', function() {
             const showCount = document.getElementById('showCount');
 
@@ -373,18 +372,16 @@
         document.querySelectorAll('.dropdown-item[href*="edit"]').forEach(function(btn) {
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
-                // Ambil data dari baris yang diklik
+
                 var row = btn.closest('.row');
                 var kode_dep = row.querySelector('.col-3').textContent.trim();
                 var nama_dep = row.querySelector('.col-5').textContent.trim();
 
-                // Isi modal dengan data
                 document.getElementById('editKodeDep').textContent = kode_dep;
                 document.getElementById('editNamaDep').value = nama_dep;
                 document.getElementById('editDepartmentForm').action = '/department/' + kode_dep;
                 document.getElementById('editDepartmentId').value = kode_dep;
 
-                // Tampilkan modal
                 var modal = new bootstrap.Modal(document.getElementById('editDepartmentModal'));
                 modal.show();
             });

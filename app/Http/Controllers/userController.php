@@ -48,21 +48,27 @@ class userController extends Controller
         return redirect('/home')->with('success', 'Berhasil Login!');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         if (session('loginRole') !== 'IT' && session('loginRole') !== 'GSK') {
             return redirect('/home')->withErrors(['access' => 'Anda tidak punya akses']);
         }
 
-        $users = User::all();
+        $perPage = (int) $request->get('per_page', 5);
+        $currentPage = (int) $request->get('page', 1);
+
+        $users = User::paginate($perPage, ['*'], 'page', $currentPage);
         $lastId = User::max('id_user');
         $positions = Jabatan::all();
-        $departments = Department::all();
+        $departments = department::all();
 
-        Log::info('Jumlah user: ' . $users->count());
+        $users->appends(['per_page' => $perPage]);
 
-        return view('add_user', compact('users', 'lastId', 'positions', 'departments'));
+        Log::info('Jumlah user: ' . $users->total());
+
+        return view('add_user', compact('users', 'lastId', 'positions', 'departments', 'perPage'));
     }
+
 
 
     public function edit($id)
