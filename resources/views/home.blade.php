@@ -90,7 +90,7 @@
                     </div>
                 </div>
                 <script>
-                    document.addEventListener('DOMContentLoaded', function () {
+                    document.addEventListener('DOMContentLoaded', function() {
                         var toastEl = document.getElementById('loginToast');
                         var toast = new bootstrap.Toast(toastEl, {
                             delay: 2200
@@ -225,7 +225,6 @@
                 }
             });
 
-            // Department Chart (Bar)
             const deptCtx = document.getElementById('departmentChart').getContext('2d');
             new Chart(deptCtx, {
                 type: 'bar',
@@ -298,7 +297,30 @@
                             }
                         }
                     }
-                }
+                },
+                plugins: [{
+                    id: 'barValueLabels',
+                    afterDatasetsDraw(chart) {
+                        const ctx = chart.ctx;
+                        chart.data.datasets.forEach((dataset, datasetIndex) => {
+                            const meta = chart.getDatasetMeta(datasetIndex);
+                            meta.data.forEach((bar, index) => {
+                                const value = dataset.data[index];
+                                const text = (typeof value === 'number') ? value.toLocaleString(
+                                    'id-ID') : value;
+                                const x = bar.x;
+                                const y = bar.y;
+                                ctx.save();
+                                ctx.fillStyle = '#0d606e';
+                                ctx.font = '600 12px Arial';
+                                ctx.textAlign = 'center';
+                                ctx.textBaseline = 'bottom';
+                                ctx.fillText(text, x, y - 6);
+                                ctx.restore();
+                            });
+                        });
+                    }
+                }]
             });
         </script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>

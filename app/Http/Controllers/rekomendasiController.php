@@ -363,7 +363,6 @@ class rekomendasiController extends Controller
         $query = $request->input('query');
         $perPage = $request->input('per_page', 10);
 
-        // build a subquery for detail_rekomendasi and use it in whereIn
         $subQuery = DB::table('detail_rekomendasi')
             ->select('id_rek')
             ->where('jenis_unit', 'LIKE', "%{$query}%");
