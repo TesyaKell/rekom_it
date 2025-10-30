@@ -374,7 +374,10 @@ class rekomendasiController extends Controller
             ->orWhere('jabatan_receiver', 'LIKE', "%{$query}%")
             ->orWhere('nama_dep', 'LIKE', "%{$query}%")
             ->orWhere('id_rek', 'LIKE', "%{$query}%")
+            ->orderBy('id_rek', 'desc')
             ->paginate($perPage);
+
+        $data->appends(['per_page' => $perPage]);
 
         $departments = department::all();
         return view('daftar_rekomendasi', compact('data', 'departments', 'query', 'perPage'));
@@ -385,20 +388,20 @@ class rekomendasiController extends Controller
     public function filterStatus(Request $request)
     {
         $status = $request->status;
-        $departments = \DB::table('department')->get();
-        $query = Rekomendasi::query();
+        $perPage = $request->input('per_page', 10);
+        $departments = department::all();
+        $query = rekomendasi::query();
 
         if ($status === "Belum Realisasi") {
-
             $query->where("status", "!=", "Diterima");
         } elseif ($status === "Diterima") {
-
             $query->where("status", "Diterima");
         }
 
-        $data = $query->get();
+        $data = $query->orderBy('id_rek', 'desc')->paginate($perPage);
+        $data->appends(['per_page' => $perPage]);
 
-        return view('daftar_rekomendasi', compact('data', 'departments', 'status'));
+        return view('daftar_rekomendasi', compact('data', 'departments', 'status', 'perPage'));
     }
 
 

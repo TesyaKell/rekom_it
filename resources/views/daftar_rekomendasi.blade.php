@@ -144,8 +144,8 @@
                                 @php
                                     $selected = request('status');
                                     $label = match ($selected) {
-                                        'Belum Realisasi' => 'Belum Realisasi',
-                                        'Diterima' => 'Sudah Realisasi',
+                                        'Belum Realisasi' => 'Belum Disetujui',
+                                        'Diterima' => 'Sudah Disetujui',
                                         default => 'Semua Rekomendasi',
                                     };
                                 @endphp
@@ -160,12 +160,11 @@
                                     </li>
                                     <li>
                                         <button class="dropdown-item" type="submit" name="status"
-                                            value="Belum Realisasi">Belum Realisasi</button>
+                                            value="Belum Realisasi">Belum Disetujui</button>
                                     </li>
                                     <li>
                                         <button class="dropdown-item" type="submit" name="status"
-                                            value="Diterima">Sudah
-                                            Realisasi</button>
+                                            value="Diterima">Sudah Disetujui</button>
                                     </li>
                                 </ul>
                             </div>
