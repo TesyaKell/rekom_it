@@ -182,18 +182,29 @@
                                             required>
                                     </div>
                                     <div class="form-group mt-2">
-                                        <label for="exampleFormControlInput1" class="mb-1 mt-2">Dibuat Oleh</label>
-                                        <input class="form-control" id="namapengaju" name="nama_lengkap"
-                                            placeholder="Masukan Nama Anda" required>
+                                        <label for="namapengaju" class="mb-1 mt-2">Dibuat Oleh</label>
+                                        {{-- populate from controller $user or fallback to auth() --}}
+                                        <input type="text" class="form-control" id="namapengaju" name="nama_lengkap"
+                                            value="{{ old('nama_lengkap', $user->nama_leng ?? ($user->nama_lengkap ?? (optional(auth()->user())->nama_lengkap ?? (optional(auth()->user())->name ?? '')))) }}"
+                                            required readonly>
                                     </div>
                                     <div class="form-group mt-2">
                                         <label for="department" class="mb-1 mt-2">Department</label>
-                                        <select class="form-control" id="kode_dep" name="kode_dep" required>
-                                            <option value="" disabled selected>Pilih Department</option>
+                                        {{-- visible disabled select for display only (no name) --}}
+                                        <select class="form-control" id="kode_dep_display" disabled>
+                                            <option value="" disabled
+                                                {{ empty(old('kode_dep', $user->kode_dep ?? '')) ? 'selected' : '' }}>Pilih
+                                                Department</option>
                                             @foreach ($departments as $dep)
-                                                <option value="{{ $dep->kode_dep }}">{{ $dep->nama_dep }}</option>
+                                                <option value="{{ $dep->kode_dep }}"
+                                                    {{ old('kode_dep', $user->kode_dep ?? '') == $dep->kode_dep ? 'selected' : '' }}>
+                                                    {{ $dep->nama_dep }}
+                                                </option>
                                             @endforeach
                                         </select>
+                                        {{-- hidden input that will be submitted --}}
+                                        <input type="hidden" id="kode_dep_hidden" name="kode_dep"
+                                            value="{{ old('kode_dep', $user->kode_dep ?? '') }}">
                                     </div>
 
                                     <div class="form-group mt-2">
@@ -218,6 +229,7 @@
                             </div>
                         </div>
                     </div>
+
 
                     <div class="col-md-7">
                         <button id="addRekomendasiBtn" type="button" class="btn mb-3 ms-4 shadow-sm"
@@ -253,7 +265,7 @@
                 form.addEventListener('submit', function(e) {
                     const tgl = form.tgl_masuk.value;
                     const nama = form.nama_lengkap.value;
-                    const dep = form.kode_dep.value;
+                    const dep = document.getElementById('kode_dep_hidden')?.value || '';
                     if (!tgl || !nama || !dep) {
                         alert('Semua field wajib diisi!');
                         e.preventDefault();
@@ -306,13 +318,14 @@
                         <div class="form-group mt-2">
                             <label for="jabatan" class="mb-1 mt-2">Divisi</label>
                             <select class="form-control" id="id_jab_${idx}" name="id_jab_${idx}" required>
-                                <option value="" disabled selected>Pilih Divisi</option>
+                                <option value="" disabled selected style="color: gray;">Pilih Divisi</option>
                                 @foreach ($divisions as $div)
                                     <option value="{{ $div->id_jab }}">{{ $div->nama_jab }}</option>
                                 @endforeach
                             </select>
                         </div>
-                        <button type="button" class="btn btn-success mt-3 shadow-sm" onclick="addDetail(${idx})">
+                        <span style="color: gray; font-size: 0.8rem; margin-left: 0.2rem;">* Pilih Divisi IT yang dituju sesuai dengan barang yang direquest</span>
+                        <button type="button" class="btn btn-success mt-4 shadow-sm" onclick="addDetail(${idx})">
                             <i class="bi bi-check2-circle me-1"></i>Simpan
                         </button>
                     </div>

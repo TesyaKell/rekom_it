@@ -22,7 +22,7 @@
         }
 
         .logo-img {
-            max-width: 85px;
+            max-width: 75px;
             height: auto;
             margin-top: 10px;
             margin-bottom: 20px;
@@ -34,7 +34,7 @@
             font-weight: bold;
             margin-top: -75px;
             margin-bottom: 80px;
-            font-size: 20px;
+            font-size: 17px;
         }
 
         table {
@@ -103,14 +103,6 @@
             font-size: 14px;
             margin-bottom: -80px;
         }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .text-end {
-            text-align: right;
-        }
     </style>
 </head>
 
@@ -125,9 +117,9 @@
             <tbody>
                 @if ($data)
                     <tr>
-                        <td>No. Rekomendasi</td>
-                        <td> : </td>
-                        <td>{{ $data->id_rek }}</td>
+                        <td style="font-size: 15px; font-weight: bold;">No. Rekomendasi</td>
+                        <td style="font-size: 15px; font-weight: bold;"> : </td>
+                        <td style="font-size: 15px; font-weight: bold;">{{ $data->id_rek }}</td>
                     </tr>
                     <tr>
                         <td>No. PR</td>
@@ -147,7 +139,8 @@
                     <tr>
                         <td>Tanggal Pengajuan</td>
                         <td> : </td>
-                        <td>{{ $data->tgl_masuk }}</td>
+                        <td>{{ $data->tgl_masuk ? \Carbon\Carbon::parse($data->tgl_masuk)->translatedFormat('d F Y') : '' }}
+                        </td>
                     </tr>
                     <tr>
                         <td>Alasan</td>
@@ -207,20 +200,14 @@
             <tr>
                 <td class="ttd-label">Disetujui,</td>
                 <td class="ttd-label">Diketahui Oleh,</td>
-                <td class="ttd-label">Diminta Oleh,</td>
             </tr>
             <tr>
                 @if ($data && $data->status === 'Diterima')
-                    <td>
+                    <td class="ttd-img">
                         <img src="{{ asset('images/IT GSK.png') }}" style="height:60px; margin-bottom:0;">
                     </td>
-                    <td>
+                    <td class="ttd-img">
                         <img src="{{ asset('images/IT GSK.png') }}" style="height:60px; margin-bottom:0;">
-                    </td>
-                    <td>
-                        <img src="{{ asset($signRequester) }}" style="height:60px; margin-bottom:0;">
-                    </td>
-                    <td>
                     </td>
             </tr>
             <tr>
@@ -234,10 +221,7 @@
                     <span class="ttd-role">{{ $jabatanIT ?? '' }}</span>
                 </td>
 
-                <td class="ttd-name">
-                    <u>{{ $data->nama_lengkap ?? '' }}</u><br>
-                    <span class="ttd-role">Pemohon</span>
-                </td>
+
             </tr>
             @endif
         </table>

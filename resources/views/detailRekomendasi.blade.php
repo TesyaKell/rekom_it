@@ -205,12 +205,18 @@
                                 <th class="ps-3">Nama Unit</th>
                                 <th class="ps-3">Keterangan</th>
                                 <th class="ps-3">Estimasi Harga</th>
-                                @if (session('loginRole') === 'IT')
-                                    <th class="ps-3">Berikan Masukan</th>
+                                {{-- @if (session('loginRole') === 'IT')
+                                    <th class="ps-3">Komentar</th>
                                 @elseif (session('loginRole') === 'Server' || session('loginRole') === 'Network' || session('loginRole') === 'Helpdesk')
-                                    <th class="ps-3">Berikan Masukan IT GSK</th>
+                                    <th class="ps-3">Berikan Komentar IT GSK</th>
                                 @else
-                                    <th class="ps-3">Masukan dari Tim IT</th>
+                                    <th class="ps-3">Berikan Komentar Tim IT</th>
+                                @endif --}}
+
+                                @if (session('loginRole') === 'IT')
+                                    <th class="ps-3">Komentar Tim IT</th>
+                                @elseif (session('loginRole') === 'Server' || session('loginRole') === 'Network' || session('loginRole') === 'Helpdesk')
+                                    <th class="ps-3">Komentar IT GSK</th>
                                 @endif
                                 <th class="ps-3">Tanggal Realisasi</th>
                             </tr>
@@ -233,11 +239,10 @@
                                                             action="{{ route('detailRekomendasi.masukan', $detail->id_detail_rekomendasi) }}"
                                                             class="d-flex align-items-center masukan-form">
                                                             @csrf
-                                                            <input class="form-control me-2 masukan-input"
-                                                                type="text" name="masukan_it"
-                                                                placeholder="Berikan masukan IT">
+                                                            <textarea class="form-control form-control-sm me-2 masukan-input" name="masukan_it" rows="1"
+                                                                placeholder="Berikan komentar" style="max-width:280px; height:40px; padding:6px;"></textarea>
                                                             <button type="submit"
-                                                                class="btn btn-sm btn-primary">Simpan</button>
+                                                                class="btn btn-sm btn-primary py-1 px-2">Simpan</button>
                                                         </form>
                                                     @else
                                                         <span class="text-muted">Belum bisa beri masukan karena belum di

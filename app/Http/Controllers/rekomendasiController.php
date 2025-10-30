@@ -30,6 +30,8 @@ class rekomendasiController extends Controller
         $query = rekomendasi::where('id_user', $user->id_user);
 
         $data = $query->paginate($perPage, ['*'], 'page', $currentPage);
+
+        $data = $query->orderBy('id_rek', 'desc')->paginate($perPage, ['*'], 'page', $currentPage);
         $data->appends(['per_page' => $perPage]);
 
         $departments = \DB::table('department')->get();
@@ -157,6 +159,7 @@ class rekomendasiController extends Controller
         $currentPage = request('page', 1);
 
         $query = rekomendasi::query();
+        $query->orderBy('id_rek', 'desc');
         $user = \DB::table('users')->where('id_user', session('loginId'))->first();
 
         if (session('loginRole') === 'Network' || session('loginRole') === 'Helpdesk' || session('loginRole') === 'Server') {
@@ -177,7 +180,7 @@ class rekomendasiController extends Controller
         if (!session()->has('loginId')) {
             return redirect('/login');
         }
-        $data = DB::table('deleted')->get();
+        $data = DB::table('deleted')->orderBy('id_rek', 'desc')->get();
         $departments = department::all();
         return view('deleted_rekomendasi', compact('data', 'departments'));
     }
@@ -194,7 +197,7 @@ class rekomendasiController extends Controller
         $status = $data?->status;
         $namauser = $user?->nama_leng ?? '';
 
-        if ($user && in_array(session('loginRole'), [ 'Server', 'Network', 'Helpdesk'])) {
+        if ($user && in_array(session('loginRole'), ['Server', 'Network', 'Helpdesk'])) {
             $details = \DB::table('detail_rekomendasi')
                 ->where('id_rek', $id_rek)
                 ->where('id_jab', $user->id_jab)
@@ -237,6 +240,7 @@ class rekomendasiController extends Controller
     {
         try {
             $query = \App\Models\Rekomendasi::query();
+            $query->orderBy('id_rek', 'desc');
 
             if ($req->filled('noRek') && $req->filled('noRek2')) {
                 $query->whereBetween('id_rek', [$req->noRek, $req->noRek2]);
@@ -401,6 +405,7 @@ class rekomendasiController extends Controller
     {
         try {
             $query = Rekomendasi::query();
+            $query->orderBy('id_rek', 'desc');
 
             if ($req->filled('noRek') && $req->filled('noRek2')) {
                 $query->whereBetween('id_rek', [$req->noRek, $req->noRek2]);
