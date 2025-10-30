@@ -358,25 +358,27 @@ class rekomendasiController extends Controller
     }
 
 
-    public function searchRekomendasi(Request $id_rek)
+    public function searchRekomendasi(Request $request)
     {
-        $query = $id_rek->input('query');
+        $query = $request->input('query');
+        $perPage = $request->input('per_page', 10);
 
-        $data = rekomendasi::where('nama_lengkap', 'LIKE', '%' . $query . '%')
-            ->orWhereIn('id_rek', function ($sub) use ($query) {
-                $sub->select('id_rek')
-                    ->from('detail_rekomendasi')
-                    ->where('jenis_unit', 'LIKE', '%' . $query . '%');
-            })
-            ->orWhere('status', 'LIKE', '%' . $query . '%')
-            ->orWhere('nama_receiver', 'LIKE', '%' . $query . '%')
-            ->orWhere('jabatan_receiver', 'LIKE', '%' . $query . '%')
-            ->orWhere('nama_dep', 'LIKE', '%' . $query . '%')
-            ->orWhere('id_rek', 'LIKE', '%' . $query . '%')
-            ->get();
+        // build a subquery for detail_rekomendasi and use it in whereIn
+        $subQuery = DB::table('detail_rekomendasi')
+            ->select('id_rek')
+            ->where('jenis_unit', 'LIKE', "%{$query}%");
+
+        $data = rekomendasi::where('nama_lengkap', 'LIKE', "%{$query}%")
+            ->orWhereIn('id_rek', $subQuery)
+            ->orWhere('status', 'LIKE', "%{$query}%")
+            ->orWhere('nama_receiver', 'LIKE', "%{$query}%")
+            ->orWhere('jabatan_receiver', 'LIKE', "%{$query}%")
+            ->orWhere('nama_dep', 'LIKE', "%{$query}%")
+            ->orWhere('id_rek', 'LIKE', "%{$query}%")
+            ->paginate($perPage);
 
         $departments = department::all();
-        return view('daftar_rekomendasi', compact('data', 'departments', 'query'));
+        return view('daftar_rekomendasi', compact('data', 'departments', 'query', 'perPage'));
     }
 
 
