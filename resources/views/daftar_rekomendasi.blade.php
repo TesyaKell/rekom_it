@@ -108,8 +108,16 @@
 
 <div class= "container-header">
     <div class="row-header">
-        <div class="col-header">
+        <div class="col-header d-flex justify-content-between align-items-center">
             <p class="pt-3 mt-3 ms-5 ps-5">DAFTAR REKOMENDASI & SERVIS KOMPUTER</p>
+            <div class="me-3 pe-3 pt-3 mt-2 text-end fw-bold">
+                <div class="d-flex align-items-center justify-content-end">
+                    <i class="bi bi-person-circle fs-3 me-2" style="color: #ffa800;"></i>
+                    <p id="namapengaju" class="mb-0">
+                        {{ old('nama_lengkap', $user->nama_leng ?? ($user->nama_lengkap ?? (optional(auth()->user())->nama_lengkap ?? (optional(auth()->user())->name ?? '')))) }}
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 

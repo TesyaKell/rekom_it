@@ -76,6 +76,7 @@
         .table-bordered th,
         .table-bordered td {
             border: 1.5px solid #c2c2c2ad !important;
+            font-size: 12px;
         }
 
         .btn-success {
@@ -258,7 +259,7 @@
                                         <span class="badge bg-secondary">{{ $item->status }}</span>
                                     @endif
                                 </td>
-                                <td class="ps-2">
+                                <td class="ps-2 pe-1">
                                     @if ($detail->tanggal_realisasi)
                                         {{ $detail->tanggal_realisasi }}
                                     @else
