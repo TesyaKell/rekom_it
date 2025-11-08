@@ -91,6 +91,7 @@ class userController extends Controller
                 'nama_leng' => 'required|string|max:255',
                 'id_jab' => 'required',
                 'kode_dep' => 'required',
+                'alamat' => 'nullable|string|max:255',
             ]);
 
             $user = User::create([
@@ -99,6 +100,7 @@ class userController extends Controller
                 'nama_leng' => $req->input('nama_leng'),
                 'id_jab' => $req->input('id_jab'),
                 'kode_dep' => $req->input('kode_dep'),
+                'alamat' => $req->input('alamat'),
             ]);
 
             Log::info("User created with ID: {$user->id_user}");
