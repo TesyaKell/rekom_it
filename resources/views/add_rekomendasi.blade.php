@@ -312,8 +312,8 @@
                             <input type="text" class="form-control" id="estimasiharga_${idx}" placeholder="Rp." oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                         </div>
                         <div class="form-group mt-2">
-                            <label for="keterangan_${idx}" class="mb-1 mt-2">Keterangan</label>
-                            <textarea class="form-control" id="keterangan_${idx}" rows="2" placeholder="Masukkan Keterangan"></textarea>
+                            <label for="keterangan_${idx}" class="mb-1 mt-2">Detail</label>
+                            <textarea class="form-control" id="keterangan_${idx}" rows="2" placeholder="Masukkan Detail"></textarea>
                         </div>
                         <div class="form-group mt-2">
                             <label for="jabatan" class="mb-1 mt-2">Divisi</label>

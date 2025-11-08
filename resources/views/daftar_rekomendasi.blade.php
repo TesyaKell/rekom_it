@@ -112,8 +112,8 @@
             <p class="pt-3 mt-3 ms-5 ps-5">DAFTAR REKOMENDASI & SERVIS KOMPUTER</p>
             <div class="me-3 pe-3 pt-3 mt-2 text-end fw-bold">
                 <div class="d-flex align-items-center justify-content-end">
-                    <i class="bi bi-person-circle fs-3 me-2" style="color: #ffa800;"></i>
-                    <p id="namapengaju" class="mb-0">
+                    <i class="bi bi-person-circle fs-5 me-1" style="color: #8f8f8f; font-size:14px;"></i>
+                    <p id="namapengaju" class="mb-0" style="color: #8f8f8f;">
                         {{ old('nama_lengkap', $user->nama_leng ?? ($user->nama_lengkap ?? (optional(auth()->user())->nama_lengkap ?? (optional(auth()->user())->name ?? '')))) }}
                     </p>
                 </div>
