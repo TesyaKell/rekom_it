@@ -78,7 +78,7 @@ class userController extends Controller
     }
 
 
-    public function register(Request $req)
+    public function create(Request $req)
     {
         if (session('loginRole') !== 'IT' && session('loginRole') !== 'GSK') {
             return redirect('/home')->withErrors(['access' => 'Anda tidak punya akses']);
